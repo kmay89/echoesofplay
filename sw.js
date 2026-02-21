@@ -5,13 +5,15 @@
   © ERRERlabs 2026 · Apache 2.0
 */
 
-var CACHE_NAME = 'echoes-v1';
+var CACHE_NAME = 'echoes-v2';
 var ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/favicon.ico',
+  '/apple-touch-icon.png'
 ];
 
 /* Install: cache core assets */
