@@ -11,6 +11,14 @@
   © ERRERlabs 2026 · Apache 2.0 · Karl Meves
 -->
 <meta name="theme-color" content="#2A2520" id="tc">
+<meta name="description" content="A radically honest, radically free, radically private playground for reflection.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Echoes">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <title>Echoes of Play</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -129,6 +137,12 @@ body.light .ip{background:rgba(245,240,232,.97)}
 body:not(.light) .toast{background:#2A2520;color:rgba(228,218,200,.55)}
 body.light .toast{background:#F5F0E8;color:rgba(42,37,32,.55)}
 .toast.show{opacity:1}
+.inst{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);font-family:var(--f);font-size:14px;padding:14px 22px;border-radius:6px;border:1px solid rgba(128,128,128,.1);z-index:10;display:none;align-items:center;gap:14px;max-width:360px;animation:ema .8s ease}
+body:not(.light) .inst{background:rgba(42,37,32,.95);color:rgba(228,218,200,.75)}
+body.light .inst{background:rgba(245,240,232,.95);color:rgba(42,37,32,.75)}
+.inst button{min-height:36px;min-width:36px;padding:6px 14px;font-size:13px}
+.inst .inst-add{opacity:.85;border:1px solid rgba(128,128,128,.15);border-radius:4px}
+.inst .inst-x{opacity:.3;font-size:18px;padding:6px}
 </style>
 </head>
 <body>
@@ -251,6 +265,11 @@ body.light .toast{background:#F5F0E8;color:rgba(42,37,32,.55)}
 <button class="corner c-br" onclick="doSh()">&#8599;</button>
 <button class="corner c-tr fw" onclick="toggleMode()" id="modeBtn">&#9788;</button>
 <div class="toast" id="toast" role="status"></div>
+<div class="inst" id="inst" role="alert">
+  <span>Save as app for easy return</span>
+  <button class="inst-add" id="instAdd">add</button>
+  <button class="inst-x" id="instX" aria-label="Dismiss">&times;</button>
+</div>
 
 <!-- INFO -->
 <div class="ip" id="infoP" role="dialog" aria-label="About">
@@ -274,6 +293,7 @@ body.light .toast{background:#F5F0E8;color:rgba(42,37,32,.55)}
   <button class="ia" onclick="expMem()">export memories only</button>
   <button class="ia" onclick="clrAll()">delete everything</button>
   <p style="margin-top:16px">Karl Meves / <a href="https://errerlabs.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">ERRERlabs</a> &#183; &#169; 2026 &#183; Apache 2.0</p>
+  <p style="margin-top:8px;font-size:13px;opacity:.35"><a href="https://github.com/kmay89/echoes-of-play/blob/main/PRIVACY.md" target="_blank" rel="noopener" style="color:inherit">Privacy</a> &#183; <a href="https://github.com/kmay89/echoes-of-play/blob/main/LEGAL.md" target="_blank" rel="noopener" style="color:inherit">Terms</a> &#183; <a href="https://github.com/kmay89/echoes-of-play/blob/main/COOKIES.md" target="_blank" rel="noopener" style="color:inherit">Cookies</a> &#183; <a href="https://github.com/kmay89/echoes-of-play" target="_blank" rel="noopener" style="color:inherit">Source</a></p>
   <button class="fl" style="margin-top:20px" onclick="closeI()">close</button>
 </div>
 </div>
@@ -527,6 +547,31 @@ function rnG(){var b=document.getElementById('grpB'),f=document.getElementById('
 function advG(){gPi++;if(gPh==='o'&&gPi>=GO.length)gPh='d';else if(gPh==='d'&&(gPi-GO.length)>=GD.length)gPh='c';rnG()}
 function endG(){document.getElementById('grpB').innerHTML='<div class="eg">\u25CC</div><div style="opacity:.3;font-style:italic;font-size:16px;max-width:220px;text-align:center;margin-bottom:20px">whatever stayed \u2014 yours</div>';document.getElementById('grpF').innerHTML='<button class="fw" onclick="goGrp()">again</button><button class="fw" onclick="showFull()">done</button>'}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeI()});
+
+/* ═══ SERVICE WORKER ═══ */
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}
+
+/* ═══ INSTALL PROMPT ═══ */
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();deferredPrompt=e;
+  var dismissed=false;try{dismissed=localStorage.getItem('eop_inst')==='0'}catch(x){}
+  if(!dismissed){var el=document.getElementById('inst');if(el)el.style.display='flex'}
+});
+var instAdd=document.getElementById('instAdd');
+if(instAdd)instAdd.addEventListener('click',function(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(){deferredPrompt=null;var el=document.getElementById('inst');if(el)el.style.display='none'});
+});
+var instX=document.getElementById('instX');
+if(instX)instX.addEventListener('click',function(){
+  var el=document.getElementById('inst');if(el)el.style.display='none';
+  try{localStorage.setItem('eop_inst','0')}catch(x){}
+});
+/* iOS standalone detection */
+if(window.navigator.standalone===true){var el=document.getElementById('inst');if(el)el.style.display='none'}
+
 </script>
 </body>
 </html>
