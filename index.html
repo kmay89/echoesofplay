@@ -143,6 +143,7 @@ body.light .inst{background:rgba(245,240,232,.95);color:rgba(42,37,32,.75)}
 .inst button{min-height:36px;min-width:36px;padding:6px 14px;font-size:13px}
 .inst .inst-add{opacity:.85;border:1px solid rgba(128,128,128,.15);border-radius:4px}
 .inst .inst-x{opacity:.3;font-size:18px;padding:6px}
+.pl{display:inline;min-height:0;min-width:0;padding:0;font-size:inherit;text-decoration:underline;opacity:1!important}
 </style>
 </head>
 <body>
@@ -273,7 +274,7 @@ body.light .inst{background:rgba(245,240,232,.95);color:rgba(42,37,32,.75)}
 
 <!-- INFO -->
 <div class="ip" id="infoP" role="dialog" aria-label="About">
-<div class="ic">
+<div class="ic" id="icMain">
   <h2>Three commitments</h2>
   <p><b>Radically honest.</b> Not AI. Hand-written prompts. It cannot understand you. It offers angles. Your brain does the rest.</p>
   <p><b>Radically free.</b> No cost. No ads. No subscription. No paywall. Open source. Apache 2.0. Forever.</p>
@@ -293,8 +294,68 @@ body.light .inst{background:rgba(245,240,232,.95);color:rgba(42,37,32,.75)}
   <button class="ia" onclick="expMem()">export memories only</button>
   <button class="ia" onclick="clrAll()">delete everything</button>
   <p style="margin-top:16px">Karl Meves / <a href="https://errerlabs.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">ERRERlabs</a> &#183; &#169; 2026 &#183; Apache 2.0</p>
-  <p style="margin-top:8px;font-size:13px;opacity:.35"><a href="https://github.com/kmay89/echoes-of-play/blob/main/PRIVACY.md" target="_blank" rel="noopener" style="color:inherit">Privacy</a> &#183; <a href="https://github.com/kmay89/echoes-of-play/blob/main/LEGAL.md" target="_blank" rel="noopener" style="color:inherit">Terms</a> &#183; <a href="https://github.com/kmay89/echoes-of-play/blob/main/COOKIES.md" target="_blank" rel="noopener" style="color:inherit">Cookies</a> &#183; <a href="https://github.com/kmay89/echoes-of-play" target="_blank" rel="noopener" style="color:inherit">Source</a></p>
+  <p style="margin-top:8px;font-size:13px;opacity:.35"><button class="pl" onclick="showPol('polP')">Privacy</button> &#183; <button class="pl" onclick="showPol('polT')">Terms</button> &#183; <button class="pl" onclick="showPol('polC')">Cookies</button></p>
+  <p style="margin-top:6px;font-size:12px;opacity:.2">source: github.com/kmay89/echoes-of-play</p>
   <button class="fl" style="margin-top:20px" onclick="closeI()">close</button>
+</div>
+<div class="ic" id="polP" style="display:none">
+  <h2>Privacy Policy</h2>
+  <p><b>Last updated: February 2026</b></p>
+  <p>We don&#8217;t collect your data. We can&#8217;t collect your data. There is no mechanism to collect your data. This page makes zero network connections. Your thoughts and memories never leave your device.</p>
+  <h2>What we collect</h2>
+  <p>Nothing. No personal information. No email addresses. No names. No IP addresses. No device fingerprints. No usage analytics. No behavioral data. No metadata.</p>
+  <h2>What we store</h2>
+  <p>Nothing on our end. The application stores reflections and memories in your browser&#8217;s local storage &#8212; on your device, controlled entirely by you. We never see it. We have no mechanism to access it. Export anytime. Delete with one button. We never had a copy.</p>
+  <h2>What we transmit</h2>
+  <p>Nothing. Zero network connections after initial page load. No API calls. No analytics. No telemetry. No font requests. No CDN calls. The network tab in your browser will be empty. Verify it yourself.</p>
+  <h2>Cookies</h2>
+  <p>None.</p>
+  <h2>Third-party services</h2>
+  <p>None. No analytics. No advertising. No social media integrations. No embedded content. No third-party scripts. No CDNs. No external fonts. The only external link is to errerlabs.com.</p>
+  <h2>Audio</h2>
+  <p>We do not access your microphone. Current browser speech APIs send audio to external servers. We will not include audio features until local-only speech recognition exists. No shortcuts.</p>
+  <h2>GDPR / CCPA</h2>
+  <p>We do not process personal data. Your rights under GDPR and CCPA are fully satisfied by the fact that we hold none of your data. We do not sell, share, or collect personal information.</p>
+  <h2>Data breaches</h2>
+  <p>Nothing to breach. No server. No database. No user table. No authentication system. The attack surface is zero because the surface is zero.</p>
+  <h2>Contact</h2>
+  <p>Karl Meves / ERRERlabs &#183; errerlabs.com</p>
+  <p style="margin-top:12px;font-size:13px;opacity:.3;font-style:italic">Full policy: github.com/kmay89/echoes-of-play/blob/main/PRIVACY.md</p>
+  <button class="fl" style="margin-top:16px" onclick="hidePol('polP')">&#8592; back</button>
+</div>
+<div class="ic" id="polT" style="display:none">
+  <h2>Terms of Use</h2>
+  <p><b>Last updated: February 2026</b></p>
+  <h2>This is a playground, not a clinical tool</h2>
+  <p>Echoes of Play is not therapy, counseling, a medical device, or a diagnostic tool. Responses are generated from hand-written text fragments using pattern matching. There is no AI. There is no understanding. If you are in crisis: <b>988 Suicide &amp; Crisis Lifeline</b> &#8212; call or text 988. <b>Crisis Text Line</b> &#8212; text HOME to 741741.</p>
+  <h2>Your data is yours</h2>
+  <p>Everything you write stays on your device. We have no access to it. We cannot recover it if deleted. Export and back up anything you want to keep.</p>
+  <h2>Memory Garden</h2>
+  <p>Text entry only. No audio recording. We encourage obtaining consent from anyone whose words you record. Everything stays on your device. Treat shared memories with dignity.</p>
+  <h2>Open source</h2>
+  <p>Licensed Apache 2.0. Fork and modify freely. If you add network connections or data collection, update all policies. Do not claim the original privacy guarantees for modified versions.</p>
+  <h2>No warranty</h2>
+  <p>Provided &#8220;as is&#8221; without warranty of any kind. We have done our best, but cannot promise perfection.</p>
+  <h2>Limitation of liability</h2>
+  <p>To the maximum extent permitted by law, ERRERlabs and Karl Meves shall not be liable for damages arising from use of this application.</p>
+  <h2>Accessibility</h2>
+  <p>Semantic HTML, ARIA attributes, keyboard navigation, screen reader support, high contrast, prefers-reduced-motion respect, 48px touch targets. Report issues via GitHub.</p>
+  <p style="margin-top:12px;font-size:13px;opacity:.3;font-style:italic">Full terms: github.com/kmay89/echoes-of-play/blob/main/LEGAL.md</p>
+  <button class="fl" style="margin-top:16px" onclick="hidePol('polT')">&#8592; back</button>
+</div>
+<div class="ic" id="polC" style="display:none">
+  <h2>Cookie Policy</h2>
+  <p><b>Last updated: February 2026</b></p>
+  <h2>Cookies used by this site</h2>
+  <p><b>None.</b></p>
+  <p>No first-party cookies. No third-party cookies. No session cookies. No persistent cookies. No tracking cookies. No analytics cookies. No advertising cookies. No &#8220;strictly necessary&#8221; cookies.</p>
+  <p>The document.cookie API is never called. No Set-Cookie header is sent. There is no cookie banner because there is nothing to consent to.</p>
+  <h2>Local storage</h2>
+  <p>The application uses your browser&#8217;s localStorage to save reflections and memories. Local storage is not a cookie. It lives on your device, is never transmitted, and is fully under your control. View, export, or delete everything anytime through the &#8505; panel.</p>
+  <h2>Why this page exists</h2>
+  <p>Some jurisdictions require a cookie policy. This one says: there are no cookies. An honest &#8220;none&#8221; is more useful than a missing page.</p>
+  <p style="margin-top:12px;font-size:13px;opacity:.3;font-style:italic">Full policy: github.com/kmay89/echoes-of-play/blob/main/COOKIES.md</p>
+  <button class="fl" style="margin-top:16px" onclick="hidePol('polC')">&#8592; back</button>
 </div>
 </div>
 
@@ -437,7 +498,7 @@ function pkR(a){return a[Math.floor(Math.random()*a.length)]}
 function sh(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2800)}
 function show(id){var all=document.querySelectorAll('.L');for(var i=0;i<all.length;i++)all[i].classList.remove('V');setTimeout(function(){document.getElementById(id).classList.add('V')},60)}
-function openI(){document.getElementById('infoP').classList.add('open')}
+function openI(){document.getElementById('icMain').style.display='';document.getElementById('polP').style.display='none';document.getElementById('polT').style.display='none';document.getElementById('polC').style.display='none';document.getElementById('infoP').classList.add('open')}
 function closeI(){document.getElementById('infoP').classList.remove('open')}
 function doSh(){if(navigator.share)navigator.share({title:'Echoes of Play',url:location.href}).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(function(){toast('link copied')})}
 function expAll(){var d={reflections:jrnl,memories:mems,exported:new Date().toISOString()};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='echoes-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(u);toast('exported')}
@@ -548,14 +609,18 @@ function advG(){gPi++;if(gPh==='o'&&gPi>=GO.length)gPh='d';else if(gPh==='d'&&(g
 function endG(){document.getElementById('grpB').innerHTML='<div class="eg">\u25CC</div><div style="opacity:.3;font-style:italic;font-size:16px;max-width:220px;text-align:center;margin-bottom:20px">whatever stayed \u2014 yours</div>';document.getElementById('grpF').innerHTML='<button class="fw" onclick="goGrp()">again</button><button class="fw" onclick="showFull()">done</button>'}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeI()});
 
+/* ═══ POLICY PANELS ═══ */
+function showPol(id){document.getElementById('icMain').style.display='none';document.getElementById(id).style.display='block';document.getElementById('infoP').scrollTop=0}
+function hidePol(id){document.getElementById(id).style.display='none';document.getElementById('icMain').style.display='block';document.getElementById('infoP').scrollTop=0}
+
 /* ═══ SERVICE WORKER ═══ */
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(err){console.error('SW registration failed:',err)})}
 
 /* ═══ INSTALL PROMPT ═══ */
 var deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',function(e){
   e.preventDefault();deferredPrompt=e;
-  var dismissed=false;try{dismissed=localStorage.getItem('eop_inst')==='0'}catch(x){}
+  var dismissed=false;try{dismissed=localStorage.getItem('eop_inst')==='0'}catch(x){console.warn('localStorage unavailable:',x)}
   if(!dismissed){var el=document.getElementById('inst');if(el)el.style.display='flex'}
 });
 var instAdd=document.getElementById('instAdd');
@@ -567,7 +632,7 @@ if(instAdd)instAdd.addEventListener('click',function(){
 var instX=document.getElementById('instX');
 if(instX)instX.addEventListener('click',function(){
   var el=document.getElementById('inst');if(el)el.style.display='none';
-  try{localStorage.setItem('eop_inst','0')}catch(x){}
+  try{localStorage.setItem('eop_inst','0')}catch(x){console.warn('localStorage unavailable:',x)}
 });
 /* iOS standalone detection */
 if(window.navigator.standalone===true){var el=document.getElementById('inst');if(el)el.style.display='none'}

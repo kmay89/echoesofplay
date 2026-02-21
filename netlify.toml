@@ -24,8 +24,6 @@
     X-Content-Type-Options = "nosniff"
     # Prevent clickjacking
     X-Frame-Options = "DENY"
-    # XSS protection (legacy browsers)
-    X-XSS-Protection = "1; mode=block"
     # Referrer policy — send nothing
     Referrer-Policy = "no-referrer"
     # Permissions policy — deny everything we don't use
