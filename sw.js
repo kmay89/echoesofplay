@@ -5,7 +5,7 @@
   © ERRERlabs 2026 · Apache 2.0
 */
 
-var CACHE_NAME = 'echoes-v4';
+var CACHE_NAME = 'echoes-v5';
 var ASSETS = [
   '/',
   '/index.html',
