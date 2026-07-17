@@ -17,7 +17,7 @@ Zero network connections. Zero cookies. Zero tracking. Zero AI. One HTML file.
 - **Group** — A fragment in the center of the table. Read it aloud, share what it brings up. Face to face.
 - **Past Rounds** — Re-read what you wrote. Let go of it gracefully when you're done.
 - **Music box (optional)** — Sparse, gentle notes generated procedurally on your device, tuned to your mood. No recordings, no streaming, off by default.
-- **Comfort** — An Aa button scales all text up for tired eyes, care facilities, and shared tablets. Pinch-zoom is never blocked.
+- **Comfort** — Text follows your phone's own text-size setting by default; an Aa button steps it larger (two sizes up) without breaking the layout. For tired eyes, care facilities, and shared tablets. Pinch-zoom is never blocked.
 
 ## Why it's made
 

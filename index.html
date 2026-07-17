@@ -6,7 +6,7 @@
 <title>Echoes of Play</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;-webkit-text-size-adjust:100%}
+html{font-size:100%;-webkit-text-size-adjust:100%;transition:font-size 0.3s ease}
 body{font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background 1.2s ease,color 1.2s ease}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
@@ -309,8 +309,12 @@ body[data-mood=dawn]{--gold:#e6b269;--gold-dim:#a87f42;--gold-glow:rgba(230,178,
 body[data-mood=tide]{--gold:#8fc4ae;--gold-dim:#5f8a77;--gold-glow:rgba(143,196,174,0.07);--parch:rgba(143,196,174,0.03);--bg:#070909;--surface:#0d100f;--card:#121614;--card-edge:#26302b}
 body[data-mood=violet]{--gold:#b4a5e0;--gold-dim:#7c6fa6;--gold-glow:rgba(180,165,224,0.07);--parch:rgba(180,165,224,0.03);--bg:#080709;--surface:#0e0d11;--card:#131117;--card-edge:#282433;--breath:#93a8c9}
 
-/* Comfort text size (Aa) — everything in rem scales together */
-html.big{font-size:19px}
+/* Comfort text size (Aa) — steps relative to the device's own text-size
+   setting (font-size:100% inherits it), everything in rem scales together */
+html.fs1{font-size:115%}
+html.fs2{font-size:130%}
+.fs-toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,16px);background:var(--surface);border:1px solid var(--gold-dim);color:var(--gold);font-size:0.72rem;letter-spacing:0.08em;padding:9px 18px;border-radius:20px;opacity:0;pointer-events:none;transition:opacity 0.3s ease,transform 0.3s ease;z-index:210}
+.fs-toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* MOOD SCREEN */
 .moodscr{align-items:center;justify-content:center;text-align:center;gap:18px}
@@ -351,6 +355,7 @@ html.big{font-size:19px}
 <button class="btn-info btn-music" id="btnMusic" aria-pressed="false" aria-label="Gentle background music, on or off">&#9834;</button>
 <button class="btn-info btn-size" id="btnSize" aria-pressed="false" aria-label="Larger text, on or off">Aa</button>
 <div class="rt-banner" id="rtBanner" aria-live="polite"><span id="rtTxt"></span><button class="rt-skip" id="rtSkip">skip &#8594;</button></div>
+<div class="fs-toast" id="fsToast" role="status" aria-live="polite"></div>
 
 <div class="screen trust active visible" id="screenTrust"><div class="trust-sphere"><canvas id="trustSphere" width="120" height="120"></canvas></div><h1>Echoes of Play</h1><div class="trust-sub">A quiet room for your thoughts.<br>Sand on the table. Nothing leaves.</div><div class="trust-promises" id="trustP"><span>Nothing stored on any server</span><span>No accounts, no tracking</span><span>Your words stay here only</span><span>Delete everything at any time</span></div><button class="btn-p" id="btnTrust">Enter</button><div class="safety">In crisis: <a href="tel:988">988</a> · <a href="https://988lifeline.org">988lifeline.org</a></div></div>
 
@@ -1195,7 +1200,7 @@ $('btnToday').addEventListener('click',function(){initAudio();sndClick();rtStart
 $('rtSkip').addEventListener('click',function(){sndClick();rtAdvance()});
 
 // ── MUSIC BOX — sparse generative notes, made on this device, off by default ──
-var MUS={on:false,t:null};
+var MUS={on:false,t:null,master:null};
 var MSCALES={
   ember:[196,220,246.9,293.7,329.6,392],
   dawn:[261.6,293.7,329.6,392,440,523.3],
@@ -1203,7 +1208,7 @@ var MSCALES={
   violet:[207.7,233.1,277.2,311.1,370,415.3]
 };
 function musNote(){
-  if(!MUS.on||!AC)return;
+  if(!MUS.on||!AC||!MUS.master)return;
   var sc=MSCALES[st.mood]||MSCALES.ember;
   var f=sc[Math.floor(Math.random()*sc.length)];
   var t0=AC.currentTime;
@@ -1212,41 +1217,77 @@ function musNote(){
   g.gain.setValueAtTime(0,t0);
   g.gain.linearRampToValueAtTime(0.016,t0+0.9);
   g.gain.exponentialRampToValueAtTime(0.0006,t0+5);
-  o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+5.2);
+  o.connect(g);g.connect(MUS.master);o.start(t0);o.stop(t0+5.2);
   if(Math.random()<0.35){
     var o2=AC.createOscillator(),g2=AC.createGain();
     o2.type='sine';o2.frequency.value=f*2;
     g2.gain.setValueAtTime(0,t0+0.3);
     g2.gain.linearRampToValueAtTime(0.006,t0+1.4);
     g2.gain.exponentialRampToValueAtTime(0.0004,t0+5.5);
-    o2.connect(g2);g2.connect(AC.destination);o2.start(t0);o2.stop(t0+5.7);
+    o2.connect(g2);g2.connect(MUS.master);o2.start(t0);o2.stop(t0+5.7);
   }
   MUS.t=setTimeout(musNote,2400+Math.random()*4200);
 }
 function updMusBtn(){var b=$('btnMusic');b.setAttribute('aria-pressed',MUS.on?'true':'false');if(MUS.on)b.classList.add('on');else b.classList.remove('on')}
-function musStart(){initAudio();if(AC&&AC.state==='suspended'&&AC.resume)AC.resume();if(!AC)return;MUS.on=true;musNote();updMusBtn()}
-function musStop(){MUS.on=false;if(MUS.t){clearTimeout(MUS.t);MUS.t=null}updMusBtn()}
+function musStart(){
+  initAudio();if(AC&&AC.state==='suspended'&&AC.resume)AC.resume();if(!AC)return;
+  // All notes route through one master gain so stopping can fade everything
+  MUS.master=AC.createGain();
+  MUS.master.gain.setValueAtTime(0,AC.currentTime);
+  MUS.master.gain.linearRampToValueAtTime(1,AC.currentTime+0.6);
+  MUS.master.connect(AC.destination);
+  MUS.on=true;musNote();updMusBtn();
+}
+function musStop(){
+  MUS.on=false;
+  if(MUS.t){clearTimeout(MUS.t);MUS.t=null}
+  if(MUS.master&&AC){
+    var m=MUS.master;MUS.master=null;
+    try{
+      m.gain.cancelScheduledValues(AC.currentTime);
+      m.gain.setValueAtTime(m.gain.value,AC.currentTime);
+      m.gain.linearRampToValueAtTime(0,AC.currentTime+0.25);
+    }catch(e){}
+    setTimeout(function(){try{m.disconnect()}catch(e){}},400);
+  }
+  updMusBtn();
+}
 $('btnMusic').addEventListener('click',function(){
   if(MUS.on){musStop();try{localStorage.setItem('eop_mus','0')}catch(e){}}
   else{musStart();try{localStorage.setItem('eop_mus','1')}catch(e){}}
 });
 
-// ── COMFORT TEXT SIZE ──
-function updSizeBtn(on){var b=$('btnSize');b.setAttribute('aria-pressed',on?'true':'false');if(on)b.classList.add('on');else b.classList.remove('on')}
-$('btnSize').addEventListener('click',function(){
-  sndClick();
-  var on=document.documentElement.classList.toggle('big');
-  try{localStorage.setItem('eop_big',on?'1':'0')}catch(e){}
-  updSizeBtn(on);
-});
+// ── COMFORT TEXT SIZE — steps relative to the device's own setting ──
+var FS_LABELS=['Text: your device’s size','Text: larger','Text: largest'];
+var fsStep=0,fsToastT=null;
+function applyFS(step,announce){
+  fsStep=((step%3)+3)%3;
+  var el=document.documentElement;
+  el.classList.remove('fs1');el.classList.remove('fs2');
+  if(fsStep===1)el.classList.add('fs1');
+  if(fsStep===2)el.classList.add('fs2');
+  var b=$('btnSize');
+  b.setAttribute('aria-pressed',fsStep>0?'true':'false');
+  if(fsStep>0)b.classList.add('on');else b.classList.remove('on');
+  b.setAttribute('aria-label','Text size: '+(fsStep===0?'device default':fsStep===1?'larger':'largest')+'. Tap to change.');
+  try{localStorage.setItem('eop_fs',String(fsStep))}catch(e){}
+  if(announce){
+    var tt=$('fsToast');
+    tt.textContent=FS_LABELS[fsStep];
+    tt.classList.add('show');
+    if(fsToastT)clearTimeout(fsToastT);
+    fsToastT=setTimeout(function(){tt.classList.remove('show')},1600);
+  }
+}
+$('btnSize').addEventListener('click',function(){sndClick();applyFS(fsStep+1,true)});
 
 $('btnWipe').addEventListener('click',function(){
   if(!confirm('Delete everything? Every round, every postcard, gone from this browser. There is no undo, and no copy anywhere — that’s the point.'))return;
-  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob');localStorage.removeItem('eop_mood');localStorage.removeItem('eop_day');localStorage.removeItem('eop_mus');localStorage.removeItem('eop_big')}catch(e){}
-  st.rc=0;st.ob=false;
   musStop();
-  document.documentElement.classList.remove('big');updSizeBtn(false);
+  applyFS(0,false);
   applyMood('ember',false);
+  st.rc=0;st.ob=false;
+  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob');localStorage.removeItem('eop_mood');localStorage.removeItem('eop_day');localStorage.removeItem('eop_mus');localStorage.removeItem('eop_big');localStorage.removeItem('eop_fs')}catch(e){}
   $('infoOv').classList.remove('open');
   closeVaultSheet();
   show('trust');
@@ -1255,7 +1296,11 @@ $('btnWipe').addEventListener('click',function(){
 // ── BOOT — returning users skip straight in; today's mood is remembered ──
 (function boot(){
   applyMood('ember',false);
-  try{if(localStorage.getItem('eop_big')==='1'){document.documentElement.classList.add('big');updSizeBtn(true)}}catch(e){}
+  try{
+    var fsSaved=parseInt(localStorage.getItem('eop_fs')||'',10);
+    if(isNaN(fsSaved)&&localStorage.getItem('eop_big')==='1'){fsSaved=1;localStorage.removeItem('eop_big')}
+    if(fsSaved>0)applyFS(fsSaved,false);
+  }catch(e){}
   var musPref=false;try{musPref=localStorage.getItem('eop_mus')==='1'}catch(e){}
   if(musPref){
     var musArm=function(){document.removeEventListener('click',musArm);if(!MUS.on)musStart()};
