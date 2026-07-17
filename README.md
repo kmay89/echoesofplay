@@ -2,22 +2,31 @@
 
 **Radically honest. Radically free. Radically private.**
 
-A playground for human reflection. Past, present, future. Six mirrors. Breathing exercises. A Memory Garden for sitting with people you love.
+A playground for human reflection. One thought, three mirrors. Breathing at your own pace. Memory postcards for sitting with people you love, kept in a vault that never leaves your device.
 
 Zero network connections. Zero cookies. Zero tracking. Zero AI. One HTML file.
 
 ## What it is
 
-- **Past** — Reflection through six mirror perspectives (Witness, Echo, Inside, Outside, Angle, Kintsugi)
-- **Present** — Box breathing, cloud meditation, grounding, metacognition
-- **Future** — Dreams, fears, what you're building toward
-- **Memory Garden** — Sit with someone you love. Capture what they share. Export it. Pass it on.
-- **With Others** — Group play, face to face
+- **Play a Round** — Bring one thing on your mind (past, present, or future). The game deals 3 of 6 mirror cards (Witness, Echo, Inside, Outside, Angle, Kintsugi). You write what each lens shows you, then see all three together.
+- **Breathe** — Gentle, box, or 4-7-8 pacing. Invitation, not instruction. Stop anytime.
+- **Memory Postcards** — Nonlinear story prompts (who/where/when/what/how/why) for capturing a memory — yours, or one a loved one shares. Seal it into a postcard.
+- **Memory Vault** — Your sealed postcards and past rounds on an isometric shelf. Pick one up, turn it over, sit with it.
+- **Group** — A fragment in the center of the table. Read it aloud, share what it brings up. Face to face.
+- **Past Rounds** — Re-read what you wrote. Let go of it gracefully when you're done.
+
+## Why it's made
+
+Because slowing down with a thought, breathing on purpose, and telling the story of a memory are old, ordinary, human practices — and every digital version of them seems to come with an account, a subscription, a data pipeline, and a promise it can't keep. This one comes with none of those. That's the whole idea.
+
+## What we think it's good for
+
+A few quiet minutes. A second angle on a stuck thought. A slower breath. A memory written down in someone's own words while they can still tell it. Nothing more is claimed — see [LEGAL.md](LEGAL.md) for exactly what we do and don't claim.
 
 ## What it isn't
 
-- Not therapy. Not counseling. Not a diagnostic tool.
-- Not AI. Responses are hand-written fragments, procedurally selected.
+- Not therapy. Not counseling. Not a diagnostic tool. Not a medical device.
+- Not AI. Every word is hand-written; selection is simple randomness. Nothing reads what you write.
 - Not connected. The network tab is empty. Verify yourself.
 
 ## Privacy

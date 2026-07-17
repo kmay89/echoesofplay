@@ -250,12 +250,66 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 
 .btn-bk{position:fixed;top:14px;left:14px;z-index:100;width:34px;height:34px;border-radius:50%;border:1px solid var(--card-edge);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:0.78rem;color:var(--text-dim);transition:all 0.4s}
 .btn-bk:hover{border-color:var(--gold-dim);color:var(--gold)}.btn-bk.h{display:none}
+
+/* INFO PANEL — always reachable */
+.btn-info{position:fixed;top:14px;right:14px;z-index:100;width:34px;height:34px;border-radius:50%;border:1px solid var(--card-edge);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-style:italic;color:var(--text-dim);transition:all 0.4s}
+.btn-info:hover,.btn-info:focus{border-color:var(--gold-dim);color:var(--gold)}
+.info-ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(8,8,7,0.9);z-index:200;visibility:hidden;opacity:0;transition:opacity 0.4s ease,visibility 0.4s}
+.info-ov.open{visibility:visible;opacity:1}
+.info-panel{max-width:480px;margin:0 auto;height:100%;overflow-y:auto;padding:26px 22px 48px;background:var(--surface);border-left:1px solid var(--card-edge);border-right:1px solid var(--card-edge)}
+.info-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.info-title{font-size:1.05rem;letter-spacing:0.1em;color:var(--gold);font-weight:400}
+.info-close{width:30px;height:30px;border-radius:50%;border:1px solid var(--card-edge);color:var(--text-dim);font-size:0.8rem;transition:all 0.3s}
+.info-close:hover{border-color:var(--gold-dim);color:var(--gold)}
+.info-sec{margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(42,40,32,0.5)}
+.info-sec:last-child{border-bottom:none}
+.info-h{font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:6px}
+.info-p{font-size:0.82rem;line-height:1.7;color:var(--text-mid);margin-bottom:6px}
+.info-p:last-child{margin-bottom:0}
+.info-p a{color:var(--gold);text-decoration:underline}
+.info-p em{color:var(--text)}
+.info-list{font-size:0.8rem;line-height:1.9;color:var(--text-mid);list-style:none}
+.info-list li::before{content:'\2013\00a0\00a0';color:var(--gold-dim)}
+.info-acts{display:flex;gap:8px;flex-wrap:wrap}
+.info-note{font-size:0.68rem;color:var(--text-faint);font-style:italic;margin-top:8px;line-height:1.5}
+
+/* MEMORY VAULT — isometric shelf of kept things */
+.vault{gap:10px}
+.vault-hdr{text-align:center}
+.vault-stage{width:100%;overflow:hidden;border-radius:var(--cr);border:1px solid var(--card-edge);background:radial-gradient(ellipse at 50% 25%,#12110c,#080807 75%)}
+.vault-stage svg{display:block;width:100%;height:auto}
+.vo{cursor:pointer;outline:none}
+.vo>g{transition:transform 0.35s cubic-bezier(0.2,0.9,0.3,1.35)}
+.vo:hover>g,.vo:focus>g{transform:translateY(-6px)}
+.vo:focus>g{filter:drop-shadow(0 0 7px rgba(201,168,76,0.45))}
+.vault-flame{transform-box:fill-box;transform-origin:center bottom;animation:vFlick 2.6s ease-in-out infinite}
+@keyframes vFlick{0%,100%{transform:scaleY(1)}30%{transform:scaleY(1.18) scaleX(0.9)}55%{transform:scaleY(0.88)}80%{transform:scaleY(1.1) scaleX(0.95)}}
+.vault-glowdot{animation:vGlow 4s ease-in-out infinite}
+@keyframes vGlow{0%,100%{opacity:0.25}50%{opacity:0.55}}
+.vault-hint{font-size:0.72rem;color:var(--text-faint);text-align:center;font-style:italic}
+.vault-sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:100%;max-width:480px;max-height:72vh;overflow-y:auto;background:var(--card);border:1.5px solid var(--gold-dim);border-bottom:none;border-radius:var(--cr) var(--cr) 0 0;padding:18px 18px 24px;z-index:150;transition:transform 0.5s cubic-bezier(0.2,0.9,0.3,1.15);box-shadow:0 -12px 40px rgba(0,0,0,0.55)}
+.vault-sheet.show{transform:translate(-50%,0)}
+.vs-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.vs-stamp{font-size:0.6rem;color:var(--gold-dim);letter-spacing:0.08em;border:1px solid var(--gold-dim);padding:2px 6px;border-radius:3px;transform:rotate(-3deg)}
+.vs-close{font-size:0.68rem;color:var(--text-faint);text-decoration:underline}
+.vs-close:hover{color:var(--gold)}
+.vs-body .pc-label{margin-top:8px}
+.vs-acts{display:flex;gap:6px;margin-top:14px;padding-top:10px;border-top:1px solid var(--card-edge);justify-content:center}
+
+/* Postcards — paper that behaves like paper */
+.postcard{transform:rotate(-0.5deg);transition:transform 0.35s ease,box-shadow 0.35s ease,border-color 0.35s ease}
+.postcard:nth-child(even){transform:rotate(0.6deg)}
+.postcard:hover{transform:rotate(0deg) translateY(-3px);border-color:var(--gold-dim);box-shadow:0 10px 26px rgba(0,0,0,0.4)}
+.pc-seal{position:absolute;bottom:10px;right:12px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dfc268,#8a7434 72%);box-shadow:0 1px 4px rgba(0,0,0,0.45),inset 0 0 4px rgba(58,48,18,0.6);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-style:italic;color:#3a3012;opacity:0.9}
+@keyframes sealFly{0%{opacity:1;transform:scale(1) rotate(0deg)}55%{opacity:0.85;transform:scale(0.88) rotate(-2deg) translateY(8px)}100%{opacity:0;transform:scale(0.45) rotate(-7deg) translateY(70px)}}
+.formula-card.sealing{animation:sealFly 0.8s ease forwards;pointer-events:none}
 </style>
 </head>
 <body>
 <canvas id="sandCanvas"></canvas>
 <div class="app" id="app">
 <button class="btn-bk h" id="btnBack" aria-label="Back">&#8592;</button>
+<button class="btn-info" id="btnInfo" aria-label="About, privacy, and crisis resources">i</button>
 
 <div class="screen trust active visible" id="screenTrust"><div class="trust-sphere"><canvas id="trustSphere" width="120" height="120"></canvas></div><h1>Echoes of Play</h1><div class="trust-sub">A quiet room for your thoughts.<br>Sand on the table. Nothing leaves.</div><div class="trust-promises" id="trustP"><span>Nothing stored on any server</span><span>No accounts, no tracking</span><span>Your words stay here only</span><span>Delete everything at any time</span></div><button class="btn-p" id="btnTrust">Enter</button><div class="safety">In crisis: <a href="tel:988">988</a> · <a href="https://988lifeline.org">988lifeline.org</a></div></div>
 
@@ -267,7 +321,7 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 
 <div class="screen ob" id="screenOnboard4"><div class="step-dots"><div class="sd done"></div><div class="sd done"></div><div class="sd done"></div><div class="sd on"></div></div><h2>The six mirrors</h2><div class="g-sm">Each is a different lens. You get 3 random ones per round.</div><div class="ob-cards" id="obCards"></div><div class="g-sm">You don't pick — they're dealt. Surprise is part of it.</div><button class="btn-p" id="btnOb4">I'm ready</button></div>
 
-<div class="screen home" id="screenHome"><div class="home-title">Echoes of Play</div><div class="home-sphere" id="homeSphere"><canvas id="homeSphereC" width="140" height="140"></canvas></div><div class="equator-hint">find the equator</div><div class="home-bl" id="homeBL">tap to breathe</div><div class="home-greeting" id="homeGreet"></div><div class="ng"><button class="nc pr" id="navPlay"><span class="ni">&#9671;</span><span class="nl">Play a Round</span><span class="nd">3 mirrors, 5 minutes</span></button><button class="nc" id="navGarden"><span class="ni">&#9993;</span><span class="nl">Memory Postcards</span><span class="nd">Story fragments, sealed and kept</span></button><button class="nc" id="navBreathe"><span class="ni">&#9711;</span><span class="nl">Breathe</span><span class="nd">Your oldest rhythm</span></button><button class="nc" id="navGroup"><span class="ni">&#9674;</span><span class="nl">Group</span><span class="nd">Share a prompt together</span></button><button class="nc w" id="navHist"><span class="ni">&#9776;</span><span class="nl">Past Rounds</span><span class="nd">What you've written</span></button></div></div>
+<div class="screen home" id="screenHome"><div class="home-title">Echoes of Play</div><div class="home-sphere" id="homeSphere"><canvas id="homeSphereC" width="140" height="140"></canvas></div><div class="equator-hint">find the equator</div><div class="home-bl" id="homeBL">tap to breathe</div><div class="home-greeting" id="homeGreet"></div><div class="ng"><button class="nc pr" id="navPlay"><span class="ni">&#9671;</span><span class="nl">Play a Round</span><span class="nd">3 mirrors, 5 minutes</span></button><button class="nc" id="navGarden"><span class="ni">&#9993;</span><span class="nl">Memory Postcards</span><span class="nd">Story fragments, sealed and kept</span></button><button class="nc" id="navBreathe"><span class="ni">&#9711;</span><span class="nl">Breathe</span><span class="nd">Your oldest rhythm</span></button><button class="nc" id="navGroup"><span class="ni">&#9674;</span><span class="nl">Group</span><span class="nd">Share a prompt together</span></button><button class="nc" id="navVault"><span class="ni">&#9707;</span><span class="nl">Memory Vault</span><span class="nd">Your shelf of kept things</span></button><button class="nc" id="navHist"><span class="ni">&#9776;</span><span class="nl">Past Rounds</span><span class="nd">What you've written</span></button></div></div>
 
 <div class="screen timeline" id="screenTimeline"><div class="seed-step">Step 1 of 3</div><div style="font-size:1rem;color:var(--text);font-weight:400;text-align:center">When is this from?</div><div class="g-sm">This shapes how the mirrors ask their questions.</div><div class="tl-grid"><button class="tl-btn" data-tl="past"><span class="tl-icon">&#9668;</span><span class="tl-label">Past</span><span class="tl-sub">A memory, something that happened</span></button><button class="tl-btn" data-tl="present"><span class="tl-icon">&#9679;</span><span class="tl-label">Now</span><span class="tl-sub">A feeling, a conflict</span></button><button class="tl-btn" data-tl="future"><span class="tl-icon">&#9658;</span><span class="tl-label">Future</span><span class="tl-sub">A decision, something coming</span></button></div></div>
 
@@ -323,6 +377,69 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 <div class="screen group" id="screenGroup"><div class="group-t">Group Round</div><div class="group-ex">A fragment sits in the center. Read it aloud. Share what it brings up.</div><div class="group-rem"><div class="group-rt" id="grpTxt"></div><div class="group-rp">Sit with it. Then share.</div></div><button class="btn-s" id="btnGrpN">Another</button><button class="btn-s" id="btnGrpH">Back</button></div>
 
 <div class="screen hist" id="screenHistory"><div class="hist-t">Past Rounds</div><div class="hist-st">Tap to re-read. Long press to let go.</div><div class="hist-list" id="histList"></div><button class="btn-s" id="btnClrH" style="color:var(--inside);border-color:var(--inside);margin-top:6px;display:none">Release all</button></div>
+
+<!-- MEMORY VAULT — isometric shelf -->
+<div class="screen vault" id="screenVault">
+  <div class="vault-hdr"><div class="garden-t">Memory Vault</div><div class="garden-st" id="vaultSub">Everything you keep, kept here. On this device. Nowhere else.</div></div>
+  <div class="vault-stage" id="vaultStage" aria-label="Isometric shelf of your sealed postcards and past rounds"></div>
+  <div class="vault-hint" id="vaultHint">tap a postcard or a spine to take it off the shelf</div>
+  <div style="display:flex;gap:8px;justify-content:center;padding:4px 0">
+    <button class="btn-s" id="btnVaultGarden">&#9993; Write a postcard</button>
+    <button class="btn-s" id="btnVaultPlay">&#9671; Play a round</button>
+  </div>
+</div>
+</div>
+
+<!-- VAULT READING SHEET -->
+<div class="vault-sheet" id="vaultSheet" role="dialog" aria-label="Memory">
+  <div class="vs-top"><span class="vs-stamp" id="vsStamp"></span><button class="vs-close" id="vsClose">back to the shelf</button></div>
+  <div class="vs-body" id="vsBody"></div>
+  <div class="vs-acts" id="vsActs"></div>
+</div>
+
+<!-- INFO PANEL -->
+<div class="info-ov" id="infoOv">
+  <div class="info-panel">
+    <div class="info-top"><span class="info-title">Echoes of Play</span><button class="info-close" id="infoClose" aria-label="Close">&#10005;</button></div>
+
+    <div class="info-sec"><div class="info-h">What this is</div>
+      <div class="info-p">A quiet, offline playground for reflection. A card game for your thoughts, a breathing screen, postcards for memories, and a vault to keep them in. One HTML file. Free, open source, built by ERRERlabs.</div></div>
+
+    <div class="info-sec"><div class="info-h">Why it's made</div>
+      <div class="info-p">Slowing down with a thought, breathing on purpose, and telling the story of a memory are old, ordinary, human practices. Most digital versions of them come with an account, a subscription, and a data pipeline. This one comes with none of those. That's the whole idea.</div></div>
+
+    <div class="info-sec"><div class="info-h">What we think it's good for</div>
+      <div class="info-p">A few quiet minutes. A second angle on a stuck thought. A slower breath. A memory written down in someone's own words while they can still tell it.</div>
+      <div class="info-p"><em>And what it is not:</em> not therapy, not counseling, not a medical device, not a diagnostic tool, and not AI. Every word here was written by hand; nothing reads or analyzes what you write. We claim no health benefits. If reflective writing stirs up more than you want to carry alone, stop, and consider talking to someone you trust or a professional.</div></div>
+
+    <div class="info-sec"><div class="info-h">If you are in crisis</div>
+      <ul class="info-list">
+        <li><em>988 Suicide &amp; Crisis Lifeline</em> — <a href="tel:988">call or text 988</a> (US)</li>
+        <li><em>Crisis Text Line</em> — text HOME to 741741</li>
+        <li><a href="https://988lifeline.org">988lifeline.org</a></li>
+      </ul>
+      <div class="info-note">This app cannot detect crisis and will not pretend it can. These resources are here, on every screen, instead.</div></div>
+
+    <div class="info-sec"><div class="info-h">Your privacy</div>
+      <div class="info-p">Nothing you write ever leaves this device. No server, no accounts, no cookies, no analytics, no AI, no network connections. Your reflections live in this browser's local storage, controlled entirely by you.</div>
+      <div class="info-p">Verify it: open your browser's developer tools and watch the network tab. It stays empty.</div>
+      <div class="info-note">One honest caveat: local storage belongs to your browser. Clearing browser data will erase your entries. If something matters, export it below.</div>
+      <div class="info-p" style="margin-top:8px">Full policies: <a href="PRIVACY.md">Privacy</a> &middot; <a href="LEGAL.md">Terms</a> &middot; <a href="COOKIES.md">Cookies</a></div></div>
+
+    <div class="info-sec"><div class="info-h">A note on breathing</div>
+      <div class="info-p">The breathing screen is an invitation, not an instruction — you set the pace and you can stop anytime. Slow or held breathing can make some people lightheaded. If that happens, just breathe normally. Don't use paced breathing while driving or anywhere you need your balance.</div></div>
+
+    <div class="info-sec"><div class="info-h">Your data</div>
+      <div class="info-acts">
+        <button class="btn-s" id="btnExport">&#8681; Export everything (JSON)</button>
+        <button class="btn-s" id="btnWipe" style="color:var(--inside);border-color:var(--inside)">Delete everything</button>
+      </div>
+      <div class="info-note">Export creates a file on your device — nothing is uploaded, because there is nowhere to upload to. Delete removes every entry from this browser, permanently. We can't recover it, because we never had it.</div></div>
+
+    <div class="info-sec"><div class="info-h">Copyright &amp; license</div>
+      <div class="info-p">&copy; ERRERlabs / Karl Meves. Code and text licensed Apache 2.0 — fork it, make it yours. Source: github.com/kmay89/echoesofplay</div>
+      <div class="info-p">Everything <em>you</em> write is yours. We claim no rights to it — we never even see it.</div></div>
+  </div>
 </div>
 
 <script>
@@ -522,6 +639,7 @@ function show(name,delay){
     if(t){t.classList.add('active');setTimeout(function(){t.classList.add('visible')},30)}
   },d);
   st.screen=name;
+  closeVaultSheet();
   var b=$('btnBack');var hide=(name==='trust'||name==='home'||name.indexOf('onboard')===0);
   if(hide)b.classList.add('h');else b.classList.remove('h');
 }
@@ -675,7 +793,7 @@ $('fcInput').addEventListener('input',function(){
   var filled=0;for(var k in st.fc.answers){if(st.fc.answers[k])filled++}
   $('btnSealCard').style.display=filled>=2?'':'none';
   var card=$('formulaCard');
-  card.classList.toggle('filled',!!st.fc.answers[idx]);
+  if(st.fc.answers[idx])card.classList.add('filled');else card.classList.remove('filled');
 });
 
 $('btnSealCard').addEventListener('click',function(){
@@ -689,10 +807,15 @@ $('btnSealCard').addEventListener('click',function(){
     pcs.unshift(pc);if(pcs.length>30)pcs=pcs.slice(0,30);
     localStorage.setItem('eop_pc',JSON.stringify(pcs));
   }catch(e){}
-  // Reset
-  st.fc.step=0;st.fc.answers={};st.fc.shuffled=shuf([0,1,2,3,4,5]);
-  renderFormula();
-  renderPostcards();
+  // The card folds itself away into the vault, then a fresh one appears
+  var card=$('formulaCard');
+  card.classList.add('sealing');
+  setTimeout(function(){
+    card.classList.remove('sealing');
+    st.fc.step=0;st.fc.answers={};st.fc.shuffled=shuf([0,1,2,3,4,5]);
+    renderFormula();
+    renderPostcards();
+  },850);
 });
 
 $('btnNewCard').addEventListener('click',function(){
@@ -715,12 +838,13 @@ function renderPostcards(){
         var label=FORMULA[parseInt(k)]?FORMULA[parseInt(k)].label:'';
         content+='<div class="pc-label">'+label+'</div><div class="pc-content">'+esc(pc.fragments[k])+'</div>';
       }
-      d.innerHTML='<div class="pc-stamp">&#9993; '+stamp+'</div>'+content+
+      d.innerHTML='<div class="pc-stamp">&#9993; '+stamp+'</div>'+content+'<div class="pc-seal" aria-hidden="true">e</div>'+
         '<div style="display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--card-edge);justify-content:flex-end">'+
         '<button class="del-btn dissolve" style="font-size:0.6rem">dissolve</button>'+
         '<button class="del-btn release" style="font-size:0.6rem">release</button>'+
         '<button class="del-btn return" style="font-size:0.6rem">return</button></div>';
-      d.querySelectorAll('.del-btn').forEach(function(btn){
+      var dbtns=d.querySelectorAll('.del-btn');
+      for(var db=0;db<dbtns.length;db++){(function(btn){
         btn.addEventListener('click',function(){
           sndDissolve();
           var act=btn.classList.contains('dissolve')?'dissolveOut':btn.classList.contains('release')?'releaseOut':'returnOut';
@@ -730,7 +854,7 @@ function renderPostcards(){
             renderPostcards();
           },1100);
         });
-      });
+      })(dbtns[db])}
       area.appendChild(d);
     })(pcs[i],i);
   }
@@ -785,6 +909,191 @@ function stopBr(){
 function startGroup(){show('group');setTimeout(function(){$('grpTxt').textContent=pick(FRAGS)},550)}
 $('btnGrpN').addEventListener('click',function(){sndClick();$('grpTxt').textContent=pick(FRAGS)});
 $('btnGrpH').addEventListener('click',function(){sndClick();show('home');setTimeout(updHome,600)});
+
+// ── ISOMETRIC ENGINE (2:1 dimetric, string-built SVG — shared ERRERlabs technique) ──
+var ISO_OX=250,ISO_OY=125;
+function isoP(x,y,z){return[ISO_OX+x-y,ISO_OY+(x+y)/2-z]}
+function isoPj(x,y,z){var p=isoP(x,y,z);return p[0].toFixed(1)+','+p[1].toFixed(1)}
+function isoShade(hex,f){
+  var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16);
+  function ch(v){var n=f>0?v+(255-v)*f:v*(1+f);n=Math.round(n);if(n<0)n=0;if(n>255)n=255;var s2=n.toString(16);return s2.length<2?'0'+s2:s2}
+  return'#'+ch(r)+ch(g)+ch(b);
+}
+function isoPoly(pts,fill){var s='<polygon points="';for(var i=0;i<pts.length;i++)s+=isoPj(pts[i][0],pts[i][1],pts[i][2])+' ';return s+'" fill="'+fill+'"/>'}
+function isoBox(x,y,z,w,d,h,c){
+  return isoPoly([[x,y,z+h],[x+w,y,z+h],[x+w,y+d,z+h],[x,y+d,z+h]],isoShade(c,0.20))
+       + isoPoly([[x+w,y,z],[x+w,y+d,z],[x+w,y+d,z+h],[x+w,y,z+h]],isoShade(c,-0.08))
+       + isoPoly([[x,y+d,z],[x+w,y+d,z],[x+w,y+d,z+h],[x,y+d,z+h]],isoShade(c,-0.24));
+}
+function isoShadowAt(x,y,z,rx,ry){var p=isoP(x,y,z);return'<ellipse cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" rx="'+rx+'" ry="'+ry+'" fill="rgba(0,0,0,0.4)" filter="url(#vblur)"/>'}
+function isoFaceY(x,y,z){var p=isoP(x,y,z);return'matrix(1,0.5,0,1,'+p[0].toFixed(1)+','+p[1].toFixed(1)+')'}
+function isoFaceX(y,z){var p=isoP(0,y,z);return'matrix(-1,0.5,0,1,'+p[0].toFixed(1)+','+p[1].toFixed(1)+')'}
+
+// ── MEMORY VAULT ──
+var PC_TONES=['#6b5d3e','#5f5340','#70603c','#645843','#6d5c46'];
+var RD_TONES=['#55684f','#5f4f68','#684f4f','#4f6858','#68624f','#4f5c68'];
+function loadPCs(){try{return JSON.parse(localStorage.getItem('eop_pc')||'[]')}catch(e){return[]}}
+
+function renderVault(){
+  var pcs=loadPCs(),rds=loadR();
+  var showPC=pcs.slice(0,10),showRD=rds.slice(0,16);
+  var s='<svg viewBox="55 -5 460 360" xmlns="http://www.w3.org/2000/svg" role="img">';
+  s+='<defs><filter id="vblur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3"/></filter>';
+  s+='<radialGradient id="vlant"><stop offset="0%" stop-color="rgba(232,197,106,0.35)"/><stop offset="100%" stop-color="rgba(232,197,106,0)"/></radialGradient></defs>';
+  // Walls
+  s+=isoPoly([[0,0,0],[0,170,0],[0,170,110],[0,0,110]],'#0d0c09');
+  s+=isoPoly([[0,0,0],[240,0,0],[240,0,110],[0,0,110]],'#121009');
+  // Floor
+  s+=isoBox(0,0,-6,240,170,6,'#171410');
+  // Gold edge where walls meet floor
+  s+='<polyline points="'+isoPj(0,170,0)+' '+isoPj(0,0,0)+' '+isoPj(240,0,0)+'" fill="none" stroke="rgba(201,168,76,0.14)" stroke-width="1"/>';
+  // Vault door emblem on the left wall
+  var vd='<g transform="'+isoFaceX(118,62)+'">';
+  vd+='<circle cx="0" cy="0" r="26" fill="none" stroke="rgba(201,168,76,0.22)" stroke-width="2"/>';
+  vd+='<circle cx="0" cy="0" r="17" fill="none" stroke="rgba(201,168,76,0.16)" stroke-width="1.2"/>';
+  for(var sp=0;sp<3;sp++){var an=sp*2.094+0.5;vd+='<line x1="'+(Math.cos(an)*6).toFixed(1)+'" y1="'+(Math.sin(an)*6).toFixed(1)+'" x2="'+(Math.cos(an)*15).toFixed(1)+'" y2="'+(Math.sin(an)*15).toFixed(1)+'" stroke="rgba(201,168,76,0.2)" stroke-width="2"/>'}
+  vd+='<circle cx="0" cy="0" r="4" fill="rgba(201,168,76,0.3)" class="vault-glowdot"/></g>';
+  s+=vd;
+  // Shelf unit against the right wall
+  var SHELF='#241e12',SLAB='#2c2415';
+  s+=isoShadowAt(120,26,0,110,16);
+  s+=isoBox(20,8,0,6,26,82,SHELF);
+  s+=isoBox(214,8,0,6,26,82,SHELF);
+  s+=isoBox(26,8,0,188,26,4,SLAB);
+  s+=isoBox(26,8,34,188,26,4,SLAB);
+  s+=isoBox(26,8,68,188,26,4,SLAB);
+  s+=isoBox(20,8,82,200,26,4,SLAB);
+  // Postcards standing on the two upper shelves (newest first, top shelf first)
+  for(var i=0;i<showPC.length;i++){
+    var zb=i<5?72:38,px=32+(i%5)*37,hh=20+((i*13)%4),tone=PC_TONES[i%PC_TONES.length];
+    s+='<g class="vo" data-kind="pc" data-i="'+i+'" role="button" tabindex="0" aria-label="Sealed postcard"><g>';
+    s+=isoShadowAt(px+14,22,zb,15,5);
+    s+=isoBox(px,12,zb,28,4,hh,tone);
+    s+='<g transform="'+isoFaceY(px,16,zb+hh)+'">';
+    s+='<line x1="3" y1="6" x2="14" y2="6" stroke="rgba(20,18,12,0.45)" stroke-width="1"/>';
+    s+='<line x1="3" y1="9.5" x2="12" y2="9.5" stroke="rgba(20,18,12,0.35)" stroke-width="1"/>';
+    s+='<circle cx="22" cy="'+(hh-7)+'" r="3.4" fill="#c9a84c" opacity="0.9"/><circle cx="22" cy="'+(hh-7)+'" r="1.4" fill="#8a7434"/>';
+    s+='</g></g></g>';
+  }
+  // Past rounds as book spines on the bottom shelf
+  for(var j=0;j<showRD.length;j++){
+    var bx=32+j*11;if(bx+8>212)break;
+    var bh=17+((j*11)%6),bc=RD_TONES[j%RD_TONES.length];
+    s+='<g class="vo" data-kind="rd" data-i="'+j+'" role="button" tabindex="0" aria-label="Past round"><g>';
+    s+=isoBox(bx,10,4,7,20,bh,bc);
+    s+='<g transform="'+isoFaceY(bx,30,4+bh)+'"><rect x="1.5" y="'+(bh-8)+'" width="4" height="2.6" fill="rgba(201,168,76,0.35)"/></g>';
+    s+='</g></g>';
+  }
+  // Candle lantern on the floor
+  s+='<circle cx="'+isoP(41,141,10)[0]+'" cy="'+isoP(41,141,10)[1]+'" r="22" fill="url(#vlant)"/>';
+  s+=isoShadowAt(43,145,0,10,4);
+  s+=isoBox(36,136,0,10,10,3,'#3a2f18');
+  s+=isoBox(38,138,3,6,6,8,'#7a6a4a');
+  var fp=isoP(41,141,13);
+  s+='<ellipse cx="'+fp[0].toFixed(1)+'" cy="'+fp[1].toFixed(1)+'" rx="2.4" ry="5" fill="#e8c56a" class="vault-flame"/>';
+  s+='</svg>';
+  $('vaultStage').innerHTML=s;
+  // Copy for the state
+  var sub=$('vaultSub'),hint=$('vaultHint');
+  if(!pcs.length&&!rds.length){
+    sub.textContent='Your shelf is waiting. Seal a postcard or finish a round and it will appear here.';
+    hint.textContent='everything kept here stays on this device';
+  }else{
+    sub.textContent=pcs.length+' postcard'+(pcs.length===1?'':'s')+', '+rds.length+' round'+(rds.length===1?'':'s')+'. On this device. Nowhere else.';
+    hint.textContent=(pcs.length>10||rds.length>16)?'showing the most recent — tap a postcard or a spine to take it down':'tap a postcard or a spine to take it off the shelf';
+  }
+}
+
+function vaultOpen(kind,i){
+  var body=$('vsBody'),acts=$('vsActs'),stamp=$('vsStamp'),html='';
+  if(kind==='pc'){
+    var pcs=loadPCs(),pc=pcs[i];if(!pc)return;
+    var dt=new Date(pc.ts);
+    stamp.innerHTML='&#9993; '+dt.toLocaleDateString()+' '+dt.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    for(var k in pc.fragments){
+      var label=FORMULA[parseInt(k,10)]?FORMULA[parseInt(k,10)].label:'';
+      html+='<div class="pc-label">'+label+'</div><div class="pc-content" style="padding-right:0">'+esc(pc.fragments[k])+'</div>';
+    }
+    body.innerHTML=html;
+    acts.innerHTML='<button class="del-btn dissolve">dissolve</button><button class="del-btn release">release</button><button class="del-btn return">return</button>';
+    wireVaultDel(acts,'eop_pc',i);
+  }else{
+    var rds=loadR(),rd=rds[i];if(!rd)return;
+    var dt2=new Date(rd.ts);
+    var tll=rd.tl==='past'?'◀':rd.tl==='future'?'▶':'●';
+    stamp.innerHTML=tll+' '+dt2.toLocaleDateString()+' '+dt2.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    html+='<div class="summ-seed" style="text-align:left;margin-bottom:8px">“'+esc(rd.seed)+'”</div>';
+    for(var e2=0;e2<rd.entries.length;e2++){
+      var en=rd.entries[e2],m=mBy(en.mirror);if(!m)continue;
+      html+='<div class="se" style="opacity:1;border-radius:8px;margin-bottom:6px;border:1px solid var(--card-edge)"><div class="se-m" style="color:'+m.color+'"><span class="dot" style="background:'+m.color+'"></span> '+m.name+' — '+m.q+'</div><div class="se-r">'+esc(en.response)+'</div></div>';
+    }
+    body.innerHTML=html;
+    acts.innerHTML='<button class="del-btn dissolve">dissolve</button><button class="del-btn release">release</button><button class="del-btn return">return</button>';
+    wireVaultDel(acts,'eop_r',i);
+  }
+  $('vaultSheet').classList.add('show');
+  sndFlip();
+}
+function wireVaultDel(acts,key,idx){
+  var btns=acts.querySelectorAll('.del-btn');
+  for(var b=0;b<btns.length;b++){(function(btn){
+    btn.addEventListener('click',function(){
+      sndDissolve();
+      closeVaultSheet();
+      setTimeout(function(){
+        try{var arr=JSON.parse(localStorage.getItem(key)||'[]');arr.splice(idx,1);localStorage.setItem(key,JSON.stringify(arr))}catch(e){}
+        renderVault();
+      },500);
+    });
+  })(btns[b])}
+}
+function closeVaultSheet(){$('vaultSheet').classList.remove('show')}
+$('vsClose').addEventListener('click',function(){sndClick();closeVaultSheet()});
+
+function findVO(el,stop){while(el&&el!==stop){if(el.getAttribute&&el.getAttribute('data-kind'))return el;el=el.parentNode}return null}
+$('vaultStage').addEventListener('click',function(e){
+  var g=findVO(e.target,$('vaultStage'));
+  if(g)vaultOpen(g.getAttribute('data-kind'),parseInt(g.getAttribute('data-i'),10));
+});
+$('vaultStage').addEventListener('keydown',function(e){
+  if(e.keyCode!==13&&e.keyCode!==32)return;
+  var g=findVO(e.target,$('vaultStage'));
+  if(g){e.preventDefault();vaultOpen(g.getAttribute('data-kind'),parseInt(g.getAttribute('data-i'),10))}
+});
+
+function showVault(){show('vault');setTimeout(renderVault,550)}
+$('navVault').addEventListener('click',function(){sndClick();showVault()});
+$('btnVaultGarden').addEventListener('click',function(){sndClick();closeVaultSheet();startGarden()});
+$('btnVaultPlay').addEventListener('click',function(){sndClick();closeVaultSheet();show('timeline')});
+
+// ── INFO PANEL ──
+$('btnInfo').addEventListener('click',function(){sndClick();$('infoOv').classList.add('open')});
+$('infoClose').addEventListener('click',function(){sndClick();$('infoOv').classList.remove('open')});
+$('infoOv').addEventListener('click',function(e){if(e.target===$('infoOv'))$('infoOv').classList.remove('open')});
+
+$('btnExport').addEventListener('click',function(){
+  sndClick();
+  var data={app:'Echoes of Play',exported:new Date().toISOString(),note:'This file was created locally on your device. It was never transmitted anywhere.',roundsPlayed:st.rc,rounds:loadR(),postcards:loadPCs()};
+  var json=JSON.stringify(data,null,2);
+  try{
+    var blob=new Blob([json],{type:'application/json'});
+    var U=window.URL||window.webkitURL;
+    var url=U.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download='echoes-of-play-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(function(){U.revokeObjectURL(url)},2000);
+  }catch(e){alert('Your browser could not create the export file. You can also copy your data from browser dev tools: localStorage keys starting with eop_.')}
+});
+
+$('btnWipe').addEventListener('click',function(){
+  if(!confirm('Delete everything? Every round, every postcard, gone from this browser. There is no undo, and no copy anywhere — that’s the point.'))return;
+  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob')}catch(e){}
+  st.rc=0;st.ob=false;
+  $('infoOv').classList.remove('open');
+  closeVaultSheet();
+  show('trust');
+});
 
 })();
 </script>
