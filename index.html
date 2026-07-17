@@ -349,7 +349,7 @@ html.fs2{font-size:130%}
 .orb-ball::after{content:'';position:absolute;top:8px;left:13px;width:14px;height:8px;border-radius:50%;background:rgba(255,255,255,0.10);transform:rotate(-25deg)}
 .orb-ball:hover,.orb-ball:focus{transform:translateY(-2px);border-color:var(--gold-dim)}
 .orb-ball.shake{animation:orbShake 0.45s ease}
-.orb-ball.rest{opacity:0.4;pointer-events:none;cursor:default;transform:none}
+.orb-ball.rest,.orb-ball:disabled{opacity:0.4;cursor:default;transform:none}
 @keyframes orbShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}50%{transform:rotate(7deg)}75%{transform:rotate(-4deg)}}
 .orb-win{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle,var(--gold-glow),rgba(0,0,0,0.65));display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:var(--gold)}
 .orb-side{flex:1;min-width:0;text-align:left}
@@ -937,7 +937,7 @@ for(var i=0;i<tlBtns.length;i++){(function(btn){btn.addEventListener('click',fun
 
 // ── SEED ──
 var seedIn=$('seedIn'),seedCt=$('seedCt'),btnDeal=$('btnDeal');
-function showSeed(){show('seed');setTimeout(function(){$('seedCtx').textContent=TL_CTX[st.tl];$('orbHint').textContent='Blank page? Tap the orb — it holds other people’s beginnings.';var sl=$('orbSlip');sl.textContent='';sl.classList.remove('reveal');$('orbUse').style.display='none';orbCur='';orbDraws=0;orbBusy=false;$('orbDraw').classList.remove('rest');seedIn.value='';seedCt.textContent='0';btnDeal.classList.add('off')},260)}
+function showSeed(){show('seed');setTimeout(function(){$('seedCtx').textContent=TL_CTX[st.tl];$('orbHint').textContent='Blank page? Tap the orb — it holds other people’s beginnings.';var sl=$('orbSlip');sl.textContent='';sl.classList.remove('reveal');$('orbUse').style.display='none';orbReset();seedIn.value='';seedCt.textContent='0';btnDeal.classList.add('off')},260)}
 
 // ── PROMPT ORB — a shuffled deck per timeframe, no repeats until it runs dry ──
 var exDeck={past:[],present:[],future:[]},orbCur='';
@@ -953,7 +953,7 @@ function useOrb(){if(!orbCur)return;sndClick();seedIn.value=orbCur;seedCt.textCo
 // Three offerings per sitting, with a beat between them. Endless
 // shuffling is avoidance wearing a costume — after three, the orb
 // rests and hands the pen back.
-var orbDraws=0,orbBusy=false;
+var orbDraws=0,orbBusy=false,orbT1=null,orbT2=null;
 $('orbDraw').addEventListener('click',function(){
   var b=$('orbDraw');
   if(orbBusy||b.classList.contains('rest'))return;
@@ -961,20 +961,32 @@ $('orbDraw').addEventListener('click',function(){
   initAudio();sndFlip();
   b.classList.remove('shake');b.offsetWidth;b.classList.add('shake');
   var sl=$('orbSlip');sl.classList.remove('reveal');
-  setTimeout(function(){
+  orbT1=setTimeout(function(){
+    orbT1=null;
     orbCur=drawEx();
     sl.textContent='“'+orbCur+'”';
     sl.offsetWidth;sl.classList.add('reveal');
     $('orbUse').style.display='block';
     if(orbDraws>=3){
       b.classList.add('rest');
+      b.disabled=true;
+      b.setAttribute('aria-label','The orb is resting — three draws per sitting');
       $('orbHint').textContent='The orb rests now. Three is enough for one sitting — or bring your own words.';
     }else{
       $('orbHint').textContent='';
     }
   },320);
-  setTimeout(function(){orbBusy=false},1600);
+  orbT2=setTimeout(function(){orbT2=null;orbBusy=false},1600);
 });
+function orbReset(){
+  if(orbT1){clearTimeout(orbT1);orbT1=null}
+  if(orbT2){clearTimeout(orbT2);orbT2=null}
+  orbDraws=0;orbBusy=false;orbCur='';
+  var b=$('orbDraw');
+  b.classList.remove('rest');b.classList.remove('shake');
+  b.disabled=false;
+  b.setAttribute('aria-label','Draw an example thought from the orb');
+}
 $('orbSlip').addEventListener('click',useOrb);
 $('orbSlip').addEventListener('keydown',function(e){if(e.keyCode===13||e.keyCode===32){e.preventDefault();useOrb()}});
 seedIn.addEventListener('input',function(){seedCt.textContent=seedIn.value.length;if(seedIn.value.trim().length>=3)btnDeal.classList.remove('off');else btnDeal.classList.add('off')});
