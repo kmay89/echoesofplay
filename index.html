@@ -443,7 +443,7 @@ html.fs2{font-size:130%}
     <button class="bst" data-bs="calm">4-7-8</button>
   </div>
   <div class="breathe-styles"><button class="bst" data-pr="ground">Ground &#183; 5&#8209;4&#8209;3&#8209;2&#8209;1</button><button class="bst" data-pr="scan">Body scan</button></div>
-  <div class="breathe-hint" id="breatheHint">Follow the bloom. Or let it follow you. There's no wrong pace.</div>
+  <div class="breathe-hint" id="breatheHint">Follow the current. Or let it follow you. There's no wrong pace.</div>
   <div class="breathe-orb-wrap"><canvas id="bCanvas" width="300" height="300"></canvas><div class="breathe-orb" id="bOrb"></div></div>
   <div class="breathe-label" id="bLabel" aria-live="polite">ready when you are</div>
   <div class="pr-text" id="prText" aria-live="polite"></div>
@@ -990,7 +990,7 @@ function renderPostcards(){
 
 // ── ORGANIC BREATHING ──
 var breathStyles={
-  gentle:{label:'Gentle',hint:'Let the spiral breathe with you. No counting needed.',phases:[{t:'breathe in',d:5,e:true},{t:'let go',d:5,e:false}]},
+  gentle:{label:'Gentle',hint:'Let the current carry the pace. No counting needed.',phases:[{t:'breathe in',d:5,e:true},{t:'let go',d:5,e:false}]},
   box:{label:'Box',hint:'A steady rhythm. Four counts each way \u2014 or close enough.',phases:[{t:'in',d:4,e:true},{t:'hold',d:4,e:true},{t:'out',d:4,e:false},{t:'rest',d:4,e:false}]},
   calm:{label:'4-7-8',hint:'Slow exhale calms the nervous system. Let the long out-breath do the work.',phases:[{t:'in',d:4,e:true},{t:'hold',d:7,e:true},{t:'out',d:8,e:false}]}
 };
@@ -1040,6 +1040,13 @@ function stopBr(){
 var bcv=$('bCanvas'),bcx=bcv?bcv.getContext('2d'):null;
 var bAnim={v:0.22,from:0.22,to:0.22,t0:0,dur:3000};
 var BRC=[138,170,154];
+// Offscreen trail canvas + flow motes for the breath currents
+var trailCv=document.createElement('canvas');trailCv.width=300;trailCv.height=300;
+var trailCx=trailCv.getContext('2d');
+var FLOW=[],lastFlowT=0;
+for(var fw=0;fw<150;fw++){
+  FLOW.push({fr:0.15+Math.random()*0.87,an:Math.random()*Math.PI*2,dr:(Math.random()-0.5)*0.006,lit:(fw%9===0),lx:0,ly:0,has:false});
+}
 function setBreath(expand,durSec){bAnim.from=bAnim.v;bAnim.to=expand?1:0.22;bAnim.t0=Date.now();bAnim.dur=Math.max(durSec||3,0.5)*1000}
 function easeIO(t){return t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
 function mixC(a,b,k){return[Math.round(a[0]+(b[0]-a[0])*k),Math.round(a[1]+(b[1]-a[1])*k),Math.round(a[2]+(b[2]-a[2])*k)]}
@@ -1061,31 +1068,46 @@ function drawBloom(){
   // outward on the inhale and winds gently inward on the exhale, over a
   // very slow constant rotation. Slow motion + a stable bright center =
   // the spiral pull without the vertigo.
-  var GA=2.399963229728653; // golden angle in radians
-  var rot=tm*0.03;          // ~1 revolution every 3.5 minutes
-  var wind=(1-v)*0.85;      // exhale winds the spiral tighter, inhale unwinds
-  // soft glow FIRST, behind the seed field
+  // soft glow FIRST, behind the flow field
   var g1=c.createRadialGradient(cx2,cy2,0,cx2,cy2,R*0.7);
   g1.addColorStop(0,'rgba('+col[0]+','+col[1]+','+col[2]+',0.16)');
   g1.addColorStop(1,'rgba('+col[0]+','+col[1]+','+col[2]+',0)');
   c.beginPath();c.arc(cx2,cy2,R*0.7,0,Math.PI*2);c.fillStyle=g1;c.fill();
-  var n=300;
-  for(var i=0;i<n;i++){
-    var fr=(i+0.5)/n;
-    var rr=Math.sqrt(fr);              // even area distribution
-    var rad=rr*R*1.05;
-    var an=i*GA+rot+wind*rr*rr;        // wind grows toward the rim
-    var sx3=cx2+Math.cos(an)*rad;
-    var sy3=cy2+Math.sin(an)*rad*0.985;
-    var tw=0.5+0.5*Math.sin(tm*0.9+i*0.37);          // slow shimmer
-    var sz=(0.7+rr*2.5)*(0.7+0.4*v);                 // seeds grow outward
-    var al=(0.10+0.34*(1-rr*0.4))*(0.30+0.70*v)*(0.68+0.32*tw);
-    // every 13th seed catches the light — traces one parastichy arm
-    var cc=col;
-    if(i%13===0){cc=lit;al=al*1.7;if(al>0.85)al=0.85}
-    c.beginPath();c.arc(sx3,sy3,sz,0,Math.PI*2);
-    c.fillStyle='rgba('+cc[0]+','+cc[1]+','+cc[2]+','+al.toFixed(3)+')';c.fill();
+  // Breath currents — a vector field combed into geodesic orbits.
+  // Each mote rides the field: differential rotation (inner streams orbit
+  // faster) shears the strokes into nested flow lines, and because every
+  // mote's radius is a fraction of the breathing R, the whole current
+  // streams outward on the inhale and draws back in on the exhale.
+  // Persistent trails live on an offscreen canvas faded a little each
+  // frame, so strokes comb into comet-lines instead of dots.
+  trailCx.globalCompositeOperation='destination-out';
+  trailCx.fillStyle='rgba(0,0,0,0.05)';
+  trailCx.fillRect(0,0,300,300);
+  trailCx.globalCompositeOperation='source-over';
+  trailCx.lineCap='round';
+  var dt=lastFlowT?(now-lastFlowT)/1000:0.016;if(dt>0.05)dt=0.05;lastFlowT=now;
+  for(var i=0;i<FLOW.length;i++){
+    var p2=FLOW[i];
+    p2.an+=(0.05+0.11*(1-p2.fr))*dt;   // inner streams orbit faster — this combs the field
+    p2.fr+=p2.dr*dt*60;                // slow personal drift across bands
+    if(p2.fr<0.13){p2.fr=0.13;p2.dr=Math.abs(p2.dr)}
+    if(p2.fr>1.02){p2.fr=1.02;p2.dr=-Math.abs(p2.dr)}
+    var rad=p2.fr*R*1.04;
+    var px3=cx2+Math.cos(p2.an)*rad;
+    var py3=cy2+Math.sin(p2.an)*rad*0.985;
+    if(p2.has){
+      var ddx=px3-p2.lx,ddy=py3-p2.ly;
+      if(ddx*ddx+ddy*ddy<225){         // skip strokes across re-entry jumps
+        var al2=(p2.lit?0.7:0.32)*(0.45+0.55*v);
+        var cc2=p2.lit?lit:col;
+        trailCx.strokeStyle='rgba('+cc2[0]+','+cc2[1]+','+cc2[2]+','+al2.toFixed(3)+')';
+        trailCx.lineWidth=p2.lit?1.7:1.2;
+        trailCx.beginPath();trailCx.moveTo(p2.lx,p2.ly);trailCx.lineTo(px3,py3);trailCx.stroke();
+      }
+    }
+    p2.lx=px3;p2.ly=py3;p2.has=true;
   }
+  c.drawImage(trailCv,0,0);
   // bright fixation center — a stable anchor for the eyes
   var g2=c.createRadialGradient(cx2,cy2,0,cx2,cy2,R*0.14);
   g2.addColorStop(0,'rgba(255,252,240,'+(0.22+0.2*v).toFixed(3)+')');
