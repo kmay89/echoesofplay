@@ -16,6 +16,8 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 
 /* Sand canvas — full page, interactive memory */
 #sandCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.6}
+/* Kolam lattice — a threshold pattern, drawn once, felt more than seen */
+#kolamBg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
 
 .app{max-width:480px;margin:0 auto;padding:0 20px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative;z-index:1}
 
@@ -370,6 +372,7 @@ html.fs2{font-size:130%}
 </style>
 </head>
 <body>
+<canvas id="kolamBg" aria-hidden="true"></canvas>
 <canvas id="sandCanvas"></canvas>
 <div class="app" id="app">
 <button class="btn-bk h" id="btnBack" aria-label="Back">&#8592;</button>
@@ -609,6 +612,57 @@ function drawSand(){
   requestAnimationFrame(drawSand);
 }
 drawSand();
+
+// ── KOLAM LATTICE — a threshold pattern in the manner of pulli kolam
+// and jali screens: overlapping circles weave four-petal lenses around a
+// dot grid, so every line meets through its neighbors. Drawn once,
+// radiating from the center, then it rests. Retinted with the mood. ──
+var kolCv=document.getElementById('kolamBg'),kolCx=kolCv?kolCv.getContext('2d'):null;
+var kolDone=false;
+function kolamDraw(prog){
+  if(!kolCx)return;
+  var w=window.innerWidth,h=window.innerHeight;
+  if(kolCv.width!==w||kolCv.height!==h){kolCv.width=w;kolCv.height=h}
+  kolCx.clearRect(0,0,w,h);
+  var s=76,r=s*0.72;
+  var cxm=w/2,cym=h/2;
+  var maxD=Math.sqrt(cxm*cxm+cym*cym)+s;
+  kolCx.lineWidth=1;
+  for(var gy=-1;gy*s<h+s;gy++){
+    for(var gx=-1;gx*s<w+s;gx++){
+      var px=gx*s,py=gy*s;
+      var dx=px-cxm,dy=py-cym;
+      var lp=prog*1.45-Math.sqrt(dx*dx+dy*dy)/maxD*0.45;
+      if(lp<=0)continue;if(lp>1)lp=1;
+      // the woven ring — each circle overlaps its four neighbors into petals
+      kolCx.beginPath();
+      kolCx.arc(px,py,r,-Math.PI/2,-Math.PI/2+Math.PI*2*lp);
+      kolCx.strokeStyle=accA(0.045);
+      kolCx.stroke();
+      // pulli — the dots the lines are woven around
+      if(lp>0.5){
+        kolCx.beginPath();kolCx.arc(px,py,1.1,0,Math.PI*2);
+        kolCx.fillStyle=accA(0.10);kolCx.fill();
+        kolCx.beginPath();kolCx.arc(px+s/2,py+s/2,0.8,0,Math.PI*2);
+        kolCx.fillStyle=accA(0.06);kolCx.fill();
+      }
+    }
+  }
+}
+(function(){
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+  if(reduce){kolamDraw(1);kolDone=true;return}
+  var t0=null;
+  function step(ts){
+    if(t0===null)t0=ts;
+    var p=(ts-t0)/6000;if(p>1)p=1;
+    kolamDraw(p);
+    if(p<1)requestAnimationFrame(step);else kolDone=true;
+  }
+  requestAnimationFrame(step);
+})();
+window.addEventListener('resize',function(){if(kolDone)kolamDraw(1)});
 
 // ── MöBIUS-ON-SPHERE (equator orbit with amplitude & phase) ──
 function drawMobiusSphere(canvas,size,time){
@@ -1374,6 +1428,7 @@ function applyMood(id,save){
   document.body.setAttribute('data-mood',m.id);
   ACC.r=m.acc[0];ACC.g=m.acc[1];ACC.b=m.acc[2];
   st.bMode=m.breath;syncBst();
+  if(kolDone)kolamDraw(1);
   if(save){try{localStorage.setItem('eop_mood',JSON.stringify({d:dayStr(),m:m.id}))}catch(e){}}
 }
 var mbtns=document.querySelectorAll('.mood-btn');
