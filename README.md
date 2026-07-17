@@ -11,7 +11,9 @@ Zero network connections. Zero cookies. Zero tracking. Zero AI. One HTML file.
 - **Arrive** — One tap to say how you're arriving (light, heavy, quiet, restless). The room retunes its colors, particles, and breathing pace to meet you. Asked once a day, always skippable.
 - **Today** — A one-tap daily ritual with no menu decisions: breathe three cycles, bring one thought, see it through three mirrors. About five minutes. No streaks, no counters, no guilt.
 - **Play a Round** — Bring one thing on your mind (past, present, or future). The game deals 3 of 6 mirror cards (Witness, Echo, Inside, Outside, Angle, Kintsugi). You write what each lens shows you, then see all three together.
-- **Breathe** — Gentle, box, or 4-7-8 pacing. Invitation, not instruction. Stop anytime.
+- **Breathe** — Gentle, box, or 4-7-8 pacing under a living canvas bloom that breathes with you (mood-tinted petals, particle halo, phase ring). Plus two short guided practices — grounding (5-4-3-2-1) and a body scan — written by hand, claiming nothing. Invitation, not instruction. Stop anytime.
+- **The prompt orb** — Stuck on a blank page? Tap the orb and it draws one gentle example at a time from a hand-written deck. No wall of options, no repeats until the deck runs dry.
+- **Pass it on** — One button shares the app via your device's own share sheet; another copies a finished round as plain text to hand to a friend, a counselor, or your journal. The app itself still transmits nothing.
 - **Memory Postcards** — Nonlinear story prompts (who/where/when/what/how/why) for capturing a memory — yours, or one a loved one shares. Seal it into a postcard.
 - **Memory Vault** — Your sealed postcards and past rounds on an isometric shelf. Pick one up, turn it over, sit with it.
 - **Group** — A fragment in the center of the table. Read it aloud, share what it brings up. Face to face.

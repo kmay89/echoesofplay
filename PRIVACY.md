@@ -38,6 +38,8 @@ This application makes zero network connections after the initial page load. No 
 
 For completeness: the service worker (sw.js) requests copies of the application's own files from the same domain, once, so the app can work offline. Those requests carry no user data — they are the app downloading itself. Nothing you write is ever in any request.
 
+If you use the optional share or copy buttons, your device's own share sheet or clipboard does the carrying — the application hands the text to your operating system and steps away. Nothing is transmitted by the application itself, and nothing is shared unless you choose to share it.
+
 You are encouraged to verify this yourself.
 
 ## Cookies
