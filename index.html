@@ -990,7 +990,7 @@ function renderPostcards(){
 
 // ── ORGANIC BREATHING ──
 var breathStyles={
-  gentle:{label:'Gentle',hint:'Follow the orb. Breathe when it feels right. No counting needed.',phases:[{t:'breathe in',d:5,e:true},{t:'let go',d:5,e:false}]},
+  gentle:{label:'Gentle',hint:'Let the spiral breathe with you. No counting needed.',phases:[{t:'breathe in',d:5,e:true},{t:'let go',d:5,e:false}]},
   box:{label:'Box',hint:'A steady rhythm. Four counts each way \u2014 or close enough.',phases:[{t:'in',d:4,e:true},{t:'hold',d:4,e:true},{t:'out',d:4,e:false},{t:'rest',d:4,e:false}]},
   calm:{label:'4-7-8',hint:'Slow exhale calms the nervous system. Let the long out-breath do the work.',phases:[{t:'in',d:4,e:true},{t:'hold',d:7,e:true},{t:'out',d:8,e:false}]}
 };
@@ -1055,42 +1055,42 @@ function drawBloom(){
   var c=bcx,cx2=150,cy2=150;
   c.clearRect(0,0,300,300);
   var col=mixC([ACC.r,ACC.g,ACC.b],BRC,0.45);
+  var lit=mixC(col,[255,250,235],0.45);
   var R=44+76*v;
-  // orbiting particle halo, breathing with the core
-  for(var i=0;i<36;i++){
-    var dir=(i%2===0)?1:-1;
-    var an=i/36*Math.PI*2+tm*0.07*dir;
-    var rad=R+13+Math.sin(tm*0.8+i*1.7)*6;
-    var hx=cx2+Math.cos(an)*rad,hy=cy2+Math.sin(an)*rad*0.96;
-    var al=(0.10+0.16*(0.5+0.5*Math.sin(tm*1.3+i)))*(0.45+0.55*v);
-    c.beginPath();c.arc(hx,hy,0.9+((i*7)%10)/8,0,Math.PI*2);
-    c.fillStyle='rgba('+col[0]+','+col[1]+','+col[2]+','+al.toFixed(3)+')';c.fill();
-  }
-  // two counter-rotating petal rings
-  for(var ring=0;ring<2;ring++){
-    var rot=tm*(ring===0?0.05:-0.035)+ring*0.5;
-    var prad=R*(ring===0?0.62:0.8),plen=R*(ring===0?0.6:0.42),pwid=R*(ring===0?0.2:0.13);
-    var pal=ring===0?0.085:0.055;
-    for(var pi2=0;pi2<6;pi2++){
-      var pa=pi2/6*Math.PI*2+rot;
-      c.save();
-      c.translate(cx2+Math.cos(pa)*prad*0.35,cy2+Math.sin(pa)*prad*0.35);
-      c.rotate(pa);
-      c.scale(plen/2,pwid/2);
-      c.beginPath();c.arc(1,0,1,0,Math.PI*2);
-      c.fillStyle='rgba('+col[0]+','+col[1]+','+col[2]+','+pal+')';
-      c.fill();c.restore();
-    }
-  }
-  // soft glow core + bright center
-  var g1=c.createRadialGradient(cx2,cy2,0,cx2,cy2,R*0.62);
-  g1.addColorStop(0,'rgba('+col[0]+','+col[1]+','+col[2]+',0.34)');
+  // Phyllotaxis spiral — golden-angle seed field. The whole field blooms
+  // outward on the inhale and winds gently inward on the exhale, over a
+  // very slow constant rotation. Slow motion + a stable bright center =
+  // the spiral pull without the vertigo.
+  var GA=2.399963229728653; // golden angle in radians
+  var rot=tm*0.03;          // ~1 revolution every 3.5 minutes
+  var wind=(1-v)*0.85;      // exhale winds the spiral tighter, inhale unwinds
+  // soft glow FIRST, behind the seed field
+  var g1=c.createRadialGradient(cx2,cy2,0,cx2,cy2,R*0.7);
+  g1.addColorStop(0,'rgba('+col[0]+','+col[1]+','+col[2]+',0.16)');
   g1.addColorStop(1,'rgba('+col[0]+','+col[1]+','+col[2]+',0)');
-  c.beginPath();c.arc(cx2,cy2,R*0.62,0,Math.PI*2);c.fillStyle=g1;c.fill();
-  var g2=c.createRadialGradient(cx2,cy2,0,cx2,cy2,R*0.2);
-  g2.addColorStop(0,'rgba(255,252,240,'+(0.10+0.16*v).toFixed(3)+')');
+  c.beginPath();c.arc(cx2,cy2,R*0.7,0,Math.PI*2);c.fillStyle=g1;c.fill();
+  var n=300;
+  for(var i=0;i<n;i++){
+    var fr=(i+0.5)/n;
+    var rr=Math.sqrt(fr);              // even area distribution
+    var rad=rr*R*1.05;
+    var an=i*GA+rot+wind*rr*rr;        // wind grows toward the rim
+    var sx3=cx2+Math.cos(an)*rad;
+    var sy3=cy2+Math.sin(an)*rad*0.985;
+    var tw=0.5+0.5*Math.sin(tm*0.9+i*0.37);          // slow shimmer
+    var sz=(0.7+rr*2.5)*(0.7+0.4*v);                 // seeds grow outward
+    var al=(0.10+0.34*(1-rr*0.4))*(0.30+0.70*v)*(0.68+0.32*tw);
+    // every 13th seed catches the light — traces one parastichy arm
+    var cc=col;
+    if(i%13===0){cc=lit;al=al*1.7;if(al>0.85)al=0.85}
+    c.beginPath();c.arc(sx3,sy3,sz,0,Math.PI*2);
+    c.fillStyle='rgba('+cc[0]+','+cc[1]+','+cc[2]+','+al.toFixed(3)+')';c.fill();
+  }
+  // bright fixation center — a stable anchor for the eyes
+  var g2=c.createRadialGradient(cx2,cy2,0,cx2,cy2,R*0.14);
+  g2.addColorStop(0,'rgba(255,252,240,'+(0.22+0.2*v).toFixed(3)+')');
   g2.addColorStop(1,'rgba('+col[0]+','+col[1]+','+col[2]+',0)');
-  c.beginPath();c.arc(cx2,cy2,R*0.2,0,Math.PI*2);c.fillStyle=g2;c.fill();
+  c.beginPath();c.arc(cx2,cy2,R*0.14,0,Math.PI*2);c.fillStyle=g2;c.fill();
   // breathing ring with soft aura
   c.beginPath();c.arc(cx2,cy2,R,0,Math.PI*2);
   c.strokeStyle='rgba('+col[0]+','+col[1]+','+col[2]+',0.30)';c.lineWidth=1.4;c.stroke();
