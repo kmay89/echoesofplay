@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Echoes of Play</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-text-size-adjust:100%}
-body{font-family:Georgia,'Times New Roman',serif;background:#080807;color:#d4cfc4;min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background 1.2s ease,color 1.2s ease}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
-:root{--bg:#080807;--surface:#0e0e0c;--card:#14130f;--card-edge:#2a2820;--gold:#c9a84c;--gold-dim:#8a7434;--gold-glow:rgba(201,168,76,0.07);--parch:rgba(201,168,76,0.03);--text:#d4cfc4;--text-mid:#a09b8f;--text-dim:#78756c;--text-faint:#3e3d38;--witness:#7ea8be;--echo:#a47eb8;--inside:#be7e7e;--outside:#7ebe8a;--angle:#beb87e;--kintsugi:#c9a84c;--breath:#8aaa9a;--body:#9a7a6a;--nature:#6a9a6a;--reverse:#9a8a5e;--r:8px;--cr:14px}
+:root{--bg:#080807;--surface:#0e0e0c;--card:#14130f;--card-edge:#2a2820;--gold:#c9a84c;--gold-dim:#8a7434;--gold-glow:rgba(201,168,76,0.07);--parch:rgba(201,168,76,0.03);--text:#d4cfc4;--text-mid:#a09b8f;--text-dim:#8a877c;--text-faint:#5a574d;--witness:#7ea8be;--echo:#a47eb8;--inside:#be7e7e;--outside:#7ebe8a;--angle:#beb87e;--kintsugi:#c9a84c;--breath:#8aaa9a;--body:#9a7a6a;--nature:#6a9a6a;--reverse:#9a8a5e;--r:8px;--cr:14px}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}#sandCanvas{display:none}}
 
@@ -19,7 +19,7 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 
 .app{max-width:480px;margin:0 auto;padding:0 20px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative;z-index:1}
 
-.screen{display:none;flex-direction:column;flex:1;padding:24px 0;opacity:0;transition:opacity 0.6s ease}
+.screen{display:none;flex-direction:column;flex:1;padding:24px 0;opacity:0;transition:opacity 0.25s ease}
 .screen.active{display:flex}
 .screen.visible{opacity:1}
 
@@ -71,7 +71,7 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 .insight-box p{font-size:0.82rem;line-height:1.75;color:var(--text-mid);margin-bottom:10px}.insight-box p:last-child{margin-bottom:0}
 .step-dots{display:flex;justify-content:center;gap:6px;padding:6px 0}
 .sd{width:6px;height:6px;border-radius:50%;background:var(--text-faint);transition:all 0.5s}.sd.on{background:var(--gold);width:18px;border-radius:3px}.sd.done{background:var(--gold-dim)}
-.skip{font-size:0.7rem;color:var(--text-faint);text-decoration:underline;cursor:pointer}
+.skip{font-size:0.7rem;color:var(--text-faint);text-decoration:underline;cursor:pointer;padding:8px}
 
 /* HOME */
 .home{align-items:center;justify-content:center;gap:12px;text-align:center}
@@ -166,7 +166,7 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 .breathe-title{font-size:1.1rem;color:var(--breath);letter-spacing:0.1em;font-weight:400}
 .breathe-ex{font-size:0.78rem;color:var(--text-dim);line-height:1.6;max-width:310px}
 .breathe-styles{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
-.bst{background:var(--card);border:1px solid var(--card-edge);border-radius:var(--r);padding:7px 13px;font-size:0.7rem;color:var(--text-dim);transition:all 0.4s}
+.bst{background:var(--card);border:1px solid var(--card-edge);border-radius:var(--r);padding:10px 14px;font-size:0.7rem;color:var(--text-dim);transition:all 0.4s}
 .bst:hover,.bst.active{border-color:var(--breath);color:var(--breath)}
 .breathe-hint{font-size:0.72rem;color:var(--text-faint);font-style:italic;max-width:280px;min-height:2em;line-height:1.5}
 .breathe-label{font-size:0.9rem;color:var(--breath);letter-spacing:0.06em;min-height:1.2em;font-style:italic;transition:opacity 0.5s}
@@ -209,7 +209,7 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 .fc-dot{width:5px;height:5px;border-radius:50%;background:var(--text-faint);transition:all 0.3s}
 .fc-dot.active{background:var(--gold);width:14px;border-radius:3px}
 .fc-dot.done{background:var(--gold-dim)}
-.fc-skip{font-size:0.66rem;color:var(--text-faint);text-decoration:underline;cursor:pointer}
+.fc-skip{font-size:0.66rem;color:var(--text-faint);text-decoration:underline;cursor:pointer;padding:8px}
 .fc-next{font-size:0.72rem;color:var(--gold);letter-spacing:0.06em;padding:6px 12px;border:1px solid var(--gold-dim);border-radius:var(--r);transition:all 0.3s}
 .fc-next:hover{background:rgba(201,168,76,0.1)}
 
@@ -242,7 +242,7 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 /* Delete actions row */
 .hi-del{display:none;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--card-edge);justify-content:center}
 .hi-del.show{display:flex}
-.del-btn{font-size:0.64rem;letter-spacing:0.06em;padding:4px 10px;border:1px solid var(--card-edge);border-radius:var(--r);color:var(--text-faint);transition:all 0.3s}
+.del-btn{font-size:0.64rem;letter-spacing:0.06em;padding:8px 12px;border:1px solid var(--card-edge);border-radius:var(--r);color:var(--text-faint);transition:all 0.3s}
 .del-btn:hover{border-color:var(--inside);color:var(--inside)}
 .del-btn.dissolve:hover{color:#9a8a6a;border-color:#9a8a6a}
 .del-btn.release:hover{color:var(--breath);border-color:var(--breath)}
@@ -303,6 +303,44 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 .pc-seal{position:absolute;bottom:10px;right:12px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dfc268,#8a7434 72%);box-shadow:0 1px 4px rgba(0,0,0,0.45),inset 0 0 4px rgba(58,48,18,0.6);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-style:italic;color:#3a3012;opacity:0.9}
 @keyframes sealFly{0%{opacity:1;transform:scale(1) rotate(0deg)}55%{opacity:0.85;transform:scale(0.88) rotate(-2deg) translateY(8px)}100%{opacity:0;transform:scale(0.45) rotate(-7deg) translateY(70px)}}
 .formula-card.sealing{animation:sealFly 0.8s ease forwards;pointer-events:none}
+
+/* MOODS — the room retunes to how you arrive */
+body[data-mood=dawn]{--gold:#e6b269;--gold-dim:#a87f42;--gold-glow:rgba(230,178,105,0.09);--parch:rgba(230,178,105,0.04);--bg:#0b0907;--surface:#131009;--card:#1a150c;--card-edge:#332a1c;--text:#e2d9c6;--breath:#9ab88a}
+body[data-mood=tide]{--gold:#8fc4ae;--gold-dim:#5f8a77;--gold-glow:rgba(143,196,174,0.07);--parch:rgba(143,196,174,0.03);--bg:#070909;--surface:#0d100f;--card:#121614;--card-edge:#26302b}
+body[data-mood=violet]{--gold:#b4a5e0;--gold-dim:#7c6fa6;--gold-glow:rgba(180,165,224,0.07);--parch:rgba(180,165,224,0.03);--bg:#080709;--surface:#0e0d11;--card:#131117;--card-edge:#282433;--breath:#93a8c9}
+
+/* Comfort text size (Aa) — everything in rem scales together */
+html.big{font-size:19px}
+
+/* MOOD SCREEN */
+.moodscr{align-items:center;justify-content:center;text-align:center;gap:18px}
+.moodscr h2{font-size:1.1rem;font-weight:400;letter-spacing:0.08em;color:var(--text)}
+.mood-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:340px}
+.mood-btn{background:var(--card);border:1.5px solid var(--card-edge);border-radius:var(--cr);padding:18px 12px;text-align:center;transition:all 0.3s;min-height:96px}
+.mood-btn:hover,.mood-btn:focus{transform:translateY(-3px);border-color:var(--gold-dim)}
+.mood-btn .mi2{font-size:1.4rem;display:block;margin-bottom:4px;color:var(--gold)}
+.mood-btn .mn2{font-size:0.86rem;letter-spacing:0.06em;display:block;color:var(--text)}
+.mood-btn .ml2{font-size:0.66rem;color:var(--text-dim);display:block;margin-top:4px;line-height:1.4}
+.mood-chip{font-size:0.7rem;color:var(--text-dim);padding:6px 14px;border:1px solid var(--card-edge);border-radius:20px;transition:all 0.3s}
+.mood-chip:hover,.mood-chip:focus{border-color:var(--gold-dim);color:var(--gold)}
+
+/* TODAY — one tap, no decisions */
+.today-card{width:100%;max-width:360px;background:linear-gradient(160deg,var(--gold-glow),var(--card));border:1.5px solid var(--gold-dim);border-radius:var(--cr);padding:16px 18px;text-align:left;transition:all 0.35s;position:relative;overflow:hidden}
+.today-card::after{content:'';position:absolute;top:0;left:-120%;width:100%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,0.045) 50%,transparent);animation:tcSheen 9s ease-in-out infinite}
+@keyframes tcSheen{0%,55%{left:-120%}100%{left:220%}}
+.today-card:hover,.today-card:focus{transform:translateY(-2px);border-color:var(--gold)}
+.tc-k{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);display:block}
+.tc-t{font-size:0.95rem;color:var(--text);display:block;margin-top:4px;line-height:1.5}
+.tc-s{font-size:0.7rem;color:var(--text-dim);display:block;margin-top:3px}
+.rt-banner{position:fixed;top:12px;left:50%;transform:translate(-50%,-180%);z-index:90;background:var(--surface);border:1px solid var(--gold-dim);border-radius:20px;padding:7px 16px;font-size:0.68rem;letter-spacing:0.1em;color:var(--gold);display:flex;gap:12px;align-items:center;transition:transform 0.4s ease}
+.rt-banner.show{transform:translate(-50%,0)}
+.rt-skip{font-size:0.66rem;color:var(--text-dim);text-decoration:underline;padding:4px}
+.rt-skip:hover{color:var(--gold)}
+
+/* Extra fixed buttons (music, text size) */
+.btn-music{right:56px;font-style:normal}
+.btn-size{right:98px;font-style:normal;font-size:0.66rem;letter-spacing:0}
+.btn-info.on{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-glow)}
 </style>
 </head>
 <body>
@@ -310,8 +348,18 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 <div class="app" id="app">
 <button class="btn-bk h" id="btnBack" aria-label="Back">&#8592;</button>
 <button class="btn-info" id="btnInfo" aria-label="About, privacy, and crisis resources">i</button>
+<button class="btn-info btn-music" id="btnMusic" aria-pressed="false" aria-label="Gentle background music, on or off">&#9834;</button>
+<button class="btn-info btn-size" id="btnSize" aria-pressed="false" aria-label="Larger text, on or off">Aa</button>
+<div class="rt-banner" id="rtBanner" aria-live="polite"><span id="rtTxt"></span><button class="rt-skip" id="rtSkip">skip &#8594;</button></div>
 
 <div class="screen trust active visible" id="screenTrust"><div class="trust-sphere"><canvas id="trustSphere" width="120" height="120"></canvas></div><h1>Echoes of Play</h1><div class="trust-sub">A quiet room for your thoughts.<br>Sand on the table. Nothing leaves.</div><div class="trust-promises" id="trustP"><span>Nothing stored on any server</span><span>No accounts, no tracking</span><span>Your words stay here only</span><span>Delete everything at any time</span></div><button class="btn-p" id="btnTrust">Enter</button><div class="safety">In crisis: <a href="tel:988">988</a> · <a href="https://988lifeline.org">988lifeline.org</a></div></div>
+
+<div class="screen moodscr" id="screenMood"><h2>How are you arriving?</h2><div class="g-sm">One tap. It tunes the colors and pace of the room — nothing else. It stays on this device, like everything here.</div><div class="mood-grid">
+<button class="mood-btn" data-mood="dawn"><span class="mi2">&#9788;</span><span class="mn2">Light</span><span class="ml2">Something good is near</span></button>
+<button class="mood-btn" data-mood="ember"><span class="mi2">&#9670;</span><span class="mn2">Heavy</span><span class="ml2">Carrying something</span></button>
+<button class="mood-btn" data-mood="tide"><span class="mi2">&#8776;</span><span class="mn2">Quiet</span><span class="ml2">Soft and slow, please</span></button>
+<button class="mood-btn" data-mood="violet"><span class="mi2">&#8634;</span><span class="mn2">Restless</span><span class="ml2">Spinning a little</span></button>
+</div><span class="skip" id="moodSkip">just let me in</span></div>
 
 <div class="screen ob" id="screenOnboard1"><div class="step-dots"><div class="sd on"></div><div class="sd"></div><div class="sd"></div><div class="sd"></div></div><div class="ob-vis">&#127183;</div><h2>A card game for your thoughts</h2><div class="ob-text">Not a chatbot. Not therapy. Not an AI.<br><br>You bring <span class="g-accent">one thing</span> on your mind. The game deals cards that show you <span class="g-accent">different angles</span>. You do the thinking.</div><button class="btn-p" id="btnOb1">Makes sense</button><span class="skip" id="skipOb">skip intro</span></div>
 
@@ -321,7 +369,7 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 
 <div class="screen ob" id="screenOnboard4"><div class="step-dots"><div class="sd done"></div><div class="sd done"></div><div class="sd done"></div><div class="sd on"></div></div><h2>The six mirrors</h2><div class="g-sm">Each is a different lens. You get 3 random ones per round.</div><div class="ob-cards" id="obCards"></div><div class="g-sm">You don't pick — they're dealt. Surprise is part of it.</div><button class="btn-p" id="btnOb4">I'm ready</button></div>
 
-<div class="screen home" id="screenHome"><div class="home-title">Echoes of Play</div><div class="home-sphere" id="homeSphere"><canvas id="homeSphereC" width="140" height="140"></canvas></div><div class="equator-hint">find the equator</div><div class="home-bl" id="homeBL">tap to breathe</div><div class="home-greeting" id="homeGreet"></div><div class="ng"><button class="nc pr" id="navPlay"><span class="ni">&#9671;</span><span class="nl">Play a Round</span><span class="nd">3 mirrors, 5 minutes</span></button><button class="nc" id="navGarden"><span class="ni">&#9993;</span><span class="nl">Memory Postcards</span><span class="nd">Story fragments, sealed and kept</span></button><button class="nc" id="navBreathe"><span class="ni">&#9711;</span><span class="nl">Breathe</span><span class="nd">Your oldest rhythm</span></button><button class="nc" id="navGroup"><span class="ni">&#9674;</span><span class="nl">Group</span><span class="nd">Share a prompt together</span></button><button class="nc" id="navVault"><span class="ni">&#9707;</span><span class="nl">Memory Vault</span><span class="nd">Your shelf of kept things</span></button><button class="nc" id="navHist"><span class="ni">&#9776;</span><span class="nl">Past Rounds</span><span class="nd">What you've written</span></button></div></div>
+<div class="screen home" id="screenHome"><div class="home-title">Echoes of Play</div><div class="home-sphere" id="homeSphere"><canvas id="homeSphereC" width="140" height="140"></canvas></div><div class="equator-hint">find the equator</div><div class="home-bl" id="homeBL">tap to breathe</div><div class="home-greeting" id="homeGreet"></div><button class="mood-chip" id="moodChip"></button><button class="today-card" id="btnToday"><span class="tc-k">Today</span><span class="tc-t" id="tcT">Breathe. One thought. Three mirrors.</span><span class="tc-s" id="tcS">About five minutes. One tap, no decisions.</span></button><div class="equator-hint" style="margin-top:2px">or wander</div><div class="ng"><button class="nc pr" id="navPlay"><span class="ni">&#9671;</span><span class="nl">Play a Round</span><span class="nd">3 mirrors, 5 minutes</span></button><button class="nc" id="navGarden"><span class="ni">&#9993;</span><span class="nl">Memory Postcards</span><span class="nd">Story fragments, sealed and kept</span></button><button class="nc" id="navBreathe"><span class="ni">&#9711;</span><span class="nl">Breathe</span><span class="nd">Your oldest rhythm</span></button><button class="nc" id="navGroup"><span class="ni">&#9674;</span><span class="nl">Group</span><span class="nd">Share a prompt together</span></button><button class="nc" id="navVault"><span class="ni">&#9707;</span><span class="nl">Memory Vault</span><span class="nd">Your shelf of kept things</span></button><button class="nc" id="navHist"><span class="ni">&#9776;</span><span class="nl">Past Rounds</span><span class="nd">What you've written</span></button></div></div>
 
 <div class="screen timeline" id="screenTimeline"><div class="seed-step">Step 1 of 3</div><div style="font-size:1rem;color:var(--text);font-weight:400;text-align:center">When is this from?</div><div class="g-sm">This shapes how the mirrors ask their questions.</div><div class="tl-grid"><button class="tl-btn" data-tl="past"><span class="tl-icon">&#9668;</span><span class="tl-label">Past</span><span class="tl-sub">A memory, something that happened</span></button><button class="tl-btn" data-tl="present"><span class="tl-icon">&#9679;</span><span class="tl-label">Now</span><span class="tl-sub">A feeling, a conflict</span></button><button class="tl-btn" data-tl="future"><span class="tl-icon">&#9658;</span><span class="tl-label">Future</span><span class="tl-sub">A decision, something coming</span></button></div></div>
 
@@ -369,7 +417,7 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
   </div>
   <div class="breathe-hint" id="breatheHint">Follow the orb. Or let it follow you. There's no wrong pace.</div>
   <div class="breathe-orb-wrap"><div class="breathe-orb" id="bOrb"></div></div>
-  <div class="breathe-label" id="bLabel">ready when you are</div>
+  <div class="breathe-label" id="bLabel" aria-live="polite">ready when you are</div>
   <button class="btn-s" id="btnBr">Begin</button>
   <div class="breathe-after" id="bAft"></div>
 </div>
@@ -403,7 +451,8 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
     <div class="info-top"><span class="info-title">Echoes of Play</span><button class="info-close" id="infoClose" aria-label="Close">&#10005;</button></div>
 
     <div class="info-sec"><div class="info-h">What this is</div>
-      <div class="info-p">A quiet, offline playground for reflection. A card game for your thoughts, a breathing screen, postcards for memories, and a vault to keep them in. One HTML file. Free, open source, built by ERRERlabs.</div></div>
+      <div class="info-p">A quiet, offline playground for reflection. A card game for your thoughts, a breathing screen, postcards for memories, and a vault to keep them in. One HTML file. Free, open source, built by ERRERlabs.</div>
+      <div class="info-p">You can tell the room how you're arriving and it retunes its colors and pace. The optional music (&#9834;) is a handful of soft notes generated on your device as you listen — there are no recordings, no files, and nothing streamed.</div></div>
 
     <div class="info-sec"><div class="info-h">Why it's made</div>
       <div class="info-p">Slowing down with a thought, breathing on purpose, and telling the story of a memory are old, ordinary, human practices. Most digital versions of them come with an account, a subscription, and a data pipeline. This one comes with none of those. That's the whole idea.</div></div>
@@ -458,6 +507,10 @@ function sndClick(){playTone(600,0.06,0.02)}
 function sndSeal(){playTone(440,0.2,0.02);setTimeout(function(){playTone(550,0.3,0.025)},150)}
 function sndDissolve(){playTone(330,0.8,0.015);setTimeout(function(){playTone(220,1.2,0.01)},300)}
 
+// ── ACCENT COLOR (retuned by mood; canvases read it live) ──
+var ACC={r:201,g:168,b:76};
+function accA(a){return'rgba('+ACC.r+','+ACC.g+','+ACC.b+','+a+')'}
+
 // ── SAND PARTICLE SYSTEM (shuffleboard wax bead memory) ──
 var sandCv=document.getElementById('sandCanvas'),sandCx=sandCv.getContext('2d');
 var grains=[],trails=[],mouseX=-1,mouseY=-1,mouseDown=false;
@@ -499,7 +552,7 @@ function drawSand(){
     if(tr.o<=0){trails.splice(ti,1);continue}
     sandCx.beginPath();
     sandCx.arc(tr.x,tr.y,tr.s,0,Math.PI*2);
-    sandCx.fillStyle='rgba(201,168,76,'+tr.o+')';
+    sandCx.fillStyle=accA(tr.o);
     sandCx.fill();
   }
   // Draw ambient floating grains
@@ -513,7 +566,7 @@ function drawSand(){
     p.vx*=0.98;p.vy*=0.98;
     sandCx.beginPath();
     sandCx.arc(p.x,p.y,p.s,0,Math.PI*2);
-    sandCx.fillStyle='rgba(201,168,76,'+p.o+')';
+    sandCx.fillStyle=accA(p.o);
     sandCx.fill();
     p.x+=p.vx;p.y+=p.vy+(Math.sin(Date.now()*0.0005+i)*0.02);
     if(p.y>sandCv.height+5){p.y=-5;p.x=Math.random()*sandCv.width}
@@ -528,12 +581,12 @@ function drawMobiusSphere(canvas,size,time){
   var c=canvas.getContext('2d');var w=canvas.width,h=canvas.height;c.clearRect(0,0,w,h);
   var cx=w/2,cy=h/2,R=size*0.35;
   // Faint sphere wireframe (equator emphasis)
-  c.strokeStyle='rgba(201,168,76,0.08)';c.lineWidth=0.6;
+  c.strokeStyle=accA(0.08);c.lineWidth=0.6;
   c.beginPath();c.arc(cx,cy,R,0,Math.PI*2);c.stroke();
   // Meridian lines (faint — these are the "pole-seeking" lines)
   for(var m=0;m<3;m++){
     var ma=m*Math.PI/3+time*0.05;
-    c.strokeStyle='rgba(201,168,76,0.04)';c.beginPath();
+    c.strokeStyle=accA(0.04);c.beginPath();
     for(var j=0;j<=60;j++){
       var phi=j/60*Math.PI*2;
       var x3=Math.cos(phi)*Math.cos(ma);var z3=Math.sin(phi)*Math.cos(ma);var y3=Math.sin(ma);
@@ -542,7 +595,7 @@ function drawMobiusSphere(canvas,size,time){
     }c.stroke();
   }
   // Equator ring — bright, this is "where truth lives"
-  c.strokeStyle='rgba(201,168,76,0.2)';c.lineWidth=1;c.beginPath();
+  c.strokeStyle=accA(0.2);c.lineWidth=1;c.beginPath();
   for(var eq=0;eq<=80;eq++){
     var eqa=eq/80*Math.PI*2;
     var ex2=cx+Math.cos(eqa)*R;var ey2=cy+Math.sin(eqa)*R*0.3;
@@ -552,7 +605,7 @@ function drawMobiusSphere(canvas,size,time){
   // Möbius band orbiting the equator with phase twist
   var segs=150,bandW=size*0.06;
   // Front half
-  c.strokeStyle='rgba(201,168,76,0.4)';c.lineWidth=1.2;c.beginPath();
+  c.strokeStyle=accA(0.4);c.lineWidth=1.2;c.beginPath();
   var started=false;
   for(var i=0;i<=segs;i++){
     var t2=i/segs*Math.PI*2;
@@ -567,7 +620,7 @@ function drawMobiusSphere(canvas,size,time){
     else{if(started){c.stroke();c.beginPath();started=false}}
   }c.stroke();
   // Back half (dimmer)
-  c.strokeStyle='rgba(201,168,76,0.12)';c.lineWidth=0.8;c.beginPath();started=false;
+  c.strokeStyle=accA(0.12);c.lineWidth=0.8;c.beginPath();started=false;
   for(var k=0;k<=segs;k++){
     var t3=k/segs*Math.PI*2;
     var twist2=t3/2+time*0.4+Math.PI;
@@ -585,7 +638,7 @@ function drawMobiusSphere(canvas,size,time){
   var dotX=cx+Math.cos(dotAngle)*R;
   var dotY=cy+Math.sin(dotAngle)*R*0.3;
   c.beginPath();c.arc(dotX,dotY,2,0,Math.PI*2);
-  c.fillStyle='rgba(201,168,76,0.6)';c.fill();
+  c.fillStyle=accA(0.6);c.fill();
 }
 var sphereTime=0;
 function animSphere(){sphereTime+=0.006;drawMobiusSphere(document.getElementById('trustSphere'),120,sphereTime);drawMobiusSphere(document.getElementById('homeSphereC'),140,sphereTime);requestAnimationFrame(animSphere)}animSphere();
@@ -620,7 +673,7 @@ var FORMULA=[
   {label:'why',prompt:'Why does it still echo?',hint:'What made this one stick? What keeps it warm?'}
 ];
 
-var st={screen:'trust',ob:false,seed:'',tl:'present',round:[],dealt:[],ci:0,frag:'',bTimer:null,bMode:'gentle',bCyc:0,bRun:false,gIdx:0,gStg:0,gU:[],rc:0,fc:{step:0,answers:{},shuffled:[]}};
+var st={screen:'trust',ob:false,seed:'',tl:'present',round:[],dealt:[],ci:0,frag:'',bTimer:null,bMode:'gentle',bCyc:0,bRun:false,gIdx:0,gStg:0,gU:[],rc:0,fc:{step:0,answers:{},shuffled:[]},mood:'ember',rt:0};
 var $=function(id){return document.getElementById(id)};
 function pick(a){return a[Math.floor(Math.random()*a.length)]}
 function esc(s){var d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML}
@@ -631,16 +684,21 @@ try{st.ob=localStorage.getItem('eop_ob')==='1';st.rc=parseInt(localStorage.getIt
 
 // ── SCREEN TRANSITIONS ──
 function show(name,delay){
+  var tid='screen'+name.charAt(0).toUpperCase()+name.slice(1);
   var all=document.querySelectorAll('.screen');
-  for(var i=0;i<all.length;i++){all[i].classList.remove('visible');setTimeout((function(el){return function(){el.classList.remove('active')}})(all[i]),400)}
-  var d=delay||500;
+  for(var i=0;i<all.length;i++){
+    if(all[i].id===tid)continue;
+    all[i].classList.remove('visible');
+    setTimeout((function(el){return function(){el.classList.remove('active')}})(all[i]),200);
+  }
+  var d=delay||240;
   setTimeout(function(){
-    var t=document.getElementById('screen'+name.charAt(0).toUpperCase()+name.slice(1));
+    var t=document.getElementById(tid);
     if(t){t.classList.add('active');setTimeout(function(){t.classList.add('visible')},30)}
   },d);
   st.screen=name;
   closeVaultSheet();
-  var b=$('btnBack');var hide=(name==='trust'||name==='home'||name.indexOf('onboard')===0);
+  var b=$('btnBack');var hide=(name==='trust'||name==='home'||name==='mood'||name.indexOf('onboard')===0);
   if(hide)b.classList.add('h');else b.classList.remove('h');
 }
 
@@ -651,25 +709,32 @@ function show(name,delay){
   var btn=document.querySelector('.trust .btn-p');btn.style.animation='fu 0.6s ease '+(1.6+spans.length*0.3+0.2)+'s forwards';
 })();
 
-$('btnTrust').addEventListener('click',function(){initAudio();sndClick();if(st.ob){show('home');setTimeout(updHome,600)}else{show('onboard1')}});
+$('btnTrust').addEventListener('click',function(){initAudio();sndClick();if(st.ob){show('home');setTimeout(updHome,300)}else{show('onboard1')}});
 
 // ── ONBOARD ──
 (function(){var c=$('obCards');for(var i=0;i<MM.length;i++){var m=MM[i];var d=document.createElement('div');d.className='dc';d.style.borderColor=m.color;d.innerHTML='<div class="dc-i" style="color:'+m.color+'">'+m.icon+'</div><div class="dc-n" style="color:'+m.color+'">'+m.name+'</div>';c.appendChild(d)}})();
 $('btnOb1').addEventListener('click',function(){sndClick();show('onboard2')});
 $('btnOb2').addEventListener('click',function(){sndClick();show('onboard3')});
 $('btnOb3').addEventListener('click',function(){sndClick();show('onboard4')});
-$('btnOb4').addEventListener('click',function(){sndClick();st.ob=true;try{localStorage.setItem('eop_ob','1')}catch(e){}show('home');setTimeout(updHome,600)});
-$('skipOb').addEventListener('click',function(){st.ob=true;try{localStorage.setItem('eop_ob','1')}catch(e){}show('home');setTimeout(updHome,600)});
+$('btnOb4').addEventListener('click',function(){sndClick();st.ob=true;try{localStorage.setItem('eop_ob','1')}catch(e){}show('mood')});
+$('skipOb').addEventListener('click',function(){st.ob=true;try{localStorage.setItem('eop_ob','1')}catch(e){}show('mood')});
 
 // ── HOME ──
-function updHome(){$('homeGreet').textContent=st.rc===0?'Your first round is waiting.':(st.rc+' round'+(st.rc===1?'':'s')+' played.')}
+function updHome(){
+  var m=moodBy(st.mood);
+  $('homeGreet').textContent=(st.rc===0?'Your first round is waiting. ':'')+m.greet;
+  $('moodChip').innerHTML=m.icon+' arriving '+m.name.toLowerCase()+' &middot; change';
+  var done=false;try{done=localStorage.getItem('eop_day')===dayStr()}catch(e){}
+  if(done){$('tcT').textContent='Done for today.';$('tcS').textContent='Nothing is counting. Wander below, or go be in your day.'}
+  else{$('tcT').textContent='Breathe. One thought. Three mirrors.';$('tcS').textContent='About five minutes. One tap, no decisions.'}
+}
 $('homeSphere').addEventListener('click',function(){sndClick();show('breathe')});
 $('navPlay').addEventListener('click',function(){sndClick();show('timeline')});
 $('navGarden').addEventListener('click',function(){sndClick();startGarden()});
 $('navBreathe').addEventListener('click',function(){sndClick();show('breathe')});
 $('navGroup').addEventListener('click',function(){sndClick();startGroup()});
 $('navHist').addEventListener('click',function(){sndClick();showHist()});
-$('btnBack').addEventListener('click',function(){sndClick();if(st.bRun)stopBr();show('home');setTimeout(updHome,600)});
+$('btnBack').addEventListener('click',function(){sndClick();if(st.bRun)stopBr();if(st.rt){st.rt=0;rtBanner(0)}show('home');setTimeout(updHome,300)});
 
 // ── TIMELINE ──
 var tlBtns=document.querySelectorAll('.tl-btn');
@@ -677,14 +742,14 @@ for(var i=0;i<tlBtns.length;i++){(function(btn){btn.addEventListener('click',fun
 
 // ── SEED ──
 var seedIn=$('seedIn'),seedCt=$('seedCt'),btnDeal=$('btnDeal');
-function showSeed(){show('seed');setTimeout(function(){$('seedCtx').textContent=TL_CTX[st.tl];var exBox=$('seedExs');exBox.innerHTML='<div class="seed-exs-t">Tap an example or write your own</div>';var exs=SEED_EX[st.tl];for(var i=0;i<exs.length;i++){var d=document.createElement('div');d.className='sex';d.setAttribute('data-text',exs[i]);d.textContent=exs[i];exBox.appendChild(d)}var sexEls=exBox.querySelectorAll('.sex');for(var j=0;j<sexEls.length;j++){(function(el){el.addEventListener('click',function(){sndClick();seedIn.value=el.getAttribute('data-text');seedCt.textContent=seedIn.value.length;btnDeal.classList.remove('off');seedIn.focus()})})(sexEls[j])}seedIn.value='';seedCt.textContent='0';btnDeal.classList.add('off')},550)}
+function showSeed(){show('seed');setTimeout(function(){$('seedCtx').textContent=TL_CTX[st.tl];var exBox=$('seedExs');exBox.innerHTML='<div class="seed-exs-t">Tap an example or write your own</div>';var exs=SEED_EX[st.tl];for(var i=0;i<exs.length;i++){var d=document.createElement('div');d.className='sex';d.setAttribute('data-text',exs[i]);d.textContent=exs[i];exBox.appendChild(d)}var sexEls=exBox.querySelectorAll('.sex');for(var j=0;j<sexEls.length;j++){(function(el){el.addEventListener('click',function(){sndClick();seedIn.value=el.getAttribute('data-text');seedCt.textContent=seedIn.value.length;btnDeal.classList.remove('off');seedIn.focus()})})(sexEls[j])}seedIn.value='';seedCt.textContent='0';btnDeal.classList.add('off')},260)}
 seedIn.addEventListener('input',function(){seedCt.textContent=seedIn.value.length;if(seedIn.value.trim().length>=3)btnDeal.classList.remove('off');else btnDeal.classList.add('off')});
 btnDeal.addEventListener('click',function(){var v=seedIn.value.trim();if(v.length<3)return;sndDeal();st.seed=v;showPD()});
 
-function showPD(){var idx=shuf([0,1,2,3,4,5]);st.dealt=[idx[0],idx[1],idx[2]];st.round=[];st.ci=0;st.frag=pick(FRAGS);show('predeal');setTimeout(function(){$('pdSeed').textContent='\u201C'+st.seed+'\u201D';var p=$('dpPrev');p.innerHTML='';for(var i=0;i<3;i++){var m=MM[st.dealt[i]];var c=document.createElement('div');c.className='dpc';c.style.borderColor=m.color;c.style.animationDelay=(0.4+i*0.3)+'s';c.innerHTML='<span class="dpc-i" style="color:'+m.color+'">'+m.icon+'</span><div class="dpc-n" style="color:'+m.color+'">'+m.name+'</div>';p.appendChild(c)}},550)}
+function showPD(){var idx=shuf([0,1,2,3,4,5]);st.dealt=[idx[0],idx[1],idx[2]];st.round=[];st.ci=0;st.frag=pick(FRAGS);show('predeal');setTimeout(function(){$('pdSeed').textContent='\u201C'+st.seed+'\u201D';var p=$('dpPrev');p.innerHTML='';for(var i=0;i<3;i++){var m=MM[st.dealt[i]];var c=document.createElement('div');c.className='dpc';c.style.borderColor=m.color;c.style.animationDelay=(0.4+i*0.3)+'s';c.innerHTML='<span class="dpc-i" style="color:'+m.color+'">'+m.icon+'</span><div class="dpc-n" style="color:'+m.color+'">'+m.name+'</div>';p.appendChild(c)}},260)}
 $('btnStart').addEventListener('click',function(){sndFlip();showCard(0)});
 
-function showCard(ci){st.ci=ci;var mir=MM[st.dealt[ci]];show('card',400);setTimeout(function(){$('cRL').textContent='Card '+(ci+1)+' of 3';var prog=$('cProg');prog.innerHTML='';for(var i=0;i<3;i++){var p=document.createElement('div');p.className='pip';if(i<ci)p.classList.add('done');if(i===ci)p.classList.add('cur');prog.appendChild(p)}var fr=$('cFrag');fr.textContent=st.frag;fr.style.animation='none';fr.offsetHeight;fr.style.animation='';var gd=$('cGuide');gd.innerHTML=mir.guide[st.tl];gd.style.animation='none';gd.offsetHeight;gd.style.animation='';var mc=$('mc');mc.style.animation='none';mc.offsetHeight;mc.style.animation='';$('mIcon').innerHTML=mir.icon;$('mIcon').style.color=mir.color;$('mIcon').style.borderColor=mir.color;$('mName').textContent=mir.name;$('mName').style.color=mir.color;$('mSub').textContent=mir.sub;$('mSeed').textContent=st.seed;$('mPr').innerHTML=mir.pr+'<span class="mc-pq">'+mir.pq+'</span>';var ta=$('mTa');ta.value='';var enc=$('mEnc');enc.textContent=pick(ENC);enc.style.animation='none';enc.offsetHeight;enc.style.animation='';setTimeout(function(){ta.focus()},600);var btn=$('btnNext');btn.classList.add('off');btn.innerHTML=ci<2?'Next &#8594;':'See all three &#10024;';ta.removeEventListener('input',onCI);ta.addEventListener('input',onCI)},450)}
+function showCard(ci){st.ci=ci;var mir=MM[st.dealt[ci]];show('card',260);setTimeout(function(){$('cRL').textContent='Card '+(ci+1)+' of 3';var prog=$('cProg');prog.innerHTML='';for(var i=0;i<3;i++){var p=document.createElement('div');p.className='pip';if(i<ci)p.classList.add('done');if(i===ci)p.classList.add('cur');prog.appendChild(p)}var fr=$('cFrag');fr.textContent=st.frag;fr.style.animation='none';fr.offsetHeight;fr.style.animation='';var gd=$('cGuide');gd.innerHTML=mir.guide[st.tl];gd.style.animation='none';gd.offsetHeight;gd.style.animation='';var mc2=$('mc');mc2.style.animation='none';mc2.offsetHeight;mc2.style.animation='';$('mIcon').innerHTML=mir.icon;$('mIcon').style.color=mir.color;$('mIcon').style.borderColor=mir.color;$('mName').textContent=mir.name;$('mName').style.color=mir.color;$('mSub').textContent=mir.sub;$('mSeed').textContent=st.seed;$('mPr').innerHTML=mir.pr+'<span class="mc-pq">'+mir.pq+'</span>';var ta=$('mTa');ta.value='';var enc=$('mEnc');enc.textContent=pick(ENC);enc.style.animation='none';enc.offsetHeight;enc.style.animation='';setTimeout(function(){ta.focus()},300);var btn=$('btnNext');btn.classList.add('off');btn.innerHTML=ci<2?'Next &#8594;':'See all three &#10024;';ta.removeEventListener('input',onCI);ta.addEventListener('input',onCI)},280)}
 function onCI(){if($('mTa').value.trim().length>=2)$('btnNext').classList.remove('off');else $('btnNext').classList.add('off')}
 $('btnNext').addEventListener('click',function(){var ta=$('mTa'),v=ta.value.trim();if(v.length<2)return;sndFlip();ta.removeEventListener('input',onCI);st.round.push({mirror:MM[st.dealt[st.ci]],response:v});if(st.ci<2){if(Math.random()<0.25)showWild(st.ci+1);else showCard(st.ci+1)}else showSum()});
 
@@ -698,9 +763,9 @@ cb.onclick=function(){sndFlip();showCard(nci)}},500)}
 function runBW(nci){var orb=$('wcBO'),lbl=$('wcBL');var ph=[{t:'in\u2026',exp:true,d:4000},{t:'hold\u2026',exp:true,d:4000},{t:'out\u2026',exp:false,d:4000},{t:'hold\u2026',exp:false,d:2000}];var s=0;orb.classList.remove('exp');lbl.textContent='ready\u2026';setTimeout(function(){sndBreathIn()},1000);setTimeout(function nx(){if(s>=ph.length){sndFlip();showCard(nci);return}var p=ph[s];lbl.textContent=p.t;if(p.exp){orb.classList.add('exp');if(s===0)sndBreathIn()}else{orb.classList.remove('exp');if(s===2)sndBreathOut()}s++;setTimeout(nx,p.d)},1200)}
 
 // ── SUMMARY ──
-function showSum(){sndDone();show('summary');setTimeout(function(){$('sumT').innerHTML='&#10024; Round complete';$('sumSeed').textContent='\u201C'+st.seed+'\u201D';var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<st.round.length;i++){var e=st.round[i];var d=document.createElement('div');d.className='se';d.style.animation='fu 0.6s ease '+(0.5+i*0.4)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+e.mirror.color+'"><span class="dot" style="background:'+e.mirror.color+'"></span> '+e.mirror.name+' \u2014 '+e.mirror.q+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=SUM_INS[st.tl];var rx=pick(RX);$('sumRx').innerHTML='<div class="summ-rx-t">Before you go</div><div class="summ-rx-text">'+rx.t+'</div><div class="summ-rx-sub">Carry what you found into your body and your world.</div>';saveRound();st.rc++;try{localStorage.setItem('eop_rc',String(st.rc))}catch(e){}},550)}
-$('btnAgain').addEventListener('click',function(){sndClick();show('timeline')});
-$('btnDone').addEventListener('click',function(){sndClick();show('home');setTimeout(updHome,600)});
+function showSum(){if(st.rt===2){st.rt=3;rtBanner(3);try{localStorage.setItem('eop_day',dayStr())}catch(e){}}sndDone();show('summary');setTimeout(function(){$('sumT').innerHTML=st.rt===3?'&#10024; Today, complete':'&#10024; Round complete';$('sumSeed').textContent='\u201C'+st.seed+'\u201D';var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<st.round.length;i++){var e=st.round[i];var d=document.createElement('div');d.className='se';d.style.animation='fu 0.6s ease '+(0.5+i*0.4)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+e.mirror.color+'"><span class="dot" style="background:'+e.mirror.color+'"></span> '+e.mirror.name+' \u2014 '+e.mirror.q+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=SUM_INS[st.tl];var rx=pick(RX);$('sumRx').innerHTML='<div class="summ-rx-t">Before you go</div><div class="summ-rx-text">'+rx.t+'</div><div class="summ-rx-sub">Carry what you found into your body and your world.</div>';saveRound();st.rc++;try{localStorage.setItem('eop_rc',String(st.rc))}catch(e){}},260)}
+$('btnAgain').addEventListener('click',function(){sndClick();st.rt=0;rtBanner(0);show('timeline')});
+$('btnDone').addEventListener('click',function(){sndClick();st.rt=0;rtBanner(0);show('home');setTimeout(updHome,300)});
 
 function saveRound(){try{var r=JSON.parse(localStorage.getItem('eop_r')||'[]');var d={ts:Date.now(),seed:st.seed,tl:st.tl,frag:st.frag,entries:[]};for(var i=0;i<st.round.length;i++)d.entries.push({mirror:st.round[i].mirror.id,response:st.round[i].response});r.unshift(d);if(r.length>50)r=r.slice(0,50);localStorage.setItem('eop_r',JSON.stringify(r))}catch(e){}}
 function loadR(){try{return JSON.parse(localStorage.getItem('eop_r')||'[]')}catch(e){return[]}}
@@ -729,8 +794,8 @@ it.addEventListener('click',function(e){
     sndClick();showHD(rd);
   }
 });
-list.appendChild(it)})(rounds[i],i)}},550)}
-function showHD(rd){show('summary');setTimeout(function(){$('sumT').textContent='';$('sumSeed').textContent='\u201C'+rd.seed+'\u201D';var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<rd.entries.length;i++){var e=rd.entries[i];var m=mBy(e.mirror);if(!m)continue;var d=document.createElement('div');d.className='se';d.style.animation='fu 0.5s ease '+(0.3+i*0.2)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+m.color+'"><span class="dot" style="background:'+m.color+'"></span> '+m.name+' \u2014 '+m.q+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=SUM_INS[rd.tl||'present'];$('sumRx').innerHTML=''},550)}
+list.appendChild(it)})(rounds[i],i)}},260)}
+function showHD(rd){show('summary');setTimeout(function(){$('sumT').textContent='';$('sumSeed').textContent='\u201C'+rd.seed+'\u201D';var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<rd.entries.length;i++){var e=rd.entries[i];var m=mBy(e.mirror);if(!m)continue;var d=document.createElement('div');d.className='se';d.style.animation='fu 0.5s ease '+(0.3+i*0.2)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+m.color+'"><span class="dot" style="background:'+m.color+'"></span> '+m.name+' \u2014 '+m.q+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=SUM_INS[rd.tl||'present'];$('sumRx').innerHTML=''},260)}
 $('btnClrH').addEventListener('click',function(){if(confirm('Release everything? This cannot be undone.')){try{localStorage.removeItem('eop_r');localStorage.setItem('eop_rc','0');st.rc=0}catch(e){}showHist()}});
 
 // ── MEMORY GARDEN / POSTCARDS ──
@@ -743,7 +808,7 @@ function startGarden(){
   setTimeout(function(){
     renderFormula();
     renderPostcards();
-  },550);
+  },260);
 }
 
 function renderFormula(){
@@ -889,7 +954,7 @@ function startBr(){
       if(p.e){orb.classList.add('exp');if(sec===0&&step%phases.length===0)sndBreathIn()}
       else{orb.classList.remove('exp');if(sec===0)sndBreathOut()}
       sec++;
-      if(sec>p.d){sec=0;step++;if(step%phases.length===0)st.bCyc++}
+      if(sec>p.d){sec=0;step++;if(step%phases.length===0){st.bCyc++;if(st.rt===1&&st.bCyc>=3){sndDone();rtAdvance();return}}}
       st.bTimer=setTimeout(tick,1000);
     }
     tick();
@@ -906,9 +971,9 @@ function stopBr(){
 }
 
 // ── GROUP ──
-function startGroup(){show('group');setTimeout(function(){$('grpTxt').textContent=pick(FRAGS)},550)}
+function startGroup(){show('group');setTimeout(function(){$('grpTxt').textContent=pick(FRAGS)},260)}
 $('btnGrpN').addEventListener('click',function(){sndClick();$('grpTxt').textContent=pick(FRAGS)});
-$('btnGrpH').addEventListener('click',function(){sndClick();show('home');setTimeout(updHome,600)});
+$('btnGrpH').addEventListener('click',function(){sndClick();show('home');setTimeout(updHome,300)});
 
 // ── ISOMETRIC ENGINE (2:1 dimetric, string-built SVG — shared ERRERlabs technique) ──
 var ISO_OX=250,ISO_OY=125;
@@ -1086,14 +1151,123 @@ $('btnExport').addEventListener('click',function(){
   }catch(e){alert('Your browser could not create the export file. You can also copy your data from browser dev tools: localStorage keys starting with eop_.')}
 });
 
+// ── MOODS — how you arrive tunes the room ──
+var MOODS=[
+{id:'dawn',icon:'☼',name:'Light',acc:[230,178,105],breath:'gentle',greet:'Keep it light. Maybe write down something worth keeping.'},
+{id:'ember',icon:'◆',name:'Heavy',acc:[201,168,76],breath:'gentle',greet:'This room can hold heavy things.'},
+{id:'tide',icon:'≈',name:'Quiet',acc:[143,196,174],breath:'box',greet:'Quiet is welcome here.'},
+{id:'violet',icon:'↺',name:'Restless',acc:[180,165,224],breath:'calm',greet:'Let’s slow the spin a little.'}
+];
+function dayStr(){return new Date().toDateString()}
+function moodBy(id){for(var i=0;i<MOODS.length;i++){if(MOODS[i].id===id)return MOODS[i]}return MOODS[1]}
+function syncBst(){for(var i=0;i<bsBtns.length;i++){if(bsBtns[i].getAttribute('data-bs')===st.bMode)bsBtns[i].classList.add('active');else bsBtns[i].classList.remove('active')}var bs=breathStyles[st.bMode];if(bs)$('breatheHint').textContent=bs.hint}
+function applyMood(id,save){
+  var m=moodBy(id);st.mood=m.id;
+  document.body.setAttribute('data-mood',m.id);
+  ACC.r=m.acc[0];ACC.g=m.acc[1];ACC.b=m.acc[2];
+  st.bMode=m.breath;syncBst();
+  if(save){try{localStorage.setItem('eop_mood',JSON.stringify({d:dayStr(),m:m.id}))}catch(e){}}
+}
+var mbtns=document.querySelectorAll('.mood-btn');
+for(var mb=0;mb<mbtns.length;mb++){(function(btn){btn.addEventListener('click',function(){initAudio();sndClick();applyMood(btn.getAttribute('data-mood'),true);show('home');setTimeout(updHome,300)})})(mbtns[mb])}
+$('moodSkip').addEventListener('click',function(){applyMood('ember',true);show('home');setTimeout(updHome,300)});
+$('moodChip').addEventListener('click',function(){sndClick();show('mood')});
+
+// ── TODAY — one tap, no decisions: breathe, one thought, three mirrors ──
+function rtBanner(step){
+  var b=$('rtBanner'),t=$('rtTxt'),sk=$('rtSkip');
+  if(!step){b.classList.remove('show');return}
+  t.textContent=step===1?'today · breathe':step===2?'today · one thing on your mind':'today · complete';
+  sk.style.display=step===1?'':'none';
+  b.classList.add('show');
+}
+function rtStart(){
+  st.rt=1;var m=moodBy(st.mood);st.bMode=m.breath;
+  rtBanner(1);show('breathe');
+  setTimeout(function(){syncBst();if(st.rt===1&&!st.bRun)startBr()},700);
+}
+function rtAdvance(){
+  if(st.rt!==1)return;
+  if(st.bRun)stopBr();
+  st.rt=2;st.tl='present';rtBanner(2);showSeed();
+}
+$('btnToday').addEventListener('click',function(){initAudio();sndClick();rtStart()});
+$('rtSkip').addEventListener('click',function(){sndClick();rtAdvance()});
+
+// ── MUSIC BOX — sparse generative notes, made on this device, off by default ──
+var MUS={on:false,t:null};
+var MSCALES={
+  ember:[196,220,246.9,293.7,329.6,392],
+  dawn:[261.6,293.7,329.6,392,440,523.3],
+  tide:[220,246.9,293.7,329.6,392,440],
+  violet:[207.7,233.1,277.2,311.1,370,415.3]
+};
+function musNote(){
+  if(!MUS.on||!AC)return;
+  var sc=MSCALES[st.mood]||MSCALES.ember;
+  var f=sc[Math.floor(Math.random()*sc.length)];
+  var t0=AC.currentTime;
+  var o=AC.createOscillator(),g=AC.createGain();
+  o.type='triangle';o.frequency.value=f;
+  g.gain.setValueAtTime(0,t0);
+  g.gain.linearRampToValueAtTime(0.016,t0+0.9);
+  g.gain.exponentialRampToValueAtTime(0.0006,t0+5);
+  o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+5.2);
+  if(Math.random()<0.35){
+    var o2=AC.createOscillator(),g2=AC.createGain();
+    o2.type='sine';o2.frequency.value=f*2;
+    g2.gain.setValueAtTime(0,t0+0.3);
+    g2.gain.linearRampToValueAtTime(0.006,t0+1.4);
+    g2.gain.exponentialRampToValueAtTime(0.0004,t0+5.5);
+    o2.connect(g2);g2.connect(AC.destination);o2.start(t0);o2.stop(t0+5.7);
+  }
+  MUS.t=setTimeout(musNote,2400+Math.random()*4200);
+}
+function updMusBtn(){var b=$('btnMusic');b.setAttribute('aria-pressed',MUS.on?'true':'false');if(MUS.on)b.classList.add('on');else b.classList.remove('on')}
+function musStart(){initAudio();if(AC&&AC.state==='suspended'&&AC.resume)AC.resume();if(!AC)return;MUS.on=true;musNote();updMusBtn()}
+function musStop(){MUS.on=false;if(MUS.t){clearTimeout(MUS.t);MUS.t=null}updMusBtn()}
+$('btnMusic').addEventListener('click',function(){
+  if(MUS.on){musStop();try{localStorage.setItem('eop_mus','0')}catch(e){}}
+  else{musStart();try{localStorage.setItem('eop_mus','1')}catch(e){}}
+});
+
+// ── COMFORT TEXT SIZE ──
+function updSizeBtn(on){var b=$('btnSize');b.setAttribute('aria-pressed',on?'true':'false');if(on)b.classList.add('on');else b.classList.remove('on')}
+$('btnSize').addEventListener('click',function(){
+  sndClick();
+  var on=document.documentElement.classList.toggle('big');
+  try{localStorage.setItem('eop_big',on?'1':'0')}catch(e){}
+  updSizeBtn(on);
+});
+
 $('btnWipe').addEventListener('click',function(){
   if(!confirm('Delete everything? Every round, every postcard, gone from this browser. There is no undo, and no copy anywhere — that’s the point.'))return;
-  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob')}catch(e){}
+  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob');localStorage.removeItem('eop_mood');localStorage.removeItem('eop_day');localStorage.removeItem('eop_mus');localStorage.removeItem('eop_big')}catch(e){}
   st.rc=0;st.ob=false;
+  musStop();
+  document.documentElement.classList.remove('big');updSizeBtn(false);
+  applyMood('ember',false);
   $('infoOv').classList.remove('open');
   closeVaultSheet();
   show('trust');
 });
+
+// ── BOOT — returning users skip straight in; today's mood is remembered ──
+(function boot(){
+  applyMood('ember',false);
+  try{if(localStorage.getItem('eop_big')==='1'){document.documentElement.classList.add('big');updSizeBtn(true)}}catch(e){}
+  var musPref=false;try{musPref=localStorage.getItem('eop_mus')==='1'}catch(e){}
+  if(musPref){
+    var musArm=function(){document.removeEventListener('click',musArm);if(!MUS.on)musStart()};
+    document.addEventListener('click',musArm);
+  }
+  if(st.ob){
+    var tr=$('screenTrust');tr.classList.remove('visible');tr.classList.remove('active');
+    var mrec=null;try{mrec=JSON.parse(localStorage.getItem('eop_mood')||'null')}catch(e){}
+    if(mrec&&mrec.d===dayStr()){applyMood(mrec.m,false);show('home',10);setTimeout(updHome,120)}
+    else{show('mood',10)}
+  }
+})();
 
 })();
 </script>
