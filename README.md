@@ -14,6 +14,8 @@ Zero network connections. Zero cookies. Zero tracking. Zero AI. One HTML file.
 - **Breathe** — Gentle, box, or 4-7-8 pacing under a living canvas bloom that breathes with you (mood-tinted petals, particle halo, phase ring). Plus two short guided practices — grounding (5-4-3-2-1) and a body scan — written by hand, claiming nothing. Invitation, not instruction. Stop anytime.
 - **The prompt orb** — Stuck on a blank page? Tap the orb and it draws one gentle example at a time from a hand-written deck. No wall of options, no repeats until the deck runs dry.
 - **Pass it on** — One button shares the app via your device's own share sheet; another copies a finished round as plain text to hand to a friend, a counselor, or your journal. The app itself still transmits nothing.
+- **Rhythm seeds** — Each day you practice adds one seed to a small golden spiral on the home screen. There is no streak to break: rest never subtracts, showing up only adds. Consistency without guilt.
+- **Lives on your Home Screen** — The info panel teaches Add-to-Home-Screen on iOS and Android (with a one-tap Install button where the browser offers it). When a new version ships, the app quietly notices and offers a one-tap refresh — your words live in browser storage, not app files, so updates never touch them.
 - **Memory Postcards** — Nonlinear story prompts (who/where/when/what/how/why) for capturing a memory — yours, or one a loved one shares. Seal it into a postcard.
 - **Memory Vault** — Your sealed postcards and past rounds on an isometric shelf. Pick one up, turn it over, sit with it.
 - **Group** — A fragment in the center of the table. Read it aloud, share what it brings up. Face to face.
