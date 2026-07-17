@@ -24,6 +24,8 @@ Nothing on our end.
 
 The application stores reflections and memories in your browser's local storage — a small database that lives on your device and is controlled entirely by you. We never see it. We never access it. We have no mechanism to access it.
 
+It also stores a few small preferences the same way: today's mood choice, whether larger text is on, whether the optional music is on, and whether you've seen the intro. These live on your device only, like everything else, and are erased by the same "delete everything" button.
+
 You can export this data as a JSON file at any time from the info panel (the &#9432; button). The export is generated on your device as a local file — no upload, no server. You can delete everything with one button in the same panel. When you delete it, it is gone. We have no backup because we never had a copy.
 
 One honest caveat: localStorage belongs to your browser, not to us. If you clear your browser data, use private/incognito mode, or your device's storage manager evicts site data, your entries can be lost. If something matters to you, export it.

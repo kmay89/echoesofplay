@@ -20,7 +20,7 @@ The `document.cookie` API is never called. No `Set-Cookie` header is sent. There
 
 ## Local storage
 
-The application uses your browser's `localStorage` to save reflections and memories you choose to keep. Local storage is not a cookie. It is a key-value store that lives on your device, is never transmitted to any server, and is fully under your control.
+The application uses your browser's `localStorage` to save reflections and memories you choose to keep, plus a few small preferences (today's mood, text size, music on/off, whether you've seen the intro). Local storage is not a cookie. It is a key-value store that lives on your device, is never transmitted to any server, and is fully under your control.
 
 You can view, export, or delete everything stored in localStorage at any time through the application's info panel (the ℹ button).
 
