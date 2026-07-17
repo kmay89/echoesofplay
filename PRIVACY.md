@@ -2,7 +2,7 @@
 
 **Echoes of Play — echoesofplay.com**
 **ERRERlabs — errerlabs.com**
-**Last updated: February 2026**
+**Last updated: July 2026**
 
 ---
 
@@ -24,13 +24,17 @@ Nothing on our end.
 
 The application stores reflections and memories in your browser's local storage — a small database that lives on your device and is controlled entirely by you. We never see it. We never access it. We have no mechanism to access it.
 
-You can export this data as a JSON file at any time. You can delete it with one button. When you delete it, it is gone. We have no backup because we never had a copy.
+You can export this data as a JSON file at any time from the info panel (the &#9432; button). The export is generated on your device as a local file — no upload, no server. You can delete everything with one button in the same panel. When you delete it, it is gone. We have no backup because we never had a copy.
+
+One honest caveat: localStorage belongs to your browser, not to us. If you clear your browser data, use private/incognito mode, or your device's storage manager evicts site data, your entries can be lost. If something matters to you, export it.
 
 ## What we transmit
 
 Nothing.
 
 This application makes zero network connections after the initial page load. No API calls. No analytics pings. No telemetry. No font requests. No CDN calls. No WebSocket connections. No beacon transmissions. The network tab in your browser's developer tools will be empty.
+
+For completeness: the service worker (sw.js) requests copies of the application's own files from the same domain, once, so the app can work offline. Those requests carry no user data — they are the app downloading itself. Nothing you write is ever in any request.
 
 You are encouraged to verify this yourself.
 

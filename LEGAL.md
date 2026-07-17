@@ -2,7 +2,7 @@
 
 **Echoes of Play — echoesofplay.com**
 **ERRERlabs — errerlabs.com**
-**Last updated: February 2026**
+**Last updated: July 2026**
 
 ---
 
@@ -16,12 +16,39 @@ By using Echoes of Play, you acknowledge the following. We've written it plainly
 
 Echoes of Play is not therapy. It is not counseling. It is not a medical device. It is not a diagnostic tool. It is not a substitute for professional mental health care.
 
-The responses you see are generated from hand-written text fragments using pattern matching. There is no artificial intelligence. There is no understanding. The application cannot assess your mental state, detect crisis, or provide clinical guidance.
+Every fragment, prompt, and question in the application is hand-written and selected by simple randomness. There is no artificial intelligence. There is no analysis of what you write. There is no understanding. The application cannot assess your mental state, detect crisis, or provide clinical guidance — and it does not try to.
 
 If you are experiencing a mental health crisis, please contact:
 - **988 Suicide & Crisis Lifeline** — call or text 988
 - **Crisis Text Line** — text HOME to 741741
 - **International Association for Suicide Prevention** — iasp.info/resources/Crisis_Centres/
+
+These resources are also listed inside the application, in the info panel (the &#9432; button), where they are reachable from every screen.
+
+## 1a. What we think it's good for — and what we don't claim
+
+We built this because slowing down to look at one thought from several angles, writing by hand-ish, breathing on purpose, and telling the story of a memory are old, ordinary, human practices. Many people find them steadying. That is the entire claim.
+
+What we think it may be good for:
+- Taking a few quiet minutes with a thought instead of scrolling past it
+- Seeing one situation from more than one angle before reacting to it
+- Slowing your breathing, which many people find calming
+- Capturing a memory — yours, or one a loved one shares with you — in their own words, with dignity
+- Sitting with another person and talking about something that matters
+
+What we do not claim:
+- We do not claim it treats, prevents, or diagnoses any condition
+- We do not claim it improves mental health outcomes
+- We do not cite studies as if they were about this product; they are not
+- We do not claim it is right for everyone. Reflective writing can stir up difficult feelings. If it does, stop, and consider talking to someone you trust or a professional.
+
+If a future version of this document claims more than this, be suspicious of it.
+
+## 1b. Breathing exercises — a note on safety
+
+The breathing screen invites slow breathing at your own pace. Guidance is invitation, not instruction: you set the pace, you can stop at any time, and nothing tracks whether you continue.
+
+Slow or held breathing (like box breathing or 4-7-8) can make some people lightheaded or dizzy, especially at first. If that happens, return to normal breathing. Do not use paced breathing exercises while driving, standing in a precarious place, or in water. If you have a respiratory or cardiovascular condition, or you are pregnant, check with your clinician about breath-holding practices. This is a general-audience relaxation aid, not a prescribed exercise.
 
 ## 2. Your data is yours
 
@@ -29,9 +56,9 @@ Everything you write stays on your device. We have no access to it. We have no c
 
 You are responsible for exporting and backing up anything you want to keep. We recommend regular exports, especially for Memory Garden content.
 
-## 3. The Memory Garden
+## 3. Memory Postcards (the Memory Garden)
 
-The Memory Garden is designed for capturing memories shared by loved ones, including those experiencing cognitive changes such as dementia. Please note:
+Memory Postcards are designed for capturing memories shared by loved ones, including those experiencing cognitive changes such as dementia. Please note:
 
 - The application does not record audio. Text entry only.
 - We encourage you to obtain the consent of anyone whose words you are recording, to the extent they are able to give it.
@@ -39,6 +66,13 @@ The Memory Garden is designed for capturing memories shared by loved ones, inclu
 - We are not responsible for how exported data is used, stored, or distributed after it leaves the application.
 
 Treat the memories people share with you with the dignity they deserve.
+
+## 3a. Copyright
+
+- **The application** — code, hand-written fragments, prompts, and visual design — is copyright ERRERlabs / Karl Meves and licensed to everyone under Apache 2.0 (see LICENSE). You may use, copy, modify, and redistribute it under those terms.
+- **Everything you write** in the application is yours. We claim no copyright, no license, and no interest of any kind in your reflections or memories. We could not claim them even if we wanted to — we never receive them.
+- **Memories shared with you by others** (for example, in the Memory Postcards) may carry their own moral weight even where copyright law is silent. Treat them accordingly.
+- "Echoes of Play" and "ERRERlabs" are names we use to identify our work. Don't use them to identify yours — see section 4.
 
 ## 4. Open source and forking
 
@@ -69,7 +103,7 @@ Parents and guardians: the application contains no advertising, no social featur
 
 ## 8. Accessibility
 
-We have designed for accessibility: semantic HTML, ARIA attributes, keyboard navigation, screen reader support, high contrast readability, prefers-reduced-motion respect, and minimum 48px touch targets. If you encounter accessibility barriers, please let us know via GitHub issues.
+We aim for accessibility: semantic HTML, ARIA attributes, keyboard focus indicators, readable contrast, and respect for prefers-reduced-motion (animations are effectively disabled when your system requests reduced motion). We do not claim perfection — if you encounter accessibility barriers, please tell us via GitHub issues and we will treat it as a bug, because it is one.
 
 ## 9. Changes
 

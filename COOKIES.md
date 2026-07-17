@@ -2,7 +2,7 @@
 
 **Echoes of Play — echoesofplay.com**
 **ERRERlabs — errerlabs.com**
-**Last updated: February 2026**
+**Last updated: July 2026**
 
 ---
 

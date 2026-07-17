@@ -91,9 +91,7 @@ grep -oP '(src|href)="https?://' index.html
 ├── LEGAL.md            # Terms of use
 ├── COOKIES.md          # Cookie policy (there are none)
 ├── LICENSE             # Apache 2.0
-├── netlify.toml        # Netlify deployment config
-├── _headers            # Security headers
-├── _redirects          # URL redirects
+├── netlify.toml        # Netlify deployment config (includes security headers + redirects)
 └── README.md           # Project README
 ```
 
