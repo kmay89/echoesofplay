@@ -349,6 +349,7 @@ html.fs2{font-size:130%}
 .orb-ball::after{content:'';position:absolute;top:8px;left:13px;width:14px;height:8px;border-radius:50%;background:rgba(255,255,255,0.10);transform:rotate(-25deg)}
 .orb-ball:hover,.orb-ball:focus{transform:translateY(-2px);border-color:var(--gold-dim)}
 .orb-ball.shake{animation:orbShake 0.45s ease}
+.orb-ball.rest{opacity:0.4;pointer-events:none;cursor:default;transform:none}
 @keyframes orbShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}50%{transform:rotate(7deg)}75%{transform:rotate(-4deg)}}
 .orb-win{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle,var(--gold-glow),rgba(0,0,0,0.65));display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:var(--gold)}
 .orb-side{flex:1;min-width:0;text-align:left}
@@ -772,6 +773,57 @@ var SEED_EX={
 past:['I keep thinking about what she said','I miss who I used to be','That summer changed everything','I never got to say goodbye','The house we grew up in','A friendship that just faded out','Something I said that I can\'t take back','A time I was braver than I knew','The last ordinary day before everything changed','A teacher who saw something in me','The argument we never finished','A place I haven\'t been back to since'],
 present:['I keep avoiding the phone call','I don\'t know if I\'m happy or just comfortable','We keep having the same argument','My friend said something that stuck','I\'m tired in a way sleep doesn\'t fix','Everyone needs something from me today','I feel behind everyone my age','There\'s a decision I keep postponing','I can\'t tell if I\'m overreacting','Something small upset me more than it should have','I\'m proud of something nobody noticed','The house is quiet and I don\'t know what to do with it'],
 future:['I\'m nervous about tomorrow','I don\'t know which path to choose','I want to change but I\'m scared','What if I make the wrong decision','Who do I want to be in five years','I\'m waiting for news that could change things','I want to ask for more but I\'m afraid to','Something is ending and I don\'t know what\'s next','I keep imagining the worst outcome','There\'s a conversation I need to have soon','I\'m hoping this time will be different','What I\'d do if I weren\'t afraid']};
+
+// Hand-written sentence templates. Every slot is written so that ANY
+// combination reads like a person wrote it — no random word salad. They
+// are assembled once at load and dealt from the same no-repeat deck as
+// the curated lines above. Procedural, auditable, no AI.
+var SEED_TPL={
+past:[
+ ['I still think about ',['what she said','what I didn\'t say','that phone call','the way it ended','that last conversation','the friend who drifted away','who I was back then','the drive home afterward']],
+ ['I never told ',['my mother','my father','my best friend','my grandmother','them','anyone'],[' how much it meant',' that I was struggling',' the whole truth',' how scared I was',' that I\'d forgiven them',' a proper thank you']],
+ ['Part of me is still ',['in that summer','in that hospital room','at that kitchen table','in our old house','on that last day','inside that argument','at the door, waving']],
+ ['I keep replaying ',['the last thing they said','the moment it went wrong','that goodbye','the decision I made','what I should have said','the look on their face']],
+ ['Back then I was ',['lighter','braver','softer','angrier','more trusting'],[' than I ever gave myself credit for','. I wonder where that went',', and nobody knew',', and it shaped everything after','. Some days I miss it']]
+],
+present:[
+ ['I keep putting off ',['the phone call','that conversation','the appointment','deciding','asking for help','the apology I owe','opening that envelope']],
+ [['A heaviness','A restlessness','An old anger','A quiet sadness','A tightness','A numbness'],[' keeps showing up in the mornings',' keeps showing up at night, when it\'s quiet',' keeps showing up around my family',' keeps showing up at work',' keeps showing up out of nowhere',' keeps showing up on Sundays']],
+ ['There\'s a distance growing between me and ',['my partner','my sister','my brother','my kids','my oldest friend','who I used to be','my own body']],
+ ['Everyone thinks I\'m ',['fine','the strong one','over it','so patient','handling it'],['. Most days I\'m not sure','. It\'s getting heavy to carry','. I\'d like to set it down sometimes',', and I almost believe it too','. Today I don\'t feel it']]
+],
+future:[
+ ['What if ',['I choose wrong','it\'s too late to change','they say no','I\'m not ready','it doesn\'t get better','the answer is no one\'s fault']],
+ ['I want ',['to start over','to speak up','to move','to ask for more','to let this go','to try again'],[', but I\'m scared of what changes',', but I don\'t know how to begin',', but the timing never feels right',', but part of me isn\'t sure',', but I keep waiting for permission']],
+ ['A year from now, I hope ',['this feels smaller','I\'ve forgiven myself','we\'re still talking','I\'ve at least started','I\'m softer with myself','I can breathe easier']],
+ ['Soon I\'ll have to ',['decide','tell them','say goodbye','stand up for myself','begin again','let something go'],[', and I\'m not sure I\'m ready',', and I\'ve been circling it for weeks',', and I\'m more tired than afraid',', and no one can do it for me',', and maybe that\'s okay']],
+ ['Who would I be ',['without this worry','if I said yes','if I stopped performing','without the old story','if I let myself rest']]
+]};
+// "Both-and" tensions get their own shape — the pairs are curated
+// together so each one names a real ambivalence
+var SEED_PAIRS=[['tired','done'],['patient','stuck'],['content','settling'],['angry','hurt'],['calm','numb'],['helping','enabling'],['careful','afraid']];
+var SEED_ALL={past:[],present:[],future:[]};
+(function(){
+  function expand(parts){
+    var acc=[''];
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i];
+      if(typeof p==='string'){for(var j=0;j<acc.length;j++)acc[j]+=p}
+      else{
+        var next=[];
+        for(var j2=0;j2<acc.length;j2++)for(var k=0;k<p.length;k++)next.push(acc[j2]+p[k]);
+        acc=next;
+      }
+    }
+    return acc;
+  }
+  for(var tl2 in SEED_TPL){
+    var out=SEED_EX[tl2].slice();
+    for(var t3=0;t3<SEED_TPL[tl2].length;t3++)out=out.concat(expand(SEED_TPL[tl2][t3]));
+    SEED_ALL[tl2]=out;
+  }
+  for(var pp=0;pp<SEED_PAIRS.length;pp++)SEED_ALL.present.push('I can\'t tell if I\'m '+SEED_PAIRS[pp][0]+' or just '+SEED_PAIRS[pp][1]);
+})();
 var SUM_INS={past:'Memories aren\'t recordings. They\'re reflections. You just held three lenses.',present:'Same situation, three angles. The full shape lives between them.',future:'Decisions look different from every angle. The answer lives where they overlap.'};
 var TL_CTX={past:'Looking back',present:'Looking at now',future:'Looking ahead'};
 var BR_AFT=['Your breath is always there. Come back anytime.','That rhythm has been with you since birth.','The space between breaths is where your next thought lives.','You just gave yourself something most people forget they need.'];
@@ -885,12 +937,12 @@ for(var i=0;i<tlBtns.length;i++){(function(btn){btn.addEventListener('click',fun
 
 // ── SEED ──
 var seedIn=$('seedIn'),seedCt=$('seedCt'),btnDeal=$('btnDeal');
-function showSeed(){show('seed');setTimeout(function(){$('seedCtx').textContent=TL_CTX[st.tl];$('orbHint').textContent='Blank page? Tap the orb — it holds other people’s beginnings.';var sl=$('orbSlip');sl.textContent='';sl.classList.remove('reveal');$('orbUse').style.display='none';orbCur='';seedIn.value='';seedCt.textContent='0';btnDeal.classList.add('off')},260)}
+function showSeed(){show('seed');setTimeout(function(){$('seedCtx').textContent=TL_CTX[st.tl];$('orbHint').textContent='Blank page? Tap the orb — it holds other people’s beginnings.';var sl=$('orbSlip');sl.textContent='';sl.classList.remove('reveal');$('orbUse').style.display='none';orbCur='';orbDraws=0;orbBusy=false;$('orbDraw').classList.remove('rest');seedIn.value='';seedCt.textContent='0';btnDeal.classList.add('off')},260)}
 
 // ── PROMPT ORB — a shuffled deck per timeframe, no repeats until it runs dry ──
 var exDeck={past:[],present:[],future:[]},orbCur='';
 function drawEx(){
-  var pool=SEED_EX[st.tl]||SEED_EX.present;
+  var pool=SEED_ALL[st.tl]||SEED_ALL.present;
   if(!exDeck[st.tl]||!exDeck[st.tl].length){
     var idx=[];for(var i=0;i<pool.length;i++)idx.push(i);
     exDeck[st.tl]=shuf(idx);
@@ -898,17 +950,30 @@ function drawEx(){
   return pool[exDeck[st.tl].pop()];
 }
 function useOrb(){if(!orbCur)return;sndClick();seedIn.value=orbCur;seedCt.textContent=String(orbCur.length);btnDeal.classList.remove('off');seedIn.focus()}
+// Three offerings per sitting, with a beat between them. Endless
+// shuffling is avoidance wearing a costume — after three, the orb
+// rests and hands the pen back.
+var orbDraws=0,orbBusy=false;
 $('orbDraw').addEventListener('click',function(){
+  var b=$('orbDraw');
+  if(orbBusy||b.classList.contains('rest'))return;
+  orbDraws++;orbBusy=true;
   initAudio();sndFlip();
-  var b=$('orbDraw');b.classList.remove('shake');b.offsetWidth;b.classList.add('shake');
+  b.classList.remove('shake');b.offsetWidth;b.classList.add('shake');
   var sl=$('orbSlip');sl.classList.remove('reveal');
   setTimeout(function(){
     orbCur=drawEx();
     sl.textContent='“'+orbCur+'”';
     sl.offsetWidth;sl.classList.add('reveal');
-    $('orbHint').textContent='';
     $('orbUse').style.display='block';
+    if(orbDraws>=3){
+      b.classList.add('rest');
+      $('orbHint').textContent='The orb rests now. Three is enough for one sitting — or bring your own words.';
+    }else{
+      $('orbHint').textContent='';
+    }
   },320);
+  setTimeout(function(){orbBusy=false},1600);
 });
 $('orbSlip').addEventListener('click',useOrb);
 $('orbSlip').addEventListener('keydown',function(e){if(e.keyCode===13||e.keyCode===32){e.preventDefault();useOrb()}});
