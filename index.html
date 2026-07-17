@@ -365,6 +365,18 @@ html.fs2{font-size:130%}
 @media(prefers-reduced-motion:reduce){#bCanvas{display:none}.breathe-orb{opacity:1}}
 .pr-text{font-size:0.84rem;color:var(--text-mid);font-style:italic;line-height:1.6;max-width:300px;min-height:2.6em}
 
+/* RHYTHM SEEDS — days of showing up, one seed each, never breaking */
+.rhythm-row{display:flex;align-items:center;gap:10px;max-width:360px;width:100%;justify-content:center;padding:2px 0}
+.rhythm-row canvas{width:44px;height:44px;flex-shrink:0}
+.rhythm-txt{font-size:0.7rem;color:var(--text-dim);font-style:italic;text-align:left;line-height:1.5;max-width:240px}
+.a2hs-tip{font-size:0.64rem;color:var(--text-faint);text-align:center}
+
+/* UPDATE BANNER — a new version exists, one tap to refresh */
+.upd-banner{position:fixed;bottom:0;left:50%;transform:translate(-50%,120%);width:100%;max-width:480px;background:var(--surface);border:1px solid var(--gold-dim);border-bottom:none;border-radius:var(--cr) var(--cr) 0 0;padding:14px 18px;z-index:220;display:flex;gap:12px;align-items:center;justify-content:space-between;transition:transform 0.5s ease;box-shadow:0 -8px 30px rgba(0,0,0,0.5)}
+.upd-banner.show{transform:translate(-50%,0)}
+.upd-txt{font-size:0.76rem;color:var(--text-mid);line-height:1.5}
+.upd-txt em{color:var(--gold);font-style:normal}
+
 /* Extra fixed buttons (music, text size) */
 .btn-music{right:56px;font-style:normal}
 .btn-size{right:98px;font-style:normal;font-size:0.66rem;letter-spacing:0}
@@ -381,6 +393,7 @@ html.fs2{font-size:130%}
 <button class="btn-info btn-size" id="btnSize" aria-pressed="false" aria-label="Larger text, on or off">Aa</button>
 <div class="rt-banner" id="rtBanner" aria-live="polite"><span id="rtTxt"></span><button class="rt-skip" id="rtSkip">skip &#8594;</button></div>
 <div class="fs-toast" id="fsToast" role="status" aria-live="polite"></div>
+<div class="upd-banner" id="updBanner" role="status"><span class="upd-txt"><em>A newer version of this room exists.</em><br>Your words stay put — refreshing only renews the walls.</span><button class="btn-s" id="btnUpd">refresh</button></div>
 
 <div class="screen trust active visible" id="screenTrust"><div class="trust-sphere"><canvas id="trustSphere" width="120" height="120"></canvas></div><h1>Echoes of Play</h1><div class="trust-sub">A quiet room for your thoughts.<br>Sand on the table. Nothing leaves.</div><div class="trust-promises" id="trustP"><span>Nothing stored on any server</span><span>No accounts, no tracking</span><span>Your words stay here only</span><span>Delete everything at any time</span></div><button class="btn-p" id="btnTrust">Enter</button><div class="safety">In crisis: <a href="tel:988">988</a> · <a href="https://988lifeline.org">988lifeline.org</a></div></div>
 
@@ -399,7 +412,7 @@ html.fs2{font-size:130%}
 
 <div class="screen ob" id="screenOnboard4"><div class="step-dots"><div class="sd done"></div><div class="sd done"></div><div class="sd done"></div><div class="sd on"></div></div><h2>The six mirrors</h2><div class="g-sm">Each is a different lens. You get 3 random ones per round.</div><div class="ob-cards" id="obCards"></div><div class="g-sm">You don't pick — they're dealt. Surprise is part of it.</div><button class="btn-p" id="btnOb4">I'm ready</button></div>
 
-<div class="screen home" id="screenHome"><div class="home-title">Echoes of Play</div><div class="home-sphere" id="homeSphere"><canvas id="homeSphereC" width="140" height="140"></canvas></div><div class="equator-hint">find the equator</div><div class="home-bl" id="homeBL">tap to breathe</div><div class="home-greeting" id="homeGreet"></div><button class="mood-chip" id="moodChip"></button><button class="today-card" id="btnToday"><span class="tc-k">Today</span><span class="tc-t" id="tcT">Breathe. One thought. Three mirrors.</span><span class="tc-s" id="tcS">About five minutes. One tap, no decisions.</span></button><div class="equator-hint" style="margin-top:2px">or wander</div><div class="ng"><button class="nc pr" id="navPlay"><span class="ni">&#9671;</span><span class="nl">Play a Round</span><span class="nd">3 mirrors, 5 minutes</span></button><button class="nc" id="navGarden"><span class="ni">&#9993;</span><span class="nl">Memory Postcards</span><span class="nd">Story fragments, sealed and kept</span></button><button class="nc" id="navBreathe"><span class="ni">&#9711;</span><span class="nl">Breathe</span><span class="nd">Your oldest rhythm</span></button><button class="nc" id="navGroup"><span class="ni">&#9674;</span><span class="nl">Group</span><span class="nd">Share a prompt together</span></button><button class="nc" id="navVault"><span class="ni">&#9707;</span><span class="nl">Memory Vault</span><span class="nd">Your shelf of kept things</span></button><button class="nc" id="navHist"><span class="ni">&#9776;</span><span class="nl">Past Rounds</span><span class="nd">What you've written</span></button></div></div>
+<div class="screen home" id="screenHome"><div class="home-title">Echoes of Play</div><div class="home-sphere" id="homeSphere"><canvas id="homeSphereC" width="140" height="140"></canvas></div><div class="equator-hint">find the equator</div><div class="home-bl" id="homeBL">tap to breathe</div><div class="home-greeting" id="homeGreet"></div><button class="mood-chip" id="moodChip"></button><button class="today-card" id="btnToday"><span class="tc-k">Today</span><span class="tc-t" id="tcT">Breathe. One thought. Three mirrors.</span><span class="tc-s" id="tcS">About five minutes. One tap, no decisions.</span></button><div class="rhythm-row" id="rhythmRow" style="display:none"><canvas id="rhythmCv" width="88" height="88" aria-hidden="true"></canvas><span class="rhythm-txt" id="rhythmTxt"></span></div><div class="a2hs-tip" id="a2hsTip" style="display:none">tip: this room lives happily on your Home Screen — the i button explains how</div><div class="equator-hint" style="margin-top:2px">or wander</div><div class="ng"><button class="nc pr" id="navPlay"><span class="ni">&#9671;</span><span class="nl">Play a Round</span><span class="nd">3 mirrors, 5 minutes</span></button><button class="nc" id="navGarden"><span class="ni">&#9993;</span><span class="nl">Memory Postcards</span><span class="nd">Story fragments, sealed and kept</span></button><button class="nc" id="navBreathe"><span class="ni">&#9711;</span><span class="nl">Breathe</span><span class="nd">Your oldest rhythm</span></button><button class="nc" id="navGroup"><span class="ni">&#9674;</span><span class="nl">Group</span><span class="nd">Share a prompt together</span></button><button class="nc" id="navVault"><span class="ni">&#9707;</span><span class="nl">Memory Vault</span><span class="nd">Your shelf of kept things</span></button><button class="nc" id="navHist"><span class="ni">&#9776;</span><span class="nl">Past Rounds</span><span class="nd">What you've written</span></button></div></div>
 
 <div class="screen timeline" id="screenTimeline"><div class="seed-step">Step 1 of 3</div><div style="font-size:1rem;color:var(--text);font-weight:400;text-align:center">When is this from?</div><div class="g-sm">This shapes how the mirrors ask their questions.</div><div class="tl-grid"><button class="tl-btn" data-tl="past"><span class="tl-icon">&#9668;</span><span class="tl-label">Past</span><span class="tl-sub">A memory, something that happened</span></button><button class="tl-btn" data-tl="present"><span class="tl-icon">&#9679;</span><span class="tl-label">Now</span><span class="tl-sub">A feeling, a conflict</span></button><button class="tl-btn" data-tl="future"><span class="tl-icon">&#9658;</span><span class="tl-label">Future</span><span class="tl-sub">A decision, something coming</span></button></div></div>
 
@@ -516,6 +529,15 @@ html.fs2{font-size:130%}
         <button class="btn-s" id="btnWipe" style="color:var(--inside);border-color:var(--inside)">Delete everything</button>
       </div>
       <div class="info-note">Export creates a file on your device — nothing is uploaded, because there is nowhere to upload to. Delete removes every entry from this browser, permanently. We can't recover it, because we never had it.</div></div>
+
+    <div class="info-sec"><div class="info-h">Keep it close</div>
+      <div class="info-p">This room lives happily on your Home Screen — it opens instantly, full screen, and works with no connection at all.</div>
+      <ul class="info-list">
+        <li><em>iPhone &amp; iPad</em> — open this page in Safari, tap the Share square, then &ldquo;Add to Home Screen&rdquo;</li>
+        <li><em>Android</em> — tap the browser&rsquo;s &#8942; menu, then &ldquo;Add to Home screen&rdquo; (or &ldquo;Install app&rdquo;)</li>
+      </ul>
+      <div class="info-acts" id="installRow" style="display:none"><button class="btn-s" id="btnInstall">&#8853; Install now</button></div>
+      <div class="info-note">When a new version ships, the app quietly notices and offers a one-tap refresh. Your reflections live in this browser&rsquo;s storage, not in the app&rsquo;s files — updates never touch them.</div></div>
 
     <div class="info-sec"><div class="info-h">Pass it on</div>
       <div class="info-p">The best way to support this is to hand it to someone who needs a quiet room.</div>
@@ -818,6 +840,36 @@ function updHome(){
   var done=false;try{done=localStorage.getItem('eop_day')===dayStr()}catch(e){}
   if(done){$('tcT').textContent='Done for today.';$('tcS').textContent='Nothing is counting. Wander below, or go be in your day.'}
   else{$('tcT').textContent='Breathe. One thought. Three mirrors.';$('tcS').textContent='About five minutes. One tap, no decisions.'}
+  var dd=loadDays(),rrw=$('rhythmRow');
+  if(dd.c>0){
+    rrw.style.display='flex';
+    drawRhythm(dd.c);
+    $('rhythmTxt').textContent=dd.c===1?'One seed. A day you showed up. It only grows.':dd.c+' seeds — one for each day you’ve come back. Rest never breaks it.';
+  }else rrw.style.display='none';
+  var standalone=false;
+  try{standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true}catch(e){}
+  $('a2hsTip').style.display=(!standalone&&(st.rc>0||dd.c>0))?'':'none';
+}
+
+// ── RHYTHM SEEDS — one seed per day of practice; a spiral that only grows ──
+function loadDays(){try{return JSON.parse(localStorage.getItem('eop_days')||'{"c":0,"last":""}')}catch(e){return{c:0,last:''}}}
+function bumpDays(){try{var d2=loadDays();if(d2.last!==dayStr()){d2.c++;d2.last=dayStr();localStorage.setItem('eop_days',JSON.stringify(d2))}}catch(e){}}
+function drawRhythm(cnt){
+  var cv2=$('rhythmCv');if(!cv2)return;
+  var g3=cv2.getContext('2d');
+  g3.clearRect(0,0,88,88);
+  var GA2=2.399963229728653;
+  var n2=cnt>144?144:cnt;
+  var sc=12.4,maxR=sc*Math.sqrt(n2-0.5<0.5?0.5:n2-0.5),f2=maxR>38?38/maxR:1;
+  for(var i4=0;i4<n2;i4++){
+    var rr2=sc*Math.sqrt(i4+0.5)*f2;
+    var aa=i4*GA2;
+    var xx=44+Math.cos(aa)*rr2,yy=44+Math.sin(aa)*rr2;
+    var newest=(i4===n2-1);
+    g3.beginPath();g3.arc(xx,yy,newest?3.4:2.2,0,Math.PI*2);
+    g3.fillStyle=newest?accA(0.9):accA(0.5);
+    g3.fill();
+  }
 }
 $('homeSphere').addEventListener('click',function(){sndClick();show('breathe')});
 $('navPlay').addEventListener('click',function(){sndClick();show('timeline')});
@@ -884,7 +936,7 @@ function showSum(){if(st.rt===2){st.rt=3;rtBanner(3);try{localStorage.setItem('e
 $('btnAgain').addEventListener('click',function(){sndClick();st.rt=0;rtBanner(0);show('timeline')});
 $('btnDone').addEventListener('click',function(){sndClick();st.rt=0;rtBanner(0);show('home');setTimeout(updHome,300)});
 
-function saveRound(){try{var r=JSON.parse(localStorage.getItem('eop_r')||'[]');var d={ts:Date.now(),seed:st.seed,tl:st.tl,frag:st.frag,entries:[]};for(var i=0;i<st.round.length;i++)d.entries.push({mirror:st.round[i].mirror.id,response:st.round[i].response});r.unshift(d);if(r.length>50)r=r.slice(0,50);localStorage.setItem('eop_r',JSON.stringify(r))}catch(e){}}
+function saveRound(){try{var r=JSON.parse(localStorage.getItem('eop_r')||'[]');var d={ts:Date.now(),seed:st.seed,tl:st.tl,frag:st.frag,entries:[]};for(var i=0;i<st.round.length;i++)d.entries.push({mirror:st.round[i].mirror.id,response:st.round[i].response});r.unshift(d);if(r.length>50)r=r.slice(0,50);localStorage.setItem('eop_r',JSON.stringify(r))}catch(e){}bumpDays()}
 function loadR(){try{return JSON.parse(localStorage.getItem('eop_r')||'[]')}catch(e){return[]}}
 
 // ── HISTORY with graceful deletion ──
@@ -989,6 +1041,7 @@ $('btnSealCard').addEventListener('click',function(){
     pcs.unshift(pc);if(pcs.length>30)pcs=pcs.slice(0,30);
     localStorage.setItem('eop_pc',JSON.stringify(pcs));
   }catch(e){}
+  bumpDays();
   // The card folds itself away into the vault, then a fresh one appears
   var card=$('formulaCard');
   card.classList.add('sealing');
@@ -1573,11 +1626,53 @@ $('btnWipe').addEventListener('click',function(){
   applyFS(0,false);
   applyMood('ember',false);
   st.rc=0;st.ob=false;
-  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob');localStorage.removeItem('eop_mood');localStorage.removeItem('eop_day');localStorage.removeItem('eop_mus');localStorage.removeItem('eop_big');localStorage.removeItem('eop_fs')}catch(e){}
+  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob');localStorage.removeItem('eop_mood');localStorage.removeItem('eop_day');localStorage.removeItem('eop_mus');localStorage.removeItem('eop_big');localStorage.removeItem('eop_fs');localStorage.removeItem('eop_days')}catch(e){}
   $('infoOv').classList.remove('open');
   closeVaultSheet();
   show('trust');
 });
+
+// ── INSTALL + SELF-UPDATE ──
+// Install prompt (Chrome/Edge fire beforeinstallprompt; iOS uses the
+// manual steps in the info panel)
+var deferredInstall=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();
+  deferredInstall=e;
+  var r4=$('installRow');if(r4)r4.style.display='flex';
+});
+$('btnInstall').addEventListener('click',function(){
+  if(deferredInstall){deferredInstall.prompt();deferredInstall=null;$('installRow').style.display='none'}
+});
+// Service worker: register, check for updates hourly and on tab focus.
+// When a new version is waiting, offer a one-tap refresh. localStorage is
+// separate from the app cache, so an update never touches user words.
+// (Promise use here is unavoidable and safe: this whole branch only runs
+// on browsers modern enough to have serviceWorker, which implies Promise.)
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(function(reg){
+    function watchInstalling(){
+      var nw=reg.installing;
+      if(!nw)return;
+      nw.addEventListener('statechange',function(){
+        if(nw.state==='installed'&&navigator.serviceWorker.controller)$('updBanner').classList.add('show');
+      });
+    }
+    if(reg.waiting&&navigator.serviceWorker.controller)$('updBanner').classList.add('show');
+    reg.addEventListener('updatefound',watchInstalling);
+    setInterval(function(){try{reg.update()}catch(e){}},3600000);
+    document.addEventListener('visibilitychange',function(){if(!document.hidden){try{reg.update()}catch(e){}}});
+    $('btnUpd').addEventListener('click',function(){
+      sndClick();
+      if(reg.waiting)reg.waiting.postMessage('skipWaiting');
+      else location.reload();
+    });
+  })['catch'](function(){});
+  var swReloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    if(swReloaded)return;swReloaded=true;location.reload();
+  });
+}
 
 // ── BOOT — returning users skip straight in; today's mood is remembered ──
 (function boot(){

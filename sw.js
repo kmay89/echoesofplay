@@ -5,7 +5,7 @@
   © ERRERlabs 2026 · Apache 2.0
 */
 
-var CACHE_NAME = 'echoes-v9';
+var CACHE_NAME = 'echoes-v10';
 var ASSETS = [
   '/',
   '/index.html',
@@ -16,14 +16,20 @@ var ASSETS = [
   '/apple-touch-icon.png'
 ];
 
-/* Install: cache core assets */
+/* Install: cache core assets.
+   No skipWaiting here — the new version waits politely until the page
+   offers the user a one-tap refresh, then activates on request. */
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(ASSETS);
     })
   );
-  self.skipWaiting();
+});
+
+/* The page asks us to take over once the user taps "refresh" */
+self.addEventListener('message', function(event) {
+  if (event.data === 'skipWaiting') self.skipWaiting();
 });
 
 /* Activate: clean old caches */
