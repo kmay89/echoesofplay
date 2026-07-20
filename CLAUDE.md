@@ -72,7 +72,12 @@ grep -c "cookie" index.html
 
 # Verify single file (no external script/link/img src)
 grep -oP '(src|href)="https?://' index.html
-# Must return: nothing (except errerlabs.com link)
+# Must return: ONLY user-initiated navigation links — never a resource the app
+# loads or a connection it opens. Allowed: the crisis lifeline (988lifeline.org)
+# and the sister ERRERlabs project (aethrakairos.com). Both are plain <a href>
+# a person chooses to tap — no fetch, no beacon, no external script/style/img/
+# font. "Zero network connections" is about what the APP does, not where a
+# person may choose to walk.
 ```
 
 ## File structure
