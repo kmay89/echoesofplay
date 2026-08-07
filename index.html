@@ -225,23 +225,41 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 .garden-t{font-size:1rem;letter-spacing:0.06em;color:var(--text-dim);font-weight:400}
 .garden-st{font-size:0.72rem;color:var(--text-faint);margin-top:3px;line-height:1.4;max-width:330px;display:inline-block}
 
-/* Formula card — the postcard prompt at top */
-.formula-card{background:var(--card);border:1.5px solid var(--card-edge);border-radius:var(--cr);padding:16px;margin:8px 0;width:100%;position:relative;min-height:120px;transition:all 0.4s}
-.formula-card.filled{border-color:var(--gold-dim);background:var(--gold-glow)}
-.fc-label{font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px}
-.fc-prompt{font-size:0.9rem;color:var(--text);line-height:1.6;font-style:italic;min-height:1.6em;margin-bottom:8px}
-.fc-hint{font-size:0.7rem;color:var(--text-faint);line-height:1.4;margin-bottom:10px}
-.fc-input{width:100%;padding:10px 0;background:transparent;border:none;border-bottom:1px solid var(--card-edge);color:var(--text);font-size:0.9rem;line-height:1.6;transition:border-color 0.3s}
-.fc-input:focus{outline:none;border-bottom-color:var(--gold-dim)}
-.fc-input::placeholder{color:var(--text-faint);font-style:italic}
-.fc-nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
-.fc-dots{display:flex;gap:4px}
-.fc-dot{width:5px;height:5px;border-radius:50%;background:var(--text-faint);transition:all 0.3s}
-.fc-dot.active{background:var(--gold);width:14px;border-radius:3px}
-.fc-dot.done{background:var(--gold-dim)}
-.fc-skip{font-size:0.66rem;color:var(--text-faint);text-decoration:underline;cursor:pointer;padding:8px}
-.fc-next{font-size:0.72rem;color:var(--gold);letter-spacing:0.06em;padding:6px 12px;border:1px solid var(--gold-dim);border-radius:var(--r);transition:all 0.3s}
-.fc-next:hover{background:var(--accent-wash)}
+/* POSTCARD SHEET — all six fragments on one page. Fill any, in any
+   order, skip the rest. Nothing gates anything; two is enough to seal. */
+.fc-sheet{background:var(--card);border:1.5px solid var(--card-edge);border-radius:var(--cr);padding:10px 14px 12px;margin:6px 0;width:100%;position:relative}
+.fc-const{display:block;width:100%;height:40px}
+.fc-rows{display:flex;flex-direction:column}
+.fcr{position:relative;padding:7px 0 7px 11px;border-top:1px solid var(--card-edge);opacity:0;transform:translateY(15px) rotate(-1.4deg);filter:blur(3px)}
+.fcr:first-child{border-top:none}
+.fcr.in{animation:fcDeal 0.6s cubic-bezier(0.2,0.9,0.3,1.1) forwards}
+@keyframes fcDeal{to{opacity:1;transform:translateY(0) rotate(0);filter:blur(0)}}
+/* an ink rule draws down the left edge the moment a fragment lands */
+.fcr::before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:1.5px;border-radius:1px;background:var(--gold-dim);opacity:0.8;transform:scaleY(0);transform-origin:top;transition:transform 0.55s cubic-bezier(0.2,0.9,0.3,1.1)}
+.fcr.has::before{transform:scaleY(1)}
+.fcr-k{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-faint);transition:color 0.45s}
+.fcr.has .fcr-k{color:var(--gold)}
+.fcr-in{width:100%;background:transparent;border:none;color:var(--text);font-size:0.9rem;line-height:1.55;padding:2px 0 0;display:block;overflow:hidden;min-height:1.55em}
+.fcr-in:focus{outline:none}
+.fcr-in::placeholder{color:var(--text-faint);font-style:italic}
+.fcr-hint{font-size:0.64rem;color:var(--text-faint);line-height:1.45;max-height:0;opacity:0;overflow:hidden;transition:max-height 0.4s ease,opacity 0.4s ease}
+.fcr:focus-within .fcr-hint{max-height:3.2em;opacity:1}
+/* ink bloom — a single soft pulse where the words landed */
+.fcr.bloom::after{content:'';position:absolute;left:-8px;right:-8px;top:0;bottom:0;border-radius:var(--r);pointer-events:none;background:radial-gradient(ellipse at 6% 50%,var(--gold-glow),transparent 62%);animation:fcBloom 0.9s ease forwards}
+@keyframes fcBloom{0%{opacity:0;transform:scale(0.92)}35%{opacity:1}100%{opacity:0;transform:scale(1.05)}}
+.fc-acts{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0 2px}
+.fc-seal{padding:12px 30px;font-size:0.78rem}
+.fc-note{font-size:0.64rem;color:var(--text-faint);font-style:italic;text-align:center;min-height:1.2em}
+.fc-fresh{font-size:0.66rem;color:var(--text-faint);text-decoration:underline;cursor:pointer;padding:5px}
+.fc-fresh:hover{color:var(--gold)}
+/* the sheet folds away toward the vault as the wax goes on */
+.fc-sheet.sealing{animation:fcFold 1.15s cubic-bezier(0.4,0,0.2,1) forwards;pointer-events:none}
+@keyframes fcFold{
+  0%{transform:perspective(760px) rotateX(0) scale(1);opacity:1}
+  34%{transform:perspective(760px) rotateX(-5deg) scale(1.012);opacity:1}
+  100%{transform:perspective(760px) rotateX(56deg) scale(0.62) translateY(96px);opacity:0;filter:blur(3px)}
+}
+#fcFx{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:240;display:none}
 
 /* Postcard (saved memory) */
 .postcard{background:var(--card);border:1.5px solid var(--card-edge);border-radius:var(--cr);padding:16px;margin:8px 0;width:100%;position:relative;animation:fu 0.5s ease forwards}
@@ -331,8 +349,6 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 .postcard:nth-child(even){transform:rotate(0.6deg)}
 .postcard:hover{transform:rotate(0deg) translateY(-3px);border-color:var(--gold-dim);box-shadow:0 10px 26px var(--shadow)}
 .pc-seal{position:absolute;bottom:10px;right:12px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#dfc268,#8a7434 72%);box-shadow:0 1px 4px var(--shadow-deep),inset 0 0 4px rgba(58,48,18,0.6);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-style:italic;color:#3a3012;opacity:0.9}
-@keyframes sealFly{0%{opacity:1;transform:scale(1) rotate(0deg)}55%{opacity:0.85;transform:scale(0.88) rotate(-2deg) translateY(8px)}100%{opacity:0;transform:scale(0.45) rotate(-7deg) translateY(70px)}}
-.formula-card.sealing{animation:sealFly 0.8s ease forwards;pointer-events:none}
 
 /* MOODS — the room retunes to how you arrive */
 body[data-mood=dawn]{--gold:#e6b269;--gold-dim:#a87f42;--gold-glow:rgba(230,178,105,0.09);--parch:rgba(230,178,105,0.04);--bg:#0b0907;--surface:#131009;--card:#1a150c;--card-edge:#332a1c;--text:#e2d9c6;--breath:#9ab88a;--accent-wash:rgba(230,178,105,0.1);--accent-sheen:rgba(230,178,105,0.06);--accent-halo:rgba(230,178,105,0.3);--glow-pulse:rgba(230,178,105,0.08)}
@@ -424,6 +440,7 @@ html.fs2{font-size:130%}
 <body>
 <canvas id="kolamBg" aria-hidden="true"></canvas>
 <canvas id="sandCanvas"></canvas>
+<canvas id="fcFx" aria-hidden="true"></canvas>
 <div class="app" id="app">
 <button class="btn-bk h" id="btnBack" aria-label="Back">&#8592;</button>
 <button class="btn-info" id="btnInfo" aria-label="About, privacy, and crisis resources">i</button>
@@ -467,25 +484,17 @@ html.fs2{font-size:130%}
 
 <!-- MEMORY GARDEN / POSTCARDS -->
 <div class="screen garden" id="screenGarden">
-  <div class="garden-hdr"><div class="garden-t">Memory Postcards</div><div class="garden-st">Story fragments. Tell it however it comes — start anywhere, skip around, circle back. No wrong order.</div></div>
-  <div class="formula-card" id="formulaCard">
-    <div class="fc-label" id="fcLabel">who</div>
-    <div class="fc-prompt" id="fcPrompt">Who's in this memory?</div>
-    <div class="fc-hint" id="fcHint">A name, a feeling, a silhouette. Whatever surfaces first.</div>
-    <textarea class="fc-input" id="fcInput" placeholder="whatever comes..." rows="2"></textarea>
-    <div class="fc-nav">
-      <div class="fc-dots" id="fcDots"></div>
-      <div style="display:flex;gap:6px;align-items:center">
-        <span class="fc-skip" id="fcSkip">skip</span>
-        <button class="fc-next" id="fcNext">next &#8594;</button>
-      </div>
-    </div>
+  <div class="garden-hdr"><div class="garden-t">Memory Postcards</div><div class="garden-st">Six fragments, all on one page. Fill whichever surface — any two is a postcard. Leave the rest blank.</div></div>
+  <div class="fc-sheet" id="fcSheet">
+    <canvas class="fc-const" id="fcConst" aria-hidden="true"></canvas>
+    <div class="fc-rows" id="fcRows"></div>
+  </div>
+  <div class="fc-acts">
+    <button class="btn-p fc-seal off" id="btnSealCard">&#9993; Seal this postcard</button>
+    <div class="fc-note" id="fcNote"></div>
+    <span class="fc-fresh" id="fcFresh">start a fresh one</span>
   </div>
   <div class="garden-postcards" id="gardenPostcards"></div>
-  <div style="display:flex;gap:8px;justify-content:center;padding:8px 0">
-    <button class="btn-s" id="btnSealCard" style="display:none">&#9993; Seal this postcard</button>
-    <button class="btn-s" id="btnNewCard">&#10010; New postcard</button>
-  </div>
 </div>
 
 <!-- BREATHE — organic -->
@@ -1117,97 +1126,222 @@ list.appendChild(it)})(rounds[i],i)}},260)}
 function showHD(rd){show('summary');setTimeout(function(){$('sumT').textContent='';$('sumSeed').textContent='\u201C'+rd.seed+'\u201D';lastSum={seed:rd.seed,entries:[]};var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<rd.entries.length;i++){var e=rd.entries[i];var m=mBy(e.mirror);if(!m)continue;lastSum.entries.push({n:m.name,q:m.q,r:e.response});var d=document.createElement('div');d.className='se';d.style.animation='fu 0.5s ease '+(0.3+i*0.2)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+m.color+'"><span class="dot" style="background:'+m.color+'"></span> '+m.name+' \u2014 '+m.q+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=SUM_INS[rd.tl||'present'];$('sumRx').innerHTML=''},260)}
 $('btnClrH').addEventListener('click',function(){if(confirm('Release everything? This cannot be undone.')){try{localStorage.removeItem('eop_r');localStorage.setItem('eop_rc','0');st.rc=0}catch(e){}showHist()}});
 
-// ── MEMORY GARDEN / POSTCARDS ──
+// ── MEMORY POSTCARDS — six fragments, one page ──
+// Everything is visible at once, nothing is sequenced. You write into
+// whichever fragment surfaces first and leave the rest blank; two of the
+// six is a whole postcard. The animation is the only ceremony.
 function startGarden(){
   show('garden');
-  st.fc.step=0;
-  st.fc.answers={};
-  // Shuffle the formula for nonlinear approach
-  st.fc.shuffled=shuf([0,1,2,3,4,5]);
   setTimeout(function(){
-    renderFormula();
+    resetSheet();
     renderPostcards();
   },260);
 }
 
-function renderFormula(){
-  var idx=st.fc.shuffled[st.fc.step];
-  var f=FORMULA[idx];
-  $('fcLabel').textContent=f.label;
-  $('fcPrompt').textContent=f.prompt;
-  $('fcHint').textContent=f.hint;
-  $('fcInput').value=st.fc.answers[idx]||'';
-  $('fcInput').placeholder='whatever comes...';
-  // Dots
-  var dots=$('fcDots');dots.innerHTML='';
+function grow(ta){ta.style.height='auto';ta.style.height=ta.scrollHeight+'px'}
+function fragFilled(){var n=0;for(var k in st.fc.answers){if(st.fc.answers[k])n++}return n}
+
+// A rising whole-tone note per fragment — filling the sheet plays a scale.
+function fragTone(i){playTone(392*Math.pow(1.1225,i),0.55,0.02,'sine')}
+
+function buildSheet(){
+  var rows=$('fcRows');rows.innerHTML='';
   for(var i=0;i<FORMULA.length;i++){
-    var d=document.createElement('div');d.className='fc-dot';
-    if(i<st.fc.step)d.classList.add('done');
-    if(i===st.fc.step)d.classList.add('active');
-    dots.appendChild(d);
+    (function(f,ix){
+      var d=document.createElement('div');d.className='fcr';
+      var k=document.createElement('div');k.className='fcr-k';k.textContent=f.label;
+      var ta=document.createElement('textarea');
+      ta.className='fcr-in';ta.rows=1;ta.placeholder=f.prompt;
+      ta.setAttribute('aria-label',f.label+' — '+f.prompt);
+      var h=document.createElement('div');h.className='fcr-hint';h.textContent=f.hint;
+      d.appendChild(k);d.appendChild(ta);d.appendChild(h);
+      ta.addEventListener('input',function(){
+        grow(ta);
+        var had=d.classList.contains('has');
+        var val=ta.value.trim();
+        st.fc.answers[ix]=val;
+        if(val&&!had){
+          d.classList.add('has');
+          d.classList.remove('bloom');
+          void d.offsetWidth;          // restart the bloom if it re-fills
+          d.classList.add('bloom');
+          initAudio();fragTone(ix);
+        }else if(!val&&had){
+          d.classList.remove('has');
+        }
+        drawConst();syncSeal();
+      });
+      rows.appendChild(d);
+    })(FORMULA[i],i);
   }
-  // Show seal button if we have at least 2 answers
-  var filled=0;for(var k in st.fc.answers){if(st.fc.answers[k])filled++}
-  $('btnSealCard').style.display=filled>=2?'':'none';
-  // Update card filled state
-  var card=$('formulaCard');
-  card.classList.remove('filled');
-  if(st.fc.answers[idx])card.classList.add('filled');
-  setTimeout(function(){$('fcInput').focus()},100);
 }
 
-$('fcNext').addEventListener('click',function(){
-  sndClick();
-  var idx=st.fc.shuffled[st.fc.step];
-  var val=$('fcInput').value.trim();
-  if(val)st.fc.answers[idx]=val;
-  st.fc.step=(st.fc.step+1)%FORMULA.length;
-  renderFormula();
-});
+// The six rows are dealt in, one after another, like cards onto the table.
+function dealSheet(){
+  var rs=$('fcRows').children;
+  for(var i=0;i<rs.length;i++){
+    (function(el,ix){setTimeout(function(){el.classList.add('in')},70+ix*80)})(rs[i],i);
+  }
+}
 
-$('fcSkip').addEventListener('click',function(){
-  sndClick();
-  st.fc.step=(st.fc.step+1)%FORMULA.length;
-  renderFormula();
-});
+function resetSheet(){
+  st.fc.answers={};
+  buildSheet();
+  sizeConst();drawConst();syncSeal();
+  dealSheet();
+}
 
-$('fcInput').addEventListener('input',function(){
-  var idx=st.fc.shuffled[st.fc.step];
-  st.fc.answers[idx]=$('fcInput').value.trim();
-  var filled=0;for(var k in st.fc.answers){if(st.fc.answers[k])filled++}
-  $('btnSealCard').style.display=filled>=2?'':'none';
-  var card=$('formulaCard');
-  if(st.fc.answers[idx])card.classList.add('filled');else card.classList.remove('filled');
-});
+function syncSeal(){
+  var n=fragFilled(),b=$('btnSealCard');
+  if(n>=2)b.classList.remove('off');else b.classList.add('off');
+  $('fcNote').textContent=n===0?'any two fragments make a postcard'
+    :n===1?'one more fragment and it can be sealed'
+    :n+' fragments — seal it whenever it feels done';
+}
+
+// ── THE CONSTELLATION — six points, lit as their fragments fill,
+// threaded together in the order you wrote them. ──
+function sizeConst(){
+  var cv=$('fcConst');if(!cv)return null;
+  var dpr=window.devicePixelRatio||1;
+  var w=cv.clientWidth||300,h=40;
+  cv.width=Math.floor(w*dpr);cv.height=Math.floor(h*dpr);
+  var c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);
+  cv.setAttribute('data-w',String(w));
+  return c;
+}
+function drawConst(){
+  var cv=$('fcConst');if(!cv||!cv.width)return;
+  var w=parseFloat(cv.getAttribute('data-w'))||300,h=40;
+  var c=cv.getContext('2d');
+  c.clearRect(0,0,w,h);
+  var n=FORMULA.length,pts=[],i;
+  for(i=0;i<n;i++){
+    var x=20+(w-40)*(i/(n-1));
+    var y=h*0.58-Math.sin(i/(n-1)*Math.PI)*7+Math.sin(i*1.9)*2;
+    pts.push([x,y]);
+  }
+  // threads, drawn between fragments that actually have words
+  var prev=-1;c.lineWidth=1;
+  for(i=0;i<n;i++){
+    if(!st.fc.answers[i])continue;
+    if(prev>=0){
+      c.beginPath();c.moveTo(pts[prev][0],pts[prev][1]);c.lineTo(pts[i][0],pts[i][1]);
+      c.strokeStyle=accA(0.32);c.stroke();
+    }
+    prev=i;
+  }
+  for(i=0;i<n;i++){
+    var lit=!!st.fc.answers[i];
+    if(lit){
+      var g=c.createRadialGradient(pts[i][0],pts[i][1],0,pts[i][0],pts[i][1],9);
+      g.addColorStop(0,accA(0.45));g.addColorStop(1,accA(0));
+      c.beginPath();c.arc(pts[i][0],pts[i][1],9,0,Math.PI*2);c.fillStyle=g;c.fill();
+    }
+    c.beginPath();c.arc(pts[i][0],pts[i][1],lit?2.7:1.4,0,Math.PI*2);
+    c.fillStyle=lit?accA(0.95):accA(0.22);c.fill();
+  }
+}
+window.addEventListener('resize',function(){if(st.screen==='garden'){sizeConst();drawConst()}});
+
+// ── THE SEAL — the sheet's edges dissolve into motes, spiral inward,
+// and press into wax. About a second and a half of ceremony. ──
+function sealFx(rect,done){
+  var cv=$('fcFx'),dpr=window.devicePixelRatio||1;
+  var W=window.innerWidth,H=window.innerHeight;
+  cv.width=Math.floor(W*dpr);cv.height=Math.floor(H*dpr);
+  cv.style.display='block';
+  var c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);
+  var cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  var motes=[],i;
+  for(i=0;i<115;i++){
+    var t=Math.random(),side=i%4,ex,ey;
+    if(side===0){ex=rect.left+rect.width*t;ey=rect.top}
+    else if(side===1){ex=rect.left+rect.width*t;ey=rect.top+rect.height}
+    else if(side===2){ex=rect.left;ey=rect.top+rect.height*t}
+    else{ex=rect.left+rect.width;ey=rect.top+rect.height*t}
+    var dx=ex-cx,dy=ey-cy;
+    motes.push({a:Math.atan2(dy,dx),r:Math.sqrt(dx*dx+dy*dy),
+      sp:0.8+Math.random()*1.6,sz:0.7+Math.random()*1.7,
+      d:Math.random()*0.2,lit:Math.random()>0.72});
+  }
+  var t0=null,DUR=1500,ended=false;
+  // The ceremony must never gate the reset: whichever finishes first —
+  // the last frame or the backstop timer — closes it out exactly once.
+  // (rAF is throttled to a standstill in a backgrounded tab.)
+  function endFx(){
+    if(ended)return;ended=true;
+    c.clearRect(0,0,W,H);cv.style.display='none';
+    if(done)done();
+  }
+  setTimeout(endFx,DUR+300);
+  function frame(ts){
+    if(ended)return;
+    if(t0===null)t0=ts;
+    var p=(ts-t0)/DUR;if(p>1)p=1;
+    c.clearRect(0,0,W,H);
+    for(var j=0;j<motes.length;j++){
+      var m=motes[j];
+      var span=0.64-m.d,mp=(p-m.d)/span;
+      if(mp<0)mp=0;if(mp>1)mp=1;
+      var e=1-Math.pow(1-mp,3);
+      var rr=m.r*(1-e),aa=m.a+e*m.sp*1.4;
+      var al=(1-mp*0.92)*0.85;
+      c.beginPath();c.arc(cx+Math.cos(aa)*rr,cy+Math.sin(aa)*rr*0.94,m.sz,0,Math.PI*2);
+      c.fillStyle=m.lit?accA(al):accA(al*0.45);c.fill();
+    }
+    if(p>0.5){
+      var s2=(p-0.5)/0.5;
+      var ease=s2<0.5?4*s2*s2*s2:1-Math.pow(-2*s2+2,3)/2;
+      var R=27*Math.min(1,ease*1.3);
+      var os=1+0.16*Math.sin(Math.min(1,s2*2.2)*Math.PI);   // the press overshoot
+      var g2=c.createRadialGradient(cx,cy,0,cx,cy,R*os||1);
+      g2.addColorStop(0,accA(0.8));g2.addColorStop(0.72,accA(0.5));g2.addColorStop(1,accA(0));
+      c.beginPath();c.arc(cx,cy,R*os,0,Math.PI*2);c.fillStyle=g2;c.fill();
+      if(s2>0.22){                                          // shockwave
+        var sw=(s2-0.22)/0.78;
+        c.beginPath();c.arc(cx,cy,27+sw*130,0,Math.PI*2);
+        c.strokeStyle=accA(0.32*(1-sw));c.lineWidth=2*(1-sw)+0.4;c.stroke();
+      }
+      var fade=1-Math.max(0,(s2-0.72)/0.28);
+      c.globalAlpha=Math.min(1,s2*3.5)*fade;
+      c.fillStyle=accA(0.95);
+      c.font='italic '+Math.round(R*0.95)+'px Georgia,serif';
+      c.textAlign='center';c.textBaseline='middle';
+      c.fillText('e',cx,cy+1);
+      c.globalAlpha=1;
+    }
+    if(p<1)requestAnimationFrame(frame);else endFx();
+  }
+  requestAnimationFrame(frame);
+}
 
 $('btnSealCard').addEventListener('click',function(){
+  if($('btnSealCard').classList.contains('off'))return;
   sndSeal();
-  // Compile postcard
-  var pc={ts:Date.now(),fragments:{}};
-  for(var k in st.fc.answers){if(st.fc.answers[k])pc.fragments[k]=st.fc.answers[k]}
-  // Save
+  var pc={ts:Date.now(),fragments:{}},k;
+  for(k in st.fc.answers){if(st.fc.answers[k])pc.fragments[k]=st.fc.answers[k]}
   try{
     var pcs=JSON.parse(localStorage.getItem('eop_pc')||'[]');
     pcs.unshift(pc);if(pcs.length>30)pcs=pcs.slice(0,30);
     localStorage.setItem('eop_pc',JSON.stringify(pcs));
   }catch(e){}
   bumpDays();
-  // The card folds itself away into the vault, then a fresh one appears
-  var card=$('formulaCard');
-  card.classList.add('sealing');
-  setTimeout(function(){
-    card.classList.remove('sealing');
-    st.fc.step=0;st.fc.answers={};st.fc.shuffled=shuf([0,1,2,3,4,5]);
-    renderFormula();
+  var sheet=$('fcSheet');
+  var rect=sheet.getBoundingClientRect();   // measured before the fold begins
+  var finish=function(){
+    sheet.classList.remove('sealing');
+    resetSheet();
     renderPostcards();
-  },850);
+  };
+  sheet.classList.add('sealing');
+  var reduce=false;
+  try{reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+  if(reduce){setTimeout(finish,240);return}
+  sealFx(rect,finish);
 });
 
-$('btnNewCard').addEventListener('click',function(){
-  sndClick();
-  st.fc.step=0;st.fc.answers={};st.fc.shuffled=shuf([0,1,2,3,4,5]);
-  renderFormula();
-});
+$('fcFresh').addEventListener('click',function(){sndClick();resetSheet()});
 
 function renderPostcards(){
   var area=$('gardenPostcards');area.innerHTML='';
@@ -1650,6 +1784,7 @@ function applyTheme(name,save,announce){
   if(mt)mt.setAttribute('content',THEME_BG[THEME]);
   applyMood(st.mood,false);            // re-tunes ACC, redraws the kolam
   if(st.screen==='vault')renderVault(); // the alcove repaints in the new light
+  if(st.screen==='garden')drawConst();  // so does the fragment constellation
   if(save){try{localStorage.setItem('eop_theme',THEME)}catch(e){}}
   if(announce)toast(THEME==='light'?'Daylight':'Lamplight');
 }
