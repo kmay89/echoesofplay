@@ -304,6 +304,14 @@ textarea,input{font-family:Georgia,'Times New Roman',serif;resize:none}
 .btn-info:hover,.btn-info:focus{border-color:var(--gold-dim);color:var(--gold)}
 .info-ov{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--scrim);z-index:200;visibility:hidden;opacity:0;transition:opacity 0.4s ease,visibility 0.4s}
 .info-ov.open{visibility:visible;opacity:1}
+/* LANGUAGE — a small sheet in the room's own materials */
+.lang-sheet{max-width:300px;margin:18vh auto 0;background:var(--surface);border:1px solid var(--card-edge);border-radius:var(--cr);padding:20px;text-align:center}
+.lang-t{font-size:0.84rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.lang-list{display:flex;flex-direction:column;gap:8px}
+.lang-opt{font-size:0.9rem;padding:11px;border:1px solid var(--card-edge);border-radius:var(--r);color:var(--text-mid);transition:all 0.4s}
+.lang-opt:hover,.lang-opt:focus{border-color:var(--gold-dim);color:var(--gold)}
+.lang-opt.on{border-color:var(--gold);color:var(--gold);background:var(--accent-wash)}
+.lang-note{font-size:0.66rem;color:var(--text-faint);margin-top:14px;line-height:1.5}
 .info-panel{max-width:480px;margin:0 auto;height:100%;overflow-y:auto;padding:26px 22px 48px;background:var(--surface);border-left:1px solid var(--card-edge);border-right:1px solid var(--card-edge)}
 .info-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .info-title{font-size:1.05rem;letter-spacing:0.1em;color:var(--gold);font-weight:400}
@@ -447,6 +455,14 @@ html.fs2{font-size:130%}
 <button class="btn-info btn-music" id="btnMusic" aria-pressed="false" aria-label="Gentle background music, on or off">&#9834;</button>
 <button class="btn-info btn-size" id="btnSize" aria-pressed="false" aria-label="Larger text, on or off">Aa</button>
 <button class="btn-info btn-theme" id="btnTheme" aria-label="Switch to daylight">&#9788;</button>
+<button class="btn-info btn-lang" id="btnLang" aria-label="Language">&#x6587;A</button>
+<div class="info-ov" id="langOv" role="dialog" aria-label="Language">
+  <div class="lang-sheet">
+    <div class="lang-t">Language</div>
+    <div class="lang-list" id="langList"></div>
+    <div class="lang-note">Your choice stays on this device, like everything here.</div>
+  </div>
+</div>
 <div class="rt-banner" id="rtBanner" aria-live="polite"><span id="rtTxt"></span><button class="rt-skip" id="rtSkip">skip &#8594;</button></div>
 <div class="fs-toast" id="fsToast" role="status" aria-live="polite"></div>
 <div class="upd-banner" id="updBanner" role="status"><span class="upd-txt"><em>A newer version of this room exists.</em><br>Your words stay put — refreshing only renews the walls.</span><button class="btn-s" id="btnUpd">refresh</button></div>
@@ -604,6 +620,120 @@ html.fs2{font-size:130%}
 
 <script>
 (function(){'use strict';
+
+// ── I18N — the Möbius i18n engine, inlined ──
+// This is the ES5 build of the shared engine that lives in the Aethra
+// Kairos repository (i18n/engine.es5.js), carried whole inside this file
+// so the room keeps its two oldest promises: one HTML file, zero network.
+// Dictionaries ride inline too (EOP_DICTS below) — choosing a language
+// never fetches anything. English strings ARE the keys; a missing
+// dictionary or key falls back to English, honestly.
+// @i18n-engine-start
+var MobiusI18n=(function(){
+  function createI18n(config){
+    var LANGS=config.langs||[{code:'en',name:'English',en:'English'}];
+    var ALIAS=config.aliases||{};
+    var KEY=config.storageKey||'i18n_lang';
+    var INLINE=config.dicts||null;
+    var FALLBACK='en';
+    function NORM(s){return String(s).replace(/\s+/g,' ').replace(/^\s+|\s+$/g,'')}
+    var DICT={};
+    var I18N={
+      lang:FALLBACK,dir:'ltr',echo:null,_plural:null,
+      entry:function(code){for(var i=0;i<LANGS.length;i++)if(LANGS[i].code===code)return LANGS[i];return null},
+      stored:function(){try{return localStorage.getItem(KEY)||''}catch(e){return''}},
+      set:function(code){try{localStorage.setItem(KEY,code)}catch(e){}},
+      detect:function(){
+        var cands=[];
+        try{
+          var raw=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language]);
+          for(var i=0;i<raw.length;i++)if(raw[i])cands.push(String(raw[i]).toLowerCase());
+        }catch(e){}
+        for(var j=0;j<cands.length;j++){
+          var t=cands[j],base=ALIAS[t.split('-')[0]]||t;
+          for(var k=0;k<LANGS.length;k++){var l=LANGS[k];if(base===l.code||base.indexOf(l.code+'-')===0)return l.code}
+        }
+        return FALLBACK;
+      },
+      _install:function(code,dict){
+        for(var k in DICT)if(DICT.hasOwnProperty(k))delete DICT[k];
+        this.echo=dict['@echo']||null;
+        for(var kk in dict)if(dict.hasOwnProperty(kk)&&kk.charAt(0)!=='@')DICT[kk]=dict[kk];
+        this.lang=code;
+        var meta=dict['@meta'],e=this.entry(code);
+        this.dir=(meta&&meta.dir)||(e&&e.dir)||'ltr';
+        this._plural=null;
+      },
+      plural:function(n){
+        try{
+          if(!this._plural)this._plural=new Intl.PluralRules(this.lang);
+          return this._plural.select(n);
+        }catch(e){return n===1?'one':'other'}
+      },
+      init:function(){
+        var stored=this.stored();
+        var code=this.entry(stored)?stored:this.detect();
+        if(code!==FALLBACK&&INLINE&&INLINE[code])this._install(code,INLINE[code]);
+        else this.lang=FALLBACK;
+        this._apply();
+      },
+      _apply:function(){if(config.onApply)config.onApply();else applyI18nDom()},
+    };
+    function T(s,vars){
+      var out=s;
+      if(I18N.lang!==FALLBACK){
+        var hit=DICT[s];
+        if(hit==null)hit=DICT[NORM(s)];
+        if(hit!=null&&typeof hit==='object'){
+          var n=vars&&vars.n!=null?Number(vars.n):NaN;
+          hit=(isFinite(n)?hit[I18N.plural(n)]:null)||hit.other||hit.one||null;
+        }
+        if(hit!=null)out=hit;
+      }
+      if(vars)for(var k in vars)if(vars.hasOwnProperty(k))out=out.split('{'+k+'}').join(vars[k]);
+      return out;
+    }
+    function applyI18nDom(root){
+      document.documentElement.lang=I18N.lang;
+      document.documentElement.dir=I18N.dir;
+      if(I18N.lang===FALLBACK)return;
+      var dt=DICT[NORM(document.title)];
+      if(typeof dt==='string')document.title=dt;
+      var scope=root||document.body;
+      if(!scope)return;
+      var nodes=scope.querySelectorAll('*');
+      var ATTRS=['title','aria-label','placeholder'];
+      for(var i=0;i<nodes.length;i++){
+        var nd=nodes[i];
+        if(!nd.isConnected)continue;
+        for(var a=0;a<ATTRS.length;a++){
+          var v=nd.getAttribute&&nd.getAttribute(ATTRS[a]);
+          if(v){var tt=DICT[NORM(v)];if(typeof tt==='string')nd.setAttribute(ATTRS[a],tt)}
+        }
+        if(nd.firstChild){
+          var key=NORM(nd.innerHTML);
+          if(key){var tr=DICT[key];if(typeof tr==='string')nd.innerHTML=tr}
+        }
+      }
+    }
+    return {LANGS:LANGS,I18N:I18N,T:T,applyI18nDom:applyI18nDom,dict:DICT};
+  }
+  return {createI18n:createI18n};
+})();
+// @i18n-engine-end
+
+// The roster this room speaks. Adding a language is one entry here plus
+// one dictionary in EOP_DICTS — validated by tools/i18n_doctor.mjs.
+var EOP_LANGS=[
+  {code:'en',name:'English',en:'English'},
+  {code:'es',name:'Español',en:'Spanish'}
+];
+// @dicts-start
+var EOP_DICTS={};
+// @dicts-end
+var i18n=MobiusI18n.createI18n({langs:EOP_LANGS,storageKey:'eop_lang',dicts:EOP_DICTS});
+var T=i18n.T,I18N=i18n.I18N;
+I18N.init();
 
 // ── AUDIO ──
 var AC=null;
@@ -886,25 +1016,30 @@ future:[
 var SEED_PAIRS=[['tired','done'],['patient','stuck'],['content','settling'],['angry','hurt'],['calm','numb'],['helping','enabling'],['careful','afraid']];
 var SEED_ALL={past:[],present:[],future:[]};
 (function(){
+  // Every fragment passes through the dictionary before it is combined,
+  // so a translated deck keeps the same guarantee as the English one:
+  // the translator writes each slot so ANY combination still reads like
+  // a person wrote it. Same craft, per language.
   function expand(parts){
     var acc=[''];
     for(var i=0;i<parts.length;i++){
       var p=parts[i];
-      if(typeof p==='string'){for(var j=0;j<acc.length;j++)acc[j]+=p}
+      if(typeof p==='string'){var tp=T(p);for(var j=0;j<acc.length;j++)acc[j]+=tp}
       else{
         var next=[];
-        for(var j2=0;j2<acc.length;j2++)for(var k=0;k<p.length;k++)next.push(acc[j2]+p[k]);
+        for(var j2=0;j2<acc.length;j2++)for(var k=0;k<p.length;k++)next.push(acc[j2]+T(p[k]));
         acc=next;
       }
     }
     return acc;
   }
   for(var tl2 in SEED_TPL){
-    var out=SEED_EX[tl2].slice();
+    var out=[];
+    for(var x=0;x<SEED_EX[tl2].length;x++)out.push(T(SEED_EX[tl2][x]));
     for(var t3=0;t3<SEED_TPL[tl2].length;t3++)out=out.concat(expand(SEED_TPL[tl2][t3]));
     SEED_ALL[tl2]=out;
   }
-  for(var pp=0;pp<SEED_PAIRS.length;pp++)SEED_ALL.present.push('I can\'t tell if I\'m '+SEED_PAIRS[pp][0]+' or just '+SEED_PAIRS[pp][1]);
+  for(var pp=0;pp<SEED_PAIRS.length;pp++)SEED_ALL.present.push(T('I can\'t tell if I\'m {a} or just {b}',{a:T(SEED_PAIRS[pp][0]),b:T(SEED_PAIRS[pp][1])}));
 })();
 var SUM_INS={past:'Memories aren\'t recordings. They\'re reflections. You just held three lenses.',present:'Same situation, three angles. The full shape lives between them.',future:'Decisions look different from every angle. The answer lives where they overlap.'};
 var TL_CTX={past:'Looking back',present:'Looking at now',future:'Looking ahead'};
@@ -959,7 +1094,7 @@ function show(name,delay){
 $('btnTrust').addEventListener('click',function(){initAudio();sndClick();if(st.ob){show('home');setTimeout(updHome,300)}else{show('onboard1')}});
 
 // ── ONBOARD ──
-(function(){var c=$('obCards');for(var i=0;i<MM.length;i++){var m=MM[i];var d=document.createElement('div');d.className='dc';d.style.borderColor=m.color;d.innerHTML='<div class="dc-i" style="color:'+m.color+'">'+m.icon+'</div><div class="dc-n" style="color:'+m.color+'">'+m.name+'</div>';c.appendChild(d)}})();
+(function(){var c=$('obCards');for(var i=0;i<MM.length;i++){var m=MM[i];var d=document.createElement('div');d.className='dc';d.style.borderColor=m.color;d.innerHTML='<div class="dc-i" style="color:'+m.color+'">'+m.icon+'</div><div class="dc-n" style="color:'+m.color+'">'+T(m.name)+'</div>';c.appendChild(d)}})();
 $('btnOb1').addEventListener('click',function(){sndClick();show('onboard2')});
 $('btnOb2').addEventListener('click',function(){sndClick();show('onboard3')});
 $('btnOb3').addEventListener('click',function(){sndClick();show('onboard4')});
@@ -969,16 +1104,16 @@ $('skipOb').addEventListener('click',function(){st.ob=true;try{localStorage.setI
 // ── HOME ──
 function updHome(){
   var m=moodBy(st.mood);
-  $('homeGreet').textContent=(st.rc===0?'Your first round is waiting. ':'')+m.greet;
-  $('moodChip').innerHTML=m.icon+' arriving '+m.name.toLowerCase()+' &middot; change';
+  $('homeGreet').textContent=(st.rc===0?T('Your first round is waiting. '):'')+T(m.greet);
+  $('moodChip').innerHTML=T('{icon} arriving {mood} &middot; change',{icon:m.icon,mood:T(m.name).toLowerCase()});
   var done=false;try{done=localStorage.getItem('eop_day')===dayStr()}catch(e){}
-  if(done){$('tcT').textContent='Done for today.';$('tcS').textContent='Nothing is counting. Wander below, or go be in your day.'}
-  else{$('tcT').textContent='Breathe. One thought. Three mirrors.';$('tcS').textContent='About five minutes. One tap, no decisions.'}
+  if(done){$('tcT').textContent=T('Done for today.');$('tcS').textContent=T('Nothing is counting. Wander below, or go be in your day.')}
+  else{$('tcT').textContent=T('Breathe. One thought. Three mirrors.');$('tcS').textContent=T('About five minutes. One tap, no decisions.')}
   var dd=loadDays(),rrw=$('rhythmRow');
   if(dd.c>0){
     rrw.style.display='flex';
     drawRhythm(dd.c);
-    $('rhythmTxt').textContent=dd.c===1?'One seed. A day you showed up. It only grows.':dd.c+' seeds — one for each day you’ve come back. Rest never breaks it.';
+    $('rhythmTxt').textContent=dd.c===1?T('One seed. A day you showed up. It only grows.'):T('{n} seeds — one for each day you’ve come back. Rest never breaks it.',{n:dd.c});
   }else rrw.style.display='none';
   var standalone=false;
   try{standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true}catch(e){}
@@ -1019,7 +1154,7 @@ for(var i=0;i<tlBtns.length;i++){(function(btn){btn.addEventListener('click',fun
 
 // ── SEED ──
 var seedIn=$('seedIn'),seedCt=$('seedCt'),btnDeal=$('btnDeal');
-function showSeed(){show('seed');setTimeout(function(){$('seedCtx').textContent=TL_CTX[st.tl];$('orbHint').textContent='Blank page? Tap the orb — it holds other people’s beginnings.';var sl=$('orbSlip');sl.textContent='';sl.classList.remove('reveal');$('orbUse').style.display='none';orbReset();seedIn.value='';seedCt.textContent='0';btnDeal.classList.add('off')},260)}
+function showSeed(){show('seed');setTimeout(function(){$('seedCtx').textContent=T(TL_CTX[st.tl]);$('orbHint').textContent=T('Blank page? Tap the orb — it holds other people’s beginnings.');var sl=$('orbSlip');sl.textContent='';sl.classList.remove('reveal');$('orbUse').style.display='none';orbReset();seedIn.value='';seedCt.textContent='0';btnDeal.classList.add('off')},260)}
 
 // ── PROMPT ORB — a shuffled deck per timeframe, no repeats until it runs dry ──
 var exDeck={past:[],present:[],future:[]},orbCur='';
@@ -1052,8 +1187,8 @@ $('orbDraw').addEventListener('click',function(){
     if(orbDraws>=3){
       b.classList.add('rest');
       b.disabled=true;
-      b.setAttribute('aria-label','The orb is resting — three draws per sitting');
-      $('orbHint').textContent='The orb rests now. Three is enough for one sitting — or bring your own words.';
+      b.setAttribute('aria-label',T('The orb is resting — three draws per sitting'));
+      $('orbHint').textContent=T('The orb rests now. Three is enough for one sitting — or bring your own words.');
     }else{
       $('orbHint').textContent='';
     }
@@ -1067,31 +1202,31 @@ function orbReset(){
   var b=$('orbDraw');
   b.classList.remove('rest');b.classList.remove('shake');
   b.disabled=false;
-  b.setAttribute('aria-label','Draw an example thought from the orb');
+  b.setAttribute('aria-label',T('Draw an example thought from the orb'));
 }
 $('orbSlip').addEventListener('click',useOrb);
 $('orbSlip').addEventListener('keydown',function(e){if(e.keyCode===13||e.keyCode===32){e.preventDefault();useOrb()}});
 seedIn.addEventListener('input',function(){seedCt.textContent=seedIn.value.length;if(seedIn.value.trim().length>=3)btnDeal.classList.remove('off');else btnDeal.classList.add('off')});
 btnDeal.addEventListener('click',function(){var v=seedIn.value.trim();if(v.length<3)return;sndDeal();st.seed=v;showPD()});
 
-function showPD(){var idx=shuf([0,1,2,3,4,5]);st.dealt=[idx[0],idx[1],idx[2]];st.round=[];st.ci=0;st.frag=pick(FRAGS);show('predeal');setTimeout(function(){$('pdSeed').textContent='\u201C'+st.seed+'\u201D';var p=$('dpPrev');p.innerHTML='';for(var i=0;i<3;i++){var m=MM[st.dealt[i]];var c=document.createElement('div');c.className='dpc';c.style.borderColor=m.color;c.style.animationDelay=(0.4+i*0.3)+'s';c.innerHTML='<span class="dpc-i" style="color:'+m.color+'">'+m.icon+'</span><div class="dpc-n" style="color:'+m.color+'">'+m.name+'</div>';p.appendChild(c)}},260)}
+function showPD(){var idx=shuf([0,1,2,3,4,5]);st.dealt=[idx[0],idx[1],idx[2]];st.round=[];st.ci=0;st.frag=T(pick(FRAGS));show('predeal');setTimeout(function(){$('pdSeed').textContent='\u201C'+st.seed+'\u201D';var p=$('dpPrev');p.innerHTML='';for(var i=0;i<3;i++){var m=MM[st.dealt[i]];var c=document.createElement('div');c.className='dpc';c.style.borderColor=m.color;c.style.animationDelay=(0.4+i*0.3)+'s';c.innerHTML='<span class="dpc-i" style="color:'+m.color+'">'+m.icon+'</span><div class="dpc-n" style="color:'+m.color+'">'+T(m.name)+'</div>';p.appendChild(c)}},260)}
 $('btnStart').addEventListener('click',function(){sndFlip();showCard(0)});
 
-function showCard(ci){st.ci=ci;var mir=MM[st.dealt[ci]];show('card',260);setTimeout(function(){$('cRL').textContent='Card '+(ci+1)+' of 3';var prog=$('cProg');prog.innerHTML='';for(var i=0;i<3;i++){var p=document.createElement('div');p.className='pip';if(i<ci)p.classList.add('done');if(i===ci)p.classList.add('cur');prog.appendChild(p)}var fr=$('cFrag');fr.textContent=st.frag;fr.style.animation='none';fr.offsetHeight;fr.style.animation='';var gd=$('cGuide');gd.innerHTML=mir.guide[st.tl];gd.style.animation='none';gd.offsetHeight;gd.style.animation='';var mc2=$('mc');mc2.style.animation='none';mc2.offsetHeight;mc2.style.animation='';$('mIcon').innerHTML=mir.icon;$('mIcon').style.color=mir.color;$('mIcon').style.borderColor=mir.color;$('mName').textContent=mir.name;$('mName').style.color=mir.color;$('mSub').textContent=mir.sub;$('mSeed').textContent=st.seed;$('mPr').innerHTML=mir.pr+'<span class="mc-pq">'+mir.pq+'</span>';var ta=$('mTa');ta.value='';var enc=$('mEnc');enc.textContent=pick(ENC);enc.style.animation='none';enc.offsetHeight;enc.style.animation='';setTimeout(function(){ta.focus()},300);var btn=$('btnNext');btn.classList.add('off');btn.innerHTML=ci<2?'Next &#8594;':'See all three &#10024;';ta.removeEventListener('input',onCI);ta.addEventListener('input',onCI)},280)}
+function showCard(ci){st.ci=ci;var mir=MM[st.dealt[ci]];show('card',260);setTimeout(function(){$('cRL').textContent=T('Card {n} of 3',{n:ci+1});var prog=$('cProg');prog.innerHTML='';for(var i=0;i<3;i++){var p=document.createElement('div');p.className='pip';if(i<ci)p.classList.add('done');if(i===ci)p.classList.add('cur');prog.appendChild(p)}var fr=$('cFrag');fr.textContent=st.frag;fr.style.animation='none';fr.offsetHeight;fr.style.animation='';var gd=$('cGuide');gd.innerHTML=T(mir.guide[st.tl]);gd.style.animation='none';gd.offsetHeight;gd.style.animation='';var mc2=$('mc');mc2.style.animation='none';mc2.offsetHeight;mc2.style.animation='';$('mIcon').innerHTML=mir.icon;$('mIcon').style.color=mir.color;$('mIcon').style.borderColor=mir.color;$('mName').textContent=T(mir.name);$('mName').style.color=mir.color;$('mSub').textContent=T(mir.sub);$('mSeed').textContent=st.seed;$('mPr').innerHTML=T(mir.pr)+'<span class="mc-pq">'+T(mir.pq)+'</span>';var ta=$('mTa');ta.value='';var enc=$('mEnc');enc.textContent=T(pick(ENC));enc.style.animation='none';enc.offsetHeight;enc.style.animation='';setTimeout(function(){ta.focus()},300);var btn=$('btnNext');btn.classList.add('off');btn.innerHTML=ci<2?T('Next →'):T('See all three ✨');ta.removeEventListener('input',onCI);ta.addEventListener('input',onCI)},280)}
 function onCI(){if($('mTa').value.trim().length>=2)$('btnNext').classList.remove('off');else $('btnNext').classList.add('off')}
 $('btnNext').addEventListener('click',function(){var ta=$('mTa'),v=ta.value.trim();if(v.length<2)return;sndFlip();ta.removeEventListener('input',onCI);st.round.push({mirror:MM[st.dealt[st.ci]],response:v});if(st.ci<2){if(Math.random()<0.25)showWild(st.ci+1);else showCard(st.ci+1)}else showSum()});
 
 // ── WILD CARDS ──
 function showWild(nci){var r=Math.random(),wt;if(r<0.25)wt='body';else if(r<0.50)wt='nature';else if(r<0.75)wt='reverse';else wt='breath';show('wild');setTimeout(function(){var ic=$('wcI'),lb=$('wcL'),tx=$('wcT'),ex=$('wcE'),bc=$('wcBC'),cb=$('btnWC');bc.style.display='none';cb.style.display='';var wc=$('wcCard');wc.style.animation='none';wc.offsetHeight;wc.style.animation='';
-if(wt==='body'){ic.innerHTML='&#9673;';ic.style.color='var(--body)';lb.textContent='Ground';lb.style.color='var(--body)';tx.textContent=pick(BODY);ex.textContent='Your thoughts live in your body too.';wc.style.borderColor='var(--body)'}
-else if(wt==='nature'){ic.innerHTML='&#9752;';ic.style.color='var(--nature)';lb.textContent='Nature';lb.style.color='var(--nature)';tx.textContent=pick(NAT);ex.textContent='No question. Just sit with this.';wc.style.borderColor='var(--nature)'}
-else if(wt==='reverse'){ic.innerHTML='&#8634;';ic.style.color='var(--reverse)';lb.textContent='Reverse';lb.style.color='var(--reverse)';tx.textContent='Re-read your first answer:';ex.innerHTML='<div style="padding:10px;border:1px solid var(--card-edge);border-radius:8px;margin-top:8px;font-style:italic;color:var(--text);text-align:left">\u201C'+esc(st.round[0].response)+'\u201D</div><div style="margin-top:8px;color:var(--text-dim)">Same? Or has something shifted?</div>';wc.style.borderColor='var(--reverse)'}
-else{ic.innerHTML='&#9711;';ic.style.color='var(--breath)';lb.textContent='Breath';lb.style.color='var(--breath)';tx.textContent='One cycle. Follow the orb.';ex.textContent='In as it grows. Out as it shrinks.';wc.style.borderColor='var(--breath)';bc.style.display='';cb.style.display='none';runBW(nci);return}
+if(wt==='body'){ic.innerHTML='&#9673;';ic.style.color='var(--body)';lb.textContent=T('Ground');lb.style.color='var(--body)';tx.textContent=T(pick(BODY));ex.textContent=T('Your thoughts live in your body too.');wc.style.borderColor='var(--body)'}
+else if(wt==='nature'){ic.innerHTML='&#9752;';ic.style.color='var(--nature)';lb.textContent=T('Nature');lb.style.color='var(--nature)';tx.textContent=T(pick(NAT));ex.textContent=T('No question. Just sit with this.');wc.style.borderColor='var(--nature)'}
+else if(wt==='reverse'){ic.innerHTML='&#8634;';ic.style.color='var(--reverse)';lb.textContent=T('Reverse');lb.style.color='var(--reverse)';tx.textContent=T('Re-read your first answer:');ex.innerHTML='<div style="padding:10px;border:1px solid var(--card-edge);border-radius:8px;margin-top:8px;font-style:italic;color:var(--text);text-align:left">\u201C'+esc(st.round[0].response)+'\u201D</div><div style="margin-top:8px;color:var(--text-dim)">'+T('Same? Or has something shifted?')+'</div>';wc.style.borderColor='var(--reverse)'}
+else{ic.innerHTML='&#9711;';ic.style.color='var(--breath)';lb.textContent=T('Breath');lb.style.color='var(--breath)';tx.textContent=T('One cycle. Follow the orb.');ex.textContent=T('In as it grows. Out as it shrinks.');wc.style.borderColor='var(--breath)';bc.style.display='';cb.style.display='none';runBW(nci);return}
 cb.onclick=function(){sndFlip();showCard(nci)}},500)}
-function runBW(nci){var orb=$('wcBO'),lbl=$('wcBL');var ph=[{t:'in\u2026',exp:true,d:4000},{t:'hold\u2026',exp:true,d:4000},{t:'out\u2026',exp:false,d:4000},{t:'hold\u2026',exp:false,d:2000}];var s=0;orb.classList.remove('exp');lbl.textContent='ready\u2026';setTimeout(function(){sndBreathIn()},1000);setTimeout(function nx(){if(s>=ph.length){sndFlip();showCard(nci);return}var p=ph[s];lbl.textContent=p.t;if(p.exp){orb.classList.add('exp');if(s===0)sndBreathIn()}else{orb.classList.remove('exp');if(s===2)sndBreathOut()}s++;setTimeout(nx,p.d)},1200)}
+function runBW(nci){var orb=$('wcBO'),lbl=$('wcBL');var ph=[{t:T('in\u2026'),exp:true,d:4000},{t:T('hold\u2026'),exp:true,d:4000},{t:T('out\u2026'),exp:false,d:4000},{t:T('hold\u2026'),exp:false,d:2000}];var s=0;orb.classList.remove('exp');lbl.textContent=T('ready\u2026');setTimeout(function(){sndBreathIn()},1000);setTimeout(function nx(){if(s>=ph.length){sndFlip();showCard(nci);return}var p=ph[s];lbl.textContent=p.t;if(p.exp){orb.classList.add('exp');if(s===0)sndBreathIn()}else{orb.classList.remove('exp');if(s===2)sndBreathOut()}s++;setTimeout(nx,p.d)},1200)}
 
 // ── SUMMARY ──
-function showSum(){if(st.rt===2){st.rt=3;rtBanner(3);try{localStorage.setItem('eop_day',dayStr())}catch(e){}}sndDone();show('summary');setTimeout(function(){$('sumT').innerHTML=st.rt===3?'&#10024; Today, complete':'&#10024; Round complete';$('sumSeed').textContent='\u201C'+st.seed+'\u201D';lastSum={seed:st.seed,entries:[]};var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<st.round.length;i++){var e=st.round[i];lastSum.entries.push({n:e.mirror.name,q:e.mirror.q,r:e.response});var d=document.createElement('div');d.className='se';d.style.animation='fu 0.6s ease '+(0.5+i*0.4)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+e.mirror.color+'"><span class="dot" style="background:'+e.mirror.color+'"></span> '+e.mirror.name+' \u2014 '+e.mirror.q+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=SUM_INS[st.tl];var rx=pick(RX);$('sumRx').innerHTML='<div class="summ-rx-t">Before you go</div><div class="summ-rx-text">'+rx.t+'</div><div class="summ-rx-sub">Carry what you found into your body and your world.</div>';saveRound();st.rc++;try{localStorage.setItem('eop_rc',String(st.rc))}catch(e){}},260)}
+function showSum(){if(st.rt===2){st.rt=3;rtBanner(3);try{localStorage.setItem('eop_day',dayStr())}catch(e){}}sndDone();show('summary');setTimeout(function(){$('sumT').innerHTML=st.rt===3?T('✨ Today, complete'):T('✨ Round complete');$('sumSeed').textContent='\u201C'+st.seed+'\u201D';lastSum={seed:st.seed,entries:[]};var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<st.round.length;i++){var e=st.round[i];lastSum.entries.push({n:e.mirror.name,q:e.mirror.q,r:e.response});var d=document.createElement('div');d.className='se';d.style.animation='fu 0.6s ease '+(0.5+i*0.4)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+e.mirror.color+'"><span class="dot" style="background:'+e.mirror.color+'"></span> '+T(e.mirror.name)+' \u2014 '+T(e.mirror.q)+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=T(SUM_INS[st.tl]);var rx=pick(RX);$('sumRx').innerHTML='<div class="summ-rx-t">'+T('Before you go')+'</div><div class="summ-rx-text">'+T(rx.t)+'</div><div class="summ-rx-sub">'+T('Carry what you found into your body and your world.')+'</div>';saveRound();st.rc++;try{localStorage.setItem('eop_rc',String(st.rc))}catch(e){}},260)}
 $('btnAgain').addEventListener('click',function(){sndClick();st.rt=0;rtBanner(0);show('timeline')});
 $('btnDone').addEventListener('click',function(){sndClick();st.rt=0;rtBanner(0);show('home');setTimeout(updHome,300)});
 
@@ -1099,8 +1234,8 @@ function saveRound(){try{var r=JSON.parse(localStorage.getItem('eop_r')||'[]');v
 function loadR(){try{return JSON.parse(localStorage.getItem('eop_r')||'[]')}catch(e){return[]}}
 
 // ── HISTORY with graceful deletion ──
-function showHist(){show('history');setTimeout(function(){var list=$('histList');list.innerHTML='';var rounds=loadR();var cb=$('btnClrH');if(!rounds.length){list.innerHTML='<div class="hist-empty">No rounds yet.<br><span style="font-size:0.74rem">Play a round and your reflections will appear here.</span></div>';cb.style.display='none';return}cb.style.display='';for(var i=0;i<rounds.length;i++){(function(rd,idx){var it=document.createElement('div');it.className='hi';it.setAttribute('role','button');it.setAttribute('tabindex','0');var d=new Date(rd.ts);var ds=d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});var dots='';for(var j=0;j<rd.entries.length;j++)dots+='<span class="dot" style="background:'+cFor(rd.entries[j].mirror)+'"></span>';var tll=rd.tl==='past'?'\u25C0':rd.tl==='future'?'\u25B6':'\u25CF';
-it.innerHTML='<div class="hi-s">\u201C'+esc(rd.seed)+'\u201D</div><div class="hi-d">'+tll+' '+ds+'</div><div class="hi-m">'+dots+'</div><div class="hi-del"><button class="del-btn dissolve" data-act="dissolve">dissolve</button><button class="del-btn release" data-act="release">release</button><button class="del-btn return" data-act="return">return</button></div>';
+function showHist(){show('history');setTimeout(function(){var list=$('histList');list.innerHTML='';var rounds=loadR();var cb=$('btnClrH');if(!rounds.length){list.innerHTML='<div class="hist-empty">'+T('No rounds yet.')+'<br><span style="font-size:0.74rem">'+T('Play a round and your reflections will appear here.')+'</span></div>';cb.style.display='none';return}cb.style.display='';for(var i=0;i<rounds.length;i++){(function(rd,idx){var it=document.createElement('div');it.className='hi';it.setAttribute('role','button');it.setAttribute('tabindex','0');var d=new Date(rd.ts);var ds=d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});var dots='';for(var j=0;j<rd.entries.length;j++)dots+='<span class="dot" style="background:'+cFor(rd.entries[j].mirror)+'"></span>';var tll=rd.tl==='past'?'\u25C0':rd.tl==='future'?'\u25B6':'\u25CF';
+it.innerHTML='<div class="hi-s">\u201C'+esc(rd.seed)+'\u201D</div><div class="hi-d">'+tll+' '+ds+'</div><div class="hi-m">'+dots+'</div><div class="hi-del"><button class="del-btn dissolve" data-act="dissolve">'+T('dissolve')+'</button><button class="del-btn release" data-act="release">'+T('release')+'</button><button class="del-btn return" data-act="return">'+T('return')+'</button></div>';
 var expanded=false;
 it.addEventListener('click',function(e){
   if(e.target.classList.contains('del-btn')){
@@ -1123,8 +1258,8 @@ it.addEventListener('click',function(e){
   }
 });
 list.appendChild(it)})(rounds[i],i)}},260)}
-function showHD(rd){show('summary');setTimeout(function(){$('sumT').textContent='';$('sumSeed').textContent='\u201C'+rd.seed+'\u201D';lastSum={seed:rd.seed,entries:[]};var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<rd.entries.length;i++){var e=rd.entries[i];var m=mBy(e.mirror);if(!m)continue;lastSum.entries.push({n:m.name,q:m.q,r:e.response});var d=document.createElement('div');d.className='se';d.style.animation='fu 0.5s ease '+(0.3+i*0.2)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+m.color+'"><span class="dot" style="background:'+m.color+'"></span> '+m.name+' \u2014 '+m.q+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=SUM_INS[rd.tl||'present'];$('sumRx').innerHTML=''},260)}
-$('btnClrH').addEventListener('click',function(){if(confirm('Release everything? This cannot be undone.')){try{localStorage.removeItem('eop_r');localStorage.setItem('eop_rc','0');st.rc=0}catch(e){}showHist()}});
+function showHD(rd){show('summary');setTimeout(function(){$('sumT').textContent='';$('sumSeed').textContent='\u201C'+rd.seed+'\u201D';lastSum={seed:rd.seed,entries:[]};var stk=$('sumStk');stk.innerHTML='';for(var i=0;i<rd.entries.length;i++){var e=rd.entries[i];var m=mBy(e.mirror);if(!m)continue;lastSum.entries.push({n:m.name,q:m.q,r:e.response});var d=document.createElement('div');d.className='se';d.style.animation='fu 0.5s ease '+(0.3+i*0.2)+'s forwards';d.innerHTML='<div class="se-m" style="color:'+m.color+'"><span class="dot" style="background:'+m.color+'"></span> '+T(m.name)+' \u2014 '+T(m.q)+'</div><div class="se-r">'+esc(e.response)+'</div>';stk.appendChild(d)}$('sumIns').textContent=T(SUM_INS[rd.tl||'present']);$('sumRx').innerHTML=''},260)}
+$('btnClrH').addEventListener('click',function(){if(confirm(T('Release everything? This cannot be undone.'))){try{localStorage.removeItem('eop_r');localStorage.setItem('eop_rc','0');st.rc=0}catch(e){}showHist()}});
 
 // ── MEMORY POSTCARDS — six fragments, one page ──
 // Everything is visible at once, nothing is sequenced. You write into
@@ -1149,11 +1284,11 @@ function buildSheet(){
   for(var i=0;i<FORMULA.length;i++){
     (function(f,ix){
       var d=document.createElement('div');d.className='fcr';
-      var k=document.createElement('div');k.className='fcr-k';k.textContent=f.label;
+      var k=document.createElement('div');k.className='fcr-k';k.textContent=T(f.label);
       var ta=document.createElement('textarea');
-      ta.className='fcr-in';ta.rows=1;ta.placeholder=f.prompt;
-      ta.setAttribute('aria-label',f.label+' — '+f.prompt);
-      var h=document.createElement('div');h.className='fcr-hint';h.textContent=f.hint;
+      ta.className='fcr-in';ta.rows=1;ta.placeholder=T(f.prompt);
+      ta.setAttribute('aria-label',T(f.label)+' — '+T(f.prompt));
+      var h=document.createElement('div');h.className='fcr-hint';h.textContent=T(f.hint);
       d.appendChild(k);d.appendChild(ta);d.appendChild(h);
       ta.addEventListener('input',function(){
         grow(ta);
@@ -1194,9 +1329,9 @@ function resetSheet(){
 function syncSeal(){
   var n=fragFilled(),b=$('btnSealCard');
   if(n>=2)b.classList.remove('off');else b.classList.add('off');
-  $('fcNote').textContent=n===0?'any two fragments make a postcard'
-    :n===1?'one more fragment and it can be sealed'
-    :n+' fragments — seal it whenever it feels done';
+  $('fcNote').textContent=n===0?T('any two fragments make a postcard')
+    :n===1?T('one more fragment and it can be sealed')
+    :T('{n} fragments — seal it whenever it feels done',{n:n});
 }
 
 // ── THE CONSTELLATION — six points, lit as their fragments fill,
@@ -1346,7 +1481,7 @@ $('fcFresh').addEventListener('click',function(){sndClick();resetSheet()});
 function renderPostcards(){
   var area=$('gardenPostcards');area.innerHTML='';
   var pcs=[];try{pcs=JSON.parse(localStorage.getItem('eop_pc')||'[]')}catch(e){}
-  if(!pcs.length){area.innerHTML='<div style="text-align:center;color:var(--text-faint);font-style:italic;padding:20px 0;font-size:0.8rem">Your sealed postcards will appear here.</div>';return}
+  if(!pcs.length){area.innerHTML='<div style="text-align:center;color:var(--text-faint);font-style:italic;padding:20px 0;font-size:0.8rem">'+T('Your sealed postcards will appear here.')+'</div>';return}
   for(var i=0;i<pcs.length;i++){
     (function(pc,idx){
       var d=document.createElement('div');d.className='postcard';
@@ -1354,14 +1489,14 @@ function renderPostcards(){
       var stamp=date.toLocaleDateString()+' '+date.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
       var content='';
       for(var k in pc.fragments){
-        var label=FORMULA[parseInt(k)]?FORMULA[parseInt(k)].label:'';
+        var label=FORMULA[parseInt(k)]?T(FORMULA[parseInt(k)].label):'';
         content+='<div class="pc-label">'+label+'</div><div class="pc-content">'+esc(pc.fragments[k])+'</div>';
       }
       d.innerHTML='<div class="pc-stamp">&#9993; '+stamp+'</div>'+content+'<div class="pc-seal" aria-hidden="true">e</div>'+
         '<div style="display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--card-edge);justify-content:flex-end">'+
-        '<button class="del-btn dissolve" style="font-size:0.6rem">dissolve</button>'+
-        '<button class="del-btn release" style="font-size:0.6rem">release</button>'+
-        '<button class="del-btn return" style="font-size:0.6rem">return</button></div>';
+        '<button class="del-btn dissolve" style="font-size:0.6rem">'+T('dissolve')+'</button>'+
+        '<button class="del-btn release" style="font-size:0.6rem">'+T('release')+'</button>'+
+        '<button class="del-btn return" style="font-size:0.6rem">'+T('return')+'</button></div>';
       var dbtns=d.querySelectorAll('.del-btn');
       for(var db=0;db<dbtns.length;db++){(function(btn){
         btn.addEventListener('click',function(){
@@ -1387,25 +1522,25 @@ var breathStyles={
 };
 
 var bsBtns=document.querySelectorAll('.bst[data-bs]');
-for(var bi=0;bi<bsBtns.length;bi++){(function(btn){btn.addEventListener('click',function(){sndClick();st.bMode=btn.getAttribute('data-bs');for(var k=0;k<bsBtns.length;k++)bsBtns[k].classList.remove('active');btn.classList.add('active');$('breatheHint').textContent=breathStyles[st.bMode].hint;if(st.bRun){stopBr();startBr()}})})(bsBtns[bi])}
+for(var bi=0;bi<bsBtns.length;bi++){(function(btn){btn.addEventListener('click',function(){sndClick();st.bMode=btn.getAttribute('data-bs');for(var k=0;k<bsBtns.length;k++)bsBtns[k].classList.remove('active');btn.classList.add('active');$('breatheHint').textContent=T(breathStyles[st.bMode].hint);if(st.bRun){stopBr();startBr()}})})(bsBtns[bi])}
 
 $('btnBr').addEventListener('click',function(){sndClick();if(st.prOn)stopPr();else if(st.bRun)stopBr();else startBr()});
 
 function startBr(){
   if(st.prOn)stopPr(true);
   st.bRun=true;st.bCyc=0;
-  $('btnBr').textContent='Stop';$('bAft').textContent='';
+  $('btnBr').textContent=T('Stop');$('bAft').textContent='';
   var orb=$('bOrb'),lbl=$('bLabel');
   var style=breathStyles[st.bMode];
   var step=0,sec=0;
-  lbl.textContent='starting\u2026';
+  lbl.textContent=T('starting\u2026');
   setTimeout(function(){
     sndBreathIn();
     function tick(){
       if(!st.bRun)return;
       var phases=style.phases;
       var p=phases[step%phases.length];
-      lbl.textContent=p.t;
+      lbl.textContent=T(p.t);
       if(sec===0)setBreath(p.e,p.d);
       if(p.e){orb.classList.add('exp');if(sec===0&&step%phases.length===0)sndBreathIn()}
       else{orb.classList.remove('exp');if(sec===0)sndBreathOut()}
@@ -1420,11 +1555,11 @@ function startBr(){
 function stopBr(){
   st.bRun=false;
   if(st.bTimer){clearTimeout(st.bTimer);st.bTimer=null}
-  $('btnBr').textContent='Begin';
-  $('bLabel').textContent='ready when you are';
+  $('btnBr').textContent=T('Begin');
+  $('bLabel').textContent=T('ready when you are');
   $('bOrb').classList.remove('exp');
   setBreath(false,2.5);
-  if(st.bCyc>0)$('bAft').textContent=pick(BR_AFT);
+  if(st.bCyc>0)$('bAft').textContent=T(pick(BR_AFT));
 }
 
 // ── BREATH BLOOM — layered canvas visual, synced to the breath phases ──
@@ -1543,17 +1678,17 @@ function startPr(id){
   stopPr(true);
   var pr=PRACTICES[id];if(!pr)return;
   st.prOn=true;
-  $('btnBr').textContent='Stop';
-  $('bLabel').textContent=pr.name;
+  $('btnBr').textContent=T('Stop');
+  $('bLabel').textContent=T(pr.name);
   $('bAft').textContent='';
   var i2=0;
   function stepGo(){
     if(!st.prOn)return;
-    if(i2>=pr.steps.length){stopPr();$('bAft').textContent='Nowhere else you need to be.';return}
+    if(i2>=pr.steps.length){stopPr();$('bAft').textContent=T('Nowhere else you need to be.');return}
     var s2=pr.steps[i2];
     var pt2=$('prText');
     pt2.style.animation='none';pt2.offsetHeight;pt2.style.animation='textReveal 0.8s ease forwards';
-    pt2.textContent=s2.t;
+    pt2.textContent=T(s2.t);
     playTone(520,0.18,0.018);
     i2++;
     prTimer=setTimeout(stepGo,s2.d*1000);
@@ -1564,14 +1699,14 @@ function stopPr(quiet){
   st.prOn=false;
   if(prTimer){clearTimeout(prTimer);prTimer=null}
   $('prText').textContent='';
-  if(!quiet){$('btnBr').textContent='Begin';$('bLabel').textContent='ready when you are'}
+  if(!quiet){$('btnBr').textContent=T('Begin');$('bLabel').textContent=T('ready when you are')}
 }
 var prBtns=document.querySelectorAll('.bst[data-pr]');
 for(var pb=0;pb<prBtns.length;pb++){(function(btn){btn.addEventListener('click',function(){initAudio();sndClick();startPr(btn.getAttribute('data-pr'))})})(prBtns[pb])}
 
 // ── GROUP ──
-function startGroup(){show('group');setTimeout(function(){$('grpTxt').textContent=pick(FRAGS)},260)}
-$('btnGrpN').addEventListener('click',function(){sndClick();$('grpTxt').textContent=pick(FRAGS)});
+function startGroup(){show('group');setTimeout(function(){$('grpTxt').textContent=T(pick(FRAGS))},260)}
+$('btnGrpN').addEventListener('click',function(){sndClick();$('grpTxt').textContent=T(pick(FRAGS))});
 $('btnGrpH').addEventListener('click',function(){sndClick();show('home');setTimeout(updHome,300)});
 
 // ── ISOMETRIC ENGINE (2:1 dimetric, string-built SVG — shared ERRERlabs technique) ──
@@ -1629,7 +1764,7 @@ function renderVault(){
   // Postcards standing on the two upper shelves (newest first, top shelf first)
   for(var i=0;i<showPC.length;i++){
     var zb=i<5?72:38,px=32+(i%5)*37,hh=20+((i*13)%4),tone=PC_TONES[i%PC_TONES.length];
-    s+='<g class="vo" data-kind="pc" data-i="'+i+'" role="button" tabindex="0" aria-label="Sealed postcard"><g>';
+    s+='<g class="vo" data-kind="pc" data-i="'+i+'" role="button" tabindex="0" aria-label="'+T('Sealed postcard')+'"><g>';
     s+=isoShadowAt(px+14,22,zb,15,5);
     s+=isoBox(px,12,zb,28,4,hh,tone);
     s+='<g transform="'+isoFaceY(px,16,zb+hh)+'">';
@@ -1642,7 +1777,7 @@ function renderVault(){
   for(var j=0;j<showRD.length;j++){
     var bx=32+j*11;if(bx+8>212)break;
     var bh=17+((j*11)%6),bc=RD_TONES[j%RD_TONES.length];
-    s+='<g class="vo" data-kind="rd" data-i="'+j+'" role="button" tabindex="0" aria-label="Past round"><g>';
+    s+='<g class="vo" data-kind="rd" data-i="'+j+'" role="button" tabindex="0" aria-label="'+T('Past round')+'"><g>';
     s+=isoBox(bx,10,4,7,20,bh,bc);
     s+='<g transform="'+isoFaceY(bx,30,4+bh)+'"><rect x="1.5" y="'+(bh-8)+'" width="4" height="2.6" fill="'+T.clasp+'"/></g>';
     s+='</g></g>';
@@ -1659,11 +1794,13 @@ function renderVault(){
   // Copy for the state
   var sub=$('vaultSub'),hint=$('vaultHint');
   if(!pcs.length&&!rds.length){
-    sub.textContent='Your shelf is waiting. Seal a postcard or finish a round and it will appear here.';
-    hint.textContent='everything kept here stays on this device';
+    sub.textContent=T('Your shelf is waiting. Seal a postcard or finish a round and it will appear here.');
+    hint.textContent=T('everything kept here stays on this device');
   }else{
-    sub.textContent=pcs.length+' postcard'+(pcs.length===1?'':'s')+', '+rds.length+' round'+(rds.length===1?'':'s')+'. On this device. Nowhere else.';
-    hint.textContent=(pcs.length>10||rds.length>16)?'showing the most recent — tap a postcard or a spine to take it down':'tap a postcard or a spine to take it off the shelf';
+    var pcn=pcs.length===1?T('{n} postcard',{n:1}):T('{n} postcards',{n:pcs.length});
+    var rdn=rds.length===1?T('{n} round',{n:1}):T('{n} rounds',{n:rds.length});
+    sub.textContent=T('{p}, {r}. On this device. Nowhere else.',{p:pcn,r:rdn});
+    hint.textContent=(pcs.length>10||rds.length>16)?T('showing the most recent — tap a postcard or a spine to take it down'):T('tap a postcard or a spine to take it off the shelf');
   }
 }
 
@@ -1674,11 +1811,11 @@ function vaultOpen(kind,i){
     var dt=new Date(pc.ts);
     stamp.innerHTML='&#9993; '+dt.toLocaleDateString()+' '+dt.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     for(var k in pc.fragments){
-      var label=FORMULA[parseInt(k,10)]?FORMULA[parseInt(k,10)].label:'';
+      var label=FORMULA[parseInt(k,10)]?T(FORMULA[parseInt(k,10)].label):'';
       html+='<div class="pc-label">'+label+'</div><div class="pc-content" style="padding-right:0">'+esc(pc.fragments[k])+'</div>';
     }
     body.innerHTML=html;
-    acts.innerHTML='<button class="del-btn dissolve">dissolve</button><button class="del-btn release">release</button><button class="del-btn return">return</button>';
+    acts.innerHTML='<button class="del-btn dissolve">'+T('dissolve')+'</button><button class="del-btn release">'+T('release')+'</button><button class="del-btn return">'+T('return')+'</button>';
     wireVaultDel(acts,'eop_pc',i);
   }else{
     var rds=loadR(),rd=rds[i];if(!rd)return;
@@ -1691,7 +1828,7 @@ function vaultOpen(kind,i){
       html+='<div class="se" style="opacity:1;border-radius:8px;margin-bottom:6px;border:1px solid var(--card-edge)"><div class="se-m" style="color:'+m.color+'"><span class="dot" style="background:'+m.color+'"></span> '+m.name+' — '+m.q+'</div><div class="se-r">'+esc(en.response)+'</div></div>';
     }
     body.innerHTML=html;
-    acts.innerHTML='<button class="del-btn dissolve">dissolve</button><button class="del-btn release">release</button><button class="del-btn return">return</button>';
+    acts.innerHTML='<button class="del-btn dissolve">'+T('dissolve')+'</button><button class="del-btn release">'+T('release')+'</button><button class="del-btn return">'+T('return')+'</button>';
     wireVaultDel(acts,'eop_r',i);
   }
   $('vaultSheet').classList.add('show');
@@ -1729,6 +1866,28 @@ $('navVault').addEventListener('click',function(){sndClick();showVault()});
 $('btnVaultGarden').addEventListener('click',function(){sndClick();closeVaultSheet();startGarden()});
 $('btnVaultPlay').addEventListener('click',function(){sndClick();closeVaultSheet();show('timeline')});
 
+// ── LANGUAGE — pick once; the room reloads speaking it ──
+function buildLangList(){
+  var list=$('langList');list.innerHTML='';
+  for(var i=0;i<EOP_LANGS.length;i++){
+    (function(l){
+      var b=document.createElement('button');
+      b.className='lang-opt'+(l.code===I18N.lang?' on':'');
+      b.setAttribute('lang',l.code);
+      b.textContent=l.name;
+      b.addEventListener('click',function(){
+        sndClick();
+        I18N.set(l.code);
+        if(l.code===I18N.lang){$('langOv').classList.remove('open');return}
+        location.reload();               // inline dictionaries: the next boot
+      });                                // paints translated from byte one
+      list.appendChild(b);
+    })(EOP_LANGS[i]);
+  }
+}
+$('btnLang').addEventListener('click',function(){sndClick();buildLangList();$('langOv').classList.add('open')});
+$('langOv').addEventListener('click',function(e){if(e.target===$('langOv'))$('langOv').classList.remove('open')});
+
 // ── INFO PANEL ──
 $('btnInfo').addEventListener('click',function(){sndClick();$('infoOv').classList.add('open')});
 $('infoClose').addEventListener('click',function(){sndClick();$('infoOv').classList.remove('open')});
@@ -1746,7 +1905,7 @@ $('btnExport').addEventListener('click',function(){
     a.href=url;a.download='echoes-of-play-'+new Date().toISOString().slice(0,10)+'.json';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
     setTimeout(function(){U.revokeObjectURL(url)},2000);
-  }catch(e){alert('Your browser could not create the export file. You can also copy your data from browser dev tools: localStorage keys starting with eop_.')}
+  }catch(e){alert(T('Your browser could not create the export file. You can also copy your data from browser dev tools: localStorage keys starting with eop_.'))}
 });
 
 // ── MOODS — how you arrive tunes the room ──
@@ -1779,14 +1938,14 @@ function applyTheme(name,save,announce){
   else document.body.removeAttribute('data-theme');
   var b=$('btnTheme');
   b.innerHTML=THEME==='light'?'&#9789;':'&#9788;';
-  b.setAttribute('aria-label',THEME==='light'?'Switch to lamplight':'Switch to daylight');
+  b.setAttribute('aria-label',THEME==='light'?T('Switch to lamplight'):T('Switch to daylight'));
   var mt=document.querySelector('meta[name=theme-color]');
   if(mt)mt.setAttribute('content',THEME_BG[THEME]);
   applyMood(st.mood,false);            // re-tunes ACC, redraws the kolam
   if(st.screen==='vault')renderVault(); // the alcove repaints in the new light
   if(st.screen==='garden')drawConst();  // so does the fragment constellation
   if(save){try{localStorage.setItem('eop_theme',THEME)}catch(e){}}
-  if(announce)toast(THEME==='light'?'Daylight':'Lamplight');
+  if(announce)toast(THEME==='light'?T('Daylight'):T('Lamplight'));
 }
 $('btnTheme').addEventListener('click',function(){
   sndClick();applyTheme(THEME==='light'?'dark':'light',true,true);
@@ -1800,7 +1959,7 @@ $('moodChip').addEventListener('click',function(){sndClick();show('mood')});
 function rtBanner(step){
   var b=$('rtBanner'),t=$('rtTxt'),sk=$('rtSkip');
   if(!step){b.classList.remove('show');return}
-  t.textContent=step===1?'today · breathe':step===2?'today · one thing on your mind':'today · complete';
+  t.textContent=step===1?T('today · breathe'):step===2?T('today · one thing on your mind'):T('today · complete');
   sk.style.display=step===1?'':'none';
   b.classList.add('show');
 }
@@ -1887,9 +2046,9 @@ function applyFS(step,announce){
   var b=$('btnSize');
   b.setAttribute('aria-pressed',fsStep>0?'true':'false');
   if(fsStep>0)b.classList.add('on');else b.classList.remove('on');
-  b.setAttribute('aria-label','Text size: '+(fsStep===0?'device default':fsStep===1?'larger':'largest')+'. Tap to change.');
+  b.setAttribute('aria-label',T('Text size: {s}. Tap to change.',{s:fsStep===0?T('device default'):fsStep===1?T('larger'):T('largest')}));
   try{localStorage.setItem('eop_fs',String(fsStep))}catch(e){}
-  if(announce)toast(FS_LABELS[fsStep]);
+  if(announce)toast(T(FS_LABELS[fsStep]));
 }
 $('btnSize').addEventListener('click',function(){sndClick();applyFS(fsStep+1,true)});
 
@@ -1910,31 +2069,31 @@ function copyText(s,msg){
     document.body.removeChild(ta2);
   }catch(e){}
   if(!okd&&navigator.clipboard&&navigator.clipboard.writeText){try{navigator.clipboard.writeText(s);okd=true}catch(e){}}
-  toast(okd?msg:'Copy didn’t work here — select the text and copy by hand.');
+  toast(okd?msg:T('Copy didn’t work here — select the text and copy by hand.'));
 }
 var lastSum=null;
 $('btnCopyRound').addEventListener('click',function(){
   if(!lastSum)return;
   var s3='“'+lastSum.seed+'”\n\n';
   for(var i3=0;i3<lastSum.entries.length;i3++){var en2=lastSum.entries[i3];s3+=en2.n+' — '+en2.q+'\n'+en2.r+'\n\n'}
-  s3+='written in Echoes of Play · echoesofplay.com';
-  copyText(s3,'Copied. Yours to keep, or to hand to someone.');
+  s3+=T('written in Echoes of Play · echoesofplay.com');
+  copyText(s3,T('Copied. Yours to keep, or to hand to someone.'));
 });
 $('btnShare').addEventListener('click',function(){
-  var stx='Echoes of Play — a radically private, free room to reflect. No accounts, no tracking, nothing leaves your device.';
+  var stx=T('Echoes of Play — a radically private, free room to reflect. No accounts, no tracking, nothing leaves your device.');
   var surl='https://echoesofplay.com';
   if(navigator.share){try{navigator.share({title:'Echoes of Play',text:stx,url:surl});return}catch(e){}}
-  copyText(stx+' '+surl,'Link copied — pass it on.');
+  copyText(stx+' '+surl,T('Link copied — pass it on.'));
 });
 
 $('btnWipe').addEventListener('click',function(){
-  if(!confirm('Delete everything? Every round, every postcard, gone from this browser. There is no undo, and no copy anywhere — that’s the point.'))return;
+  if(!confirm(T('Delete everything? Every round, every postcard, gone from this browser. There is no undo, and no copy anywhere — that’s the point.')))return;
   musStop();
   applyFS(0,false);
   applyTheme('dark',false,false);
   applyMood('ember',false);
   st.rc=0;st.ob=false;
-  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob');localStorage.removeItem('eop_mood');localStorage.removeItem('eop_day');localStorage.removeItem('eop_mus');localStorage.removeItem('eop_big');localStorage.removeItem('eop_fs');localStorage.removeItem('eop_days');localStorage.removeItem('eop_theme')}catch(e){}
+  try{localStorage.removeItem('eop_r');localStorage.removeItem('eop_pc');localStorage.removeItem('eop_rc');localStorage.removeItem('eop_ob');localStorage.removeItem('eop_mood');localStorage.removeItem('eop_day');localStorage.removeItem('eop_mus');localStorage.removeItem('eop_big');localStorage.removeItem('eop_fs');localStorage.removeItem('eop_days');localStorage.removeItem('eop_theme');localStorage.removeItem('eop_lang')}catch(e){}
   $('infoOv').classList.remove('open');
   closeVaultSheet();
   show('trust');
