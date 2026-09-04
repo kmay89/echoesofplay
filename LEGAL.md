@@ -2,7 +2,7 @@
 
 **Echoes of Play — echoesofplay.com**
 **ERRERlabs — errerlabs.com**
-**Last updated: July 2026**
+**Last updated: September 2026**
 
 ---
 
@@ -16,7 +16,7 @@ By using Echoes of Play, you acknowledge the following. We've written it plainly
 
 Echoes of Play is not therapy. It is not counseling. It is not a medical device. It is not a diagnostic tool. It is not a substitute for professional mental health care.
 
-Every fragment, prompt, and question in the application is hand-written and selected by simple randomness. There is no artificial intelligence. There is no analysis of what you write. There is no understanding. The application cannot assess your mental state, detect crisis, or provide clinical guidance — and it does not try to.
+Every fragment, prompt, and question in the application is fixed text, written by hand in English and selected by simple randomness; translations of that fixed text (currently Spanish) were prepared with AI assistance during development and reviewed before shipping. No artificial intelligence runs in the application. There is no analysis of what you write. There is no understanding. The application cannot assess your mental state, detect crisis, or provide clinical guidance — and it does not try to.
 
 If you are experiencing a mental health crisis, please contact:
 - **988 Suicide & Crisis Lifeline** — call or text 988

@@ -12,7 +12,7 @@ Zero network connections. Zero cookies. Zero tracking. Zero AI. One HTML file.
 - **Today** — A one-tap daily ritual with no menu decisions: breathe three cycles, bring one thought, see it through three mirrors. About five minutes. No streaks, no counters, no guilt.
 - **Play a Round** — Bring one thing on your mind (past, present, or future). The game deals 3 of 6 mirror cards (Witness, Echo, Inside, Outside, Angle, Kintsugi). You write what each lens shows you, then see all three together.
 - **Breathe** — Gentle, box, or 4-7-8 pacing under a living canvas bloom that breathes with you (mood-tinted petals, particle halo, phase ring). Plus two short guided practices — grounding (5-4-3-2-1) and a body scan — written by hand, claiming nothing. Invitation, not instruction. Stop anytime.
-- **The prompt orb** — Stuck on a blank page? Tap the orb and it draws one gentle beginning at a time from nearly 300 hand-written prompts — curated lines plus sentence templates whose every combination was written to make sense (no AI, no word salad; verify in the source). Three offerings per sitting, with a breath between draws: endless shuffling isn't reflection, so after three the orb rests and hands the pen back. No repeats until the deck runs dry.
+- **The prompt orb** — Stuck on a blank page? Tap the orb and it draws one gentle beginning at a time from nearly 300 hand-written prompts — curated lines plus sentence templates whose every combination was written to make sense (nothing is generated while you play, no word salad; verify in the source). Three offerings per sitting, with a breath between draws: endless shuffling isn't reflection, so after three the orb rests and hands the pen back. No repeats until the deck runs dry.
 - **Pass it on** — One button shares the app via your device's own share sheet; another copies a finished round as plain text to hand to a friend, a counselor, or your journal. The app itself still transmits nothing.
 - **Rhythm seeds** — Each day you practice adds one seed to a small golden spiral on the home screen. There is no streak to break: rest never subtracts, showing up only adds. Consistency without guilt.
 - **Lives on your Home Screen** — The info panel teaches Add-to-Home-Screen on iOS and Android (with a one-tap Install button where the browser offers it). When a new version ships, the app quietly notices and offers a one-tap refresh — your words live in browser storage, not app files, so updates never touch them.
@@ -34,8 +34,12 @@ A few quiet minutes. A second angle on a stuck thought. A slower breath. A memor
 ## What it isn't
 
 - Not therapy. Not counseling. Not a diagnostic tool. Not a medical device.
-- Not AI. Every word is hand-written; selection is simple randomness. Nothing reads what you write.
+- Not AI. No AI runs here — nothing is generated while you use it, and nothing reads what you write; every screen is fixed text, selected by simple randomness. The English is written by hand, word by word; translations of that fixed text are prepared with AI assistance and reviewed (see Languages below).
 - Not connected. The network tab is empty. Verify yourself.
+
+## Languages
+
+The room speaks English and Spanish (a 文A button; the choice stays on your device). The English is the original, written by hand. Translations are fixed text prepared with AI assistance during development, reviewed against the same craft rules — every sentence-template combination has to read like a person wrote it — and shipped inside the file, where anyone can read them. Nothing is ever translated or generated at runtime, and choosing a language never touches the network. If a line isn't how a native speaker would say it, open an issue or a pull request: the whole dictionary is in the source.
 
 ## Privacy
 

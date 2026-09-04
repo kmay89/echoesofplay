@@ -36,7 +36,7 @@ These are not guidelines. They are load-bearing walls. Removing any one collapse
 
 7. **NO CRISIS DETECTION.** This tool cannot detect crisis. It will not pretend to. Crisis resources are visible in the info panel at all times. No regex pattern matching on sensitive words. No automated intervention. That is not our role and claiming it would be dishonest.
 
-8. **NO AI.** No language model. No neural network. No API calls to any AI service. Responses are procedurally generated from hand-written fragment pools using seeded randomness and input signal analysis. The system is transparent and auditable.
+8. **NO AI AT RUNTIME.** No language model. No neural network. No API calls to any AI service. Responses are procedurally generated from hand-written fragment pools using seeded randomness and input signal analysis. The system is transparent and auditable. The English text is written by hand; translations of it (the `@dicts` block) are fixed text prepared with AI assistance during development and human-reviewed — and every public claim about AI must say so. Nothing is ever generated, translated, or fetched while the app runs.
 
 9. **NO AUDIO CAPTURE.** The Web Speech API (webkitSpeechRecognition) sends audio to Google's servers. That is a network connection. It will not be included until browsers ship reliable local-only speech recognition. No shortcuts.
 
